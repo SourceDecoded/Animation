@@ -1,7 +1,7 @@
 {
     "compilerOptions": {
         "target": "es6",
-        "module":"es6",
+        "module":"amd",
         "sourceMap": true,
         "typeRoots" : ["./typings/globals"]
     }
