@@ -87,7 +87,7 @@ var renderByOffset = function (animationItem) {
 };
 
 var renderByOffsetAndDuration = function (animationItem) {
-    return animationItem.offset + animationItem.animation._duration;
+    return animationItem.offset + animationItem.animation.duration;
 };
 
 export default class Timeline extends Animation {

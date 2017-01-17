@@ -64,7 +64,7 @@ define(["require", "exports", "./Animation", "./animationStateManager"], functio
         return animationItem.offset;
     };
     var renderByOffsetAndDuration = function (animationItem) {
-        return animationItem.offset + animationItem.animation._duration;
+        return animationItem.offset + animationItem.animation.duration;
     };
     class Timeline extends Animation_1.default {
         constructor(config) {
