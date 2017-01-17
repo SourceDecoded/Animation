@@ -2,7 +2,7 @@
   "name": "clarity-animation",
   "version": "1.0.0",
   "description": "Unopinionated animation library.",
-  "main": "main.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -18,9 +18,19 @@
     "polymer",
     "angular"
   ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/SourceDecoded/Animation.git"
+  },
   "author": "Jared J Barnes",
   "license": "MIT",
   "devDependencies": {
+    "babel-core": "^6.21.0",
+    "babel-loader": "^6.2.10",
+    "babel-preset-es2015": "^6.18.0",
     "tsc": "^1.20150623.0"
+  },
+  "dependencies": {
+    "babel-polyfill": "^6.20.0"
   }
 }

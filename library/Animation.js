@@ -1,7 +1,6 @@
-"use strict";
-const animationStateManager_1 = require("./animationStateManager");
-const AnimationManager_1 = require("./AnimationManager");
-const easings_1 = require("./easings");
+import animationStateManager from "./animationStateManager";
+import AnimationManager from "./AnimationManager";
+import easings from "./easings";
 var delayAsync = function (milliseconds) {
     return new Promise((resolve, reject) => {
         setTimeout(resolve, milliseconds);
@@ -15,7 +14,7 @@ var makeTickPercentageObservers = function (observers) {
 var returnObserver = function (observer) {
     return observer;
 };
-var animationManager = new AnimationManager_1.default();
+var animationManager = new AnimationManager();
 class Observer {
     constructor(callback, unbind) {
         this._callback = callback;
@@ -38,7 +37,7 @@ class Observer {
         return this._unbind();
     }
 }
-class Animation {
+export default class Animation {
     constructor(config) {
         config = config || {};
         this.target = config.target || {};
@@ -50,7 +49,7 @@ class Animation {
         this.beginningValues = {};
         this.startTime = 0;
         this.currentRequestAnimationFrameId = null;
-        this.currentState = animationStateManager_1.default.stoppedState;
+        this.currentState = animationStateManager.stoppedState;
         this.animationManager = animationManager;
         this.iterations = 0;
         this.repeat = 1;
@@ -68,13 +67,13 @@ class Animation {
         };
         makeTickPercentageObservers(this.observers);
         if (typeof config.easing === "string") {
-            this.easingFunction = easings_1.default[config.easing];
+            this.easingFunction = easings[config.easing];
         }
         else if (typeof config.easing === "function") {
             this.easingFunction = config.easing;
         }
         else {
-            this.easingFunction = easings_1.default.linear;
+            this.easingFunction = easings.linear;
         }
     }
     _saveBeginningValues() {
@@ -203,7 +202,7 @@ class Animation {
     }
     invalidate() {
         this.progress = 0;
-        this.currentState = animationStateManager_1.default.pausedState;
+        this.currentState = animationStateManager.pausedState;
         return this;
     }
     getProgress() {
@@ -288,6 +287,4 @@ class Animation {
         return 1;
     }
 }
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = Animation;
 //# sourceMappingURL=Animation.js.map

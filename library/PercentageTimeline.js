@@ -1,7 +1,6 @@
-"use strict";
-const Timeline_1 = require("./Timeline");
-const Animation_1 = require("./Animation");
-class PercentageTimeline extends Timeline_1.default {
+import Timeline from "./Timeline";
+import Animation from "./Animation";
+export default class PercentageTimeline extends Timeline {
     constructor(duration) {
         super();
         this.duration = duration;
@@ -25,7 +24,7 @@ class PercentageTimeline extends Timeline_1.default {
             if (typeof animationItem.endAt !== "number") {
                 throw new Error("animationItem needs to have an endAt percentage property set.");
             }
-            if (!(animationItem.animation instanceof Animation_1.default)) {
+            if (!(animationItem.animation instanceof Animation)) {
                 throw new Error("animationItem needs to have an animation property set thats an instanceof Animation.");
             }
             if ((animationItem.startAt < 0 && animationItem.startAt > 1) || (animationItem.endAt < 0 && animationItem.endAt > 1)) {
@@ -36,12 +35,10 @@ class PercentageTimeline extends Timeline_1.default {
             }
             self.animationItems.set(animationItem, animationItem);
             self._calculateAnimations();
-            if (animationItem.animation instanceof Timeline_1.default) {
+            if (animationItem.animation instanceof Timeline) {
                 animationItem.animation._calculateAnimations();
             }
         });
     }
 }
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = PercentageTimeline;
 //# sourceMappingURL=PercentageTimeline.js.map

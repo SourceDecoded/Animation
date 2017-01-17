@@ -1,6 +1,5 @@
-"use strict";
-const requestAnimationFrame_1 = require("./requestAnimationFrame");
-class AnimationManager {
+import requestAnimationFrame from "./requestAnimationFrame";
+export default class AnimationManager {
     constructor(timer) {
         this._currentRequestAnimationFrame = null;
         this._animations = [];
@@ -24,7 +23,7 @@ class AnimationManager {
     checkRequestToStartOrStop() {
         var animations = this._animations;
         if (this._currentRequestAnimationFrame === null && animations.length > 0) {
-            this._currentRequestAnimationFrame = requestAnimationFrame_1.default(this._requestCallback);
+            this._currentRequestAnimationFrame = requestAnimationFrame(this._requestCallback);
         }
     }
     tick(time) {
@@ -42,14 +41,14 @@ class AnimationManager {
                 animationsCopy.forEach((animation) => {
                     animation.tick(time);
                 });
-                this._currentRequestAnimationFrame = requestAnimationFrame_1.default(this._requestCallback);
+                this._currentRequestAnimationFrame = requestAnimationFrame(this._requestCallback);
             }
             else {
                 this._currentRequestAnimationFrame = null;
             }
         }
         else {
-            this._currentRequestAnimationFrame = requestAnimationFrame_1.default(this._requestCallback);
+            this._currentRequestAnimationFrame = requestAnimationFrame(this._requestCallback);
         }
     }
     now() {
@@ -69,6 +68,4 @@ class AnimationManager {
         }
     }
 }
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = AnimationManager;
 //# sourceMappingURL=AnimationManager.js.map

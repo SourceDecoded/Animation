@@ -1,4 +1,3 @@
-"use strict";
 var animationStateManager = {};
 var emptyFnWithReturnAnimation = function (animation) { return animation; };
 var forwardPause = function (animation) {
@@ -290,6 +289,5 @@ animationStateManager.stoppedState = {
     tick: emptyFnWithReturnAnimation,
     restart: restartForward
 };
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = animationStateManager;
+export default animationStateManager;
 //# sourceMappingURL=animationStateManager.js.map

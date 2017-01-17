@@ -1,4 +1,3 @@
-"use strict";
 var easings = {
     easeInQuad: function (t, b, c, d) {
         return c * (t /= d) * t + b;
@@ -178,6 +177,5 @@ var easings = {
         return c * t / d + b;
     }
 };
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = easings;
+export default easings;
 //# sourceMappingURL=easings.js.map

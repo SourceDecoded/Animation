@@ -1,4 +1,3 @@
-"use strict";
 var window = (function (global) { return global; })(this);
 var lastTime = 0;
 var vendors = ['ms', 'moz', 'webkit', 'o'];
@@ -21,6 +20,5 @@ if (!window.cancelAnimationFrame) {
     };
 }
 var requestAnimationFrame = window.requestAnimationFrame;
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = requestAnimationFrame;
+export default requestAnimationFrame;
 //# sourceMappingURL=requestAnimationFrame.js.map

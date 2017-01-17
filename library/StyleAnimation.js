@@ -1,5 +1,4 @@
-"use strict";
-const Animation_1 = require("./Animation");
+import Animation from "./Animation";
 var numberUnitRegEx = /^(\-?\d*\.?\d+)+(.*?)$/i;
 var rgbRegEx = /^rgb\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)$/i;
 var rgbaRegEx = /^rgba\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+|\d\.\d+)\s*\)$/i;
@@ -75,7 +74,7 @@ var mapping = {
     translateY: { handler: "unitTransformHandler", alias: "translateY" },
     translateZ: { handler: "unitTransformHandler", alias: "translateZ" },
 };
-class StyleAnimation extends Animation_1.default {
+export default class StyleAnimation extends Animation {
     constructor(config) {
         super(config);
         this.prepareTransformValues();
@@ -315,6 +314,4 @@ class StyleAnimation extends Animation_1.default {
         this.target["transform"] = transform;
     }
 }
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = StyleAnimation;
 //# sourceMappingURL=StyleAnimation.js.map

@@ -1,6 +1,5 @@
-"use strict";
-const Animation_1 = require("./Animation");
-const animationStateManager_1 = require("./animationStateManager");
+import Animation from "./Animation";
+import animationStateManager from "./animationStateManager";
 var orderBy = function (array, expr) {
     return array.sort(function (a, b) {
         var aValue = expr(a);
@@ -67,7 +66,7 @@ var renderByOffset = function (animationItem) {
 var renderByOffsetAndDuration = function (animationItem) {
     return animationItem.offset + animationItem.animation._duration;
 };
-class Timeline extends Animation_1.default {
+export default class Timeline extends Animation {
     constructor(config) {
         super(config);
         this.animationItems = new Map();
@@ -90,7 +89,7 @@ class Timeline extends Animation_1.default {
             if (typeof animationItem.offset !== "number") {
                 throw new Error("animationItem needs to have an offset property set.");
             }
-            if (!(animationItem.animation instanceof Animation_1.default)) {
+            if (!(animationItem.animation instanceof Animation)) {
                 throw new Error("animationItem needs to have an animation property set thats an instanceof Animation.");
             }
             self.animationItems.set(animationItem, animationItem);
@@ -108,8 +107,8 @@ class Timeline extends Animation_1.default {
         var now = Date.now();
         var currentState = this.currentState;
         var animationItems = Array.from(this.animationItems.values());
-        if (this.currentState === animationStateManager_1.default.reverseState ||
-            this.currentState === animationStateManager_1.default.reversePausedState) {
+        if (this.currentState === animationStateManager.reverseState ||
+            this.currentState === animationStateManager.reversePausedState) {
             orderByDesc(animationItems, renderByOffsetAndDuration);
         }
         else {
@@ -119,11 +118,11 @@ class Timeline extends Animation_1.default {
             var duration = animationItem.animation.duration;
             var offset = animationItem.offset;
             var animation = animationItem.animation;
-            if (currentState === animationStateManager_1.default.reverseState) {
-                animation.currentState = animationStateManager_1.default.reversePausedState;
+            if (currentState === animationStateManager.reverseState) {
+                animation.currentState = animationStateManager.reversePausedState;
             }
             else {
-                animation.currentState = animationStateManager_1.default.forwardPausedState;
+                animation.currentState = animationStateManager.forwardPausedState;
             }
             animation.setTimeScale(timeScale);
             if (currentTime >= offset && currentTime <= offset + duration) {
@@ -155,6 +154,4 @@ class Timeline extends Animation_1.default {
         return this;
     }
 }
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = Timeline;
 //# sourceMappingURL=Timeline.js.map
