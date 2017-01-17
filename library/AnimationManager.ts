@@ -1,6 +1,4 @@
-﻿import requestAnimationFrame from "./requestAnimationFrame";
-
-export default class AnimationManager {
+﻿export default class AnimationManager {
     private _currentRequestAnimationFrame;
     private _animations;
     private _lastTime;

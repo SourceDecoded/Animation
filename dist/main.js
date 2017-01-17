@@ -61,7 +61,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 1 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(2), __webpack_require__(7), __webpack_require__(8), __webpack_require__(9)], __WEBPACK_AMD_DEFINE_RESULT__ = function (require, exports, Animation_1, Timeline_1, PercentageTimeline_1, StyleAnimation_1) {
+	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(2), __webpack_require__(6), __webpack_require__(7), __webpack_require__(8)], __WEBPACK_AMD_DEFINE_RESULT__ = function (require, exports, Animation_1, Timeline_1, PercentageTimeline_1, StyleAnimation_1) {
 	    "use strict";
 	    exports.Animation = Animation_1.default;
 	    exports.Timeline = Timeline_1.default;
@@ -74,7 +74,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(3), __webpack_require__(4), __webpack_require__(6)], __WEBPACK_AMD_DEFINE_RESULT__ = function (require, exports, animationStateManager_1, AnimationManager_1, easings_1) {
+	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(3), __webpack_require__(4), __webpack_require__(5)], __WEBPACK_AMD_DEFINE_RESULT__ = function (require, exports, animationStateManager_1, AnimationManager_1, easings_1) {
 	    "use strict";
 	    var delayAsync = function (milliseconds) {
 	        return new Promise((resolve, reject) => {
@@ -378,55 +378,55 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var forwardPause = function (animation) {
 	        animation.notify({
 	            type: "pause",
-	            progress: animation._progress
+	            progress: animation.progress
 	        });
-	        animation._currentState = animationStateManager.forwardPausedState;
+	        animation.currentState = animationStateManager.forwardPausedState;
 	        animation.animationManager.unregister(animation);
 	        return animation;
 	    };
 	    var reversePause = function (animation) {
 	        animation.notify({
 	            type: "pause",
-	            progress: animation._progress
+	            progress: animation.progress
 	        });
-	        animation._currentState = animationStateManager.reversePausedState;
+	        animation.currentState = animationStateManager.reversePausedState;
 	        animation.animationManager.unregister(animation);
 	        return animation;
 	    };
 	    var play = function (animation) {
 	        animation.notify({
 	            type: "play",
-	            progress: animation._progress
+	            progress: animation.progress
 	        });
 	        var now = animation.animationManager.now();
-	        animation._currentTime = now;
-	        animation._currentState = animationStateManager.forwardState;
+	        animation.currentTime = now;
+	        animation.currentState = animationStateManager.forwardState;
 	        animation.animationManager.register(animation);
 	        animation.render();
 	        return animation;
 	    };
 	    var stop = function (animation) {
 	        var now = animation.animationManager.now();
-	        animation._currentTime = now;
-	        animation._currentState = animationStateManager.stoppedState;
+	        animation.currentTime = now;
+	        animation.currentState = animationStateManager.stoppedState;
 	        animation.animationManager.unregister(animation);
 	        return animation;
 	    };
 	    var stopWithNotifications = function (animation) {
 	        animation.notify({
 	            type: "stop",
-	            progress: animation._progress
+	            progress: animation.progress
 	        });
 	        return stop(animation);
 	    };
 	    var reverse = function (animation) {
 	        animation.notify({
 	            type: "reverse",
-	            progress: animation._progress
+	            progress: animation.progress
 	        });
 	        var now = animation.animationManager.now();
-	        animation._currentTime = now;
-	        animation._currentState = animationStateManager.reverseState;
+	        animation.currentTime = now;
+	        animation.currentState = animationStateManager.reverseState;
 	        animation.animationManager.register(animation);
 	        return animation;
 	    };
@@ -496,10 +496,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	    };
 	    var render = function (animation, currentTime, progress) {
-	        var lastProgress = animation._progress;
+	        var lastProgress = animation.progress;
 	        progress = getProgressValueWithBounds(progress);
-	        animation._currentTime = typeof currentTime !== "number" ? animation.animationManager.now() : currentTime;
-	        animation._progress = progress;
+	        animation.currentTime = typeof currentTime !== "number" ? animation.animationManager.now() : currentTime;
+	        animation.progress = progress;
 	        animation.render();
 	        animation.notify({
 	            type: "tick",
@@ -509,17 +509,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	    };
 	    animationStateManager.forwardPausedState = {
 	        seek: function (animation, progress, now) {
-	            var lastProgress = animation._progress;
+	            var lastProgress = animation.progress;
 	            if (lastProgress > progress) {
-	                animation._currentState = animationStateManager.reversePausedState;
-	                animation._currentState.seek(animation, progress, now);
-	                animation._currentState = animationStateManager.forwardPausedState;
+	                animation.currentState = animationStateManager.reversePausedState;
+	                animation.currentState.seek(animation, progress, now);
+	                animation.currentState = animationStateManager.forwardPausedState;
 	                return;
 	            }
-	            if (animation._progress > 1) {
+	            if (animation.progress > 1) {
 	                return;
 	            }
-	            if (animation._progress <= 0) {
+	            if (animation.progress <= 0) {
 	                animation.notify({
 	                    type: "start",
 	                    progress: 0
@@ -543,17 +543,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	    };
 	    animationStateManager.reversePausedState = {
 	        seek: function (animation, progress, now) {
-	            var lastProgress = animation._progress;
+	            var lastProgress = animation.progress;
 	            if (lastProgress < progress) {
-	                animation._currentState = animationStateManager.forwardPausedState;
-	                animation._currentState.seek(animation, progress, now);
-	                animation._currentState = animationStateManager.reversePausedState;
+	                animation.currentState = animationStateManager.forwardPausedState;
+	                animation.currentState.seek(animation, progress, now);
+	                animation.currentState = animationStateManager.reversePausedState;
 	                return;
 	            }
-	            if (animation._progress < 0) {
+	            if (animation.progress < 0) {
 	                return;
 	            }
-	            if (animation._progress >= 1) {
+	            if (animation.progress >= 1) {
 	                animation.notify({
 	                    type: "end"
 	                });
@@ -580,10 +580,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	        pause: forwardPause,
 	        reverse: reverse,
 	        tick: function (animation, now) {
-	            var lastTime = animation._currentTime;
+	            var lastTime = animation.currentTime;
 	            if (now > lastTime) {
-	                var change = (now - lastTime) * animation._timeScale;
-	                var progress = animation._progress + (change / animation._duration);
+	                var change = (now - lastTime) * animation.timeScale;
+	                var progress = animation.progress + (change / animation.duration);
 	                if (progress >= 1) {
 	                    progress = 1;
 	                    animation.iterations++;
@@ -616,10 +616,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	        pause: reversePause,
 	        reverse: emptyFnWithReturnAnimation,
 	        tick: function (animation, now) {
-	            var lastTime = animation._currentTime;
+	            var lastTime = animation.currentTime;
 	            if (now > lastTime) {
-	                var change = (now - lastTime) * animation._timeScale;
-	                var progress = animation._progress - (change / animation._duration);
+	                var change = (now - lastTime) * animation.timeScale;
+	                var progress = animation.progress - (change / animation.duration);
 	                if (progress <= 0) {
 	                    progress = 0;
 	                    animation.iterations++;
@@ -653,8 +653,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	            if (progress < 0) {
 	                progress = 0;
 	            }
-	            animation._progress = progress;
-	            animation._currentTime = now;
+	            animation.progress = progress;
+	            animation.currentTime = now;
 	            return animation;
 	        },
 	        play: play,
@@ -673,7 +673,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(5)], __WEBPACK_AMD_DEFINE_RESULT__ = function (require, exports, requestAnimationFrame_1) {
+	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports], __WEBPACK_AMD_DEFINE_RESULT__ = function (require, exports) {
 	    "use strict";
 	    class AnimationManager {
 	        constructor(timer) {
@@ -699,7 +699,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        checkRequestToStartOrStop() {
 	            var animations = this._animations;
 	            if (this._currentRequestAnimationFrame === null && animations.length > 0) {
-	                this._currentRequestAnimationFrame = requestAnimationFrame_1.default(this._requestCallback);
+	                this._currentRequestAnimationFrame = requestAnimationFrame(this._requestCallback);
 	            }
 	        }
 	        tick(time) {
@@ -717,14 +717,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    animationsCopy.forEach((animation) => {
 	                        animation.tick(time);
 	                    });
-	                    this._currentRequestAnimationFrame = requestAnimationFrame_1.default(this._requestCallback);
+	                    this._currentRequestAnimationFrame = requestAnimationFrame(this._requestCallback);
 	                }
 	                else {
 	                    this._currentRequestAnimationFrame = null;
 	                }
 	            }
 	            else {
-	                this._currentRequestAnimationFrame = requestAnimationFrame_1.default(this._requestCallback);
+	                this._currentRequestAnimationFrame = requestAnimationFrame(this._requestCallback);
 	            }
 	        }
 	        now() {
@@ -751,39 +751,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 5 */
-/***/ function(module, exports, __webpack_require__) {
-
-	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports], __WEBPACK_AMD_DEFINE_RESULT__ = function (require, exports) {
-	    "use strict";
-	    var window = (function (global) { return global; })(this);
-	    var lastTime = 0;
-	    var vendors = ['ms', 'moz', 'webkit', 'o'];
-	    for (var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
-	        window.requestAnimationFrame = window[vendors[x] + 'RequestAnimationFrame'];
-	        window.cancelAnimationFrame = window[vendors[x] + 'CancelAnimationFrame']
-	            || window[vendors[x] + 'CancelRequestAnimationFrame'];
-	    }
-	    if (!window.requestAnimationFrame)
-	        window.requestAnimationFrame = function (callback, element) {
-	            var currTime = new Date().getTime();
-	            var timeToCall = Math.max(0, 16 - (currTime - lastTime));
-	            var id = setTimeout(function () { callback(currTime + timeToCall); }, timeToCall);
-	            lastTime = currTime + timeToCall;
-	            return id;
-	        };
-	    if (!window.cancelAnimationFrame) {
-	        window.cancelAnimationFrame = function (id) {
-	            clearTimeout(id);
-	        };
-	    }
-	    var requestAnimationFrame = window.requestAnimationFrame;
-	    Object.defineProperty(exports, "__esModule", { value: true });
-	    exports.default = requestAnimationFrame;
-	}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-	//# sourceMappingURL=requestAnimationFrame.js.map
-
-/***/ },
-/* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports], __WEBPACK_AMD_DEFINE_RESULT__ = function (require, exports) {
@@ -973,7 +940,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	//# sourceMappingURL=easings.js.map
 
 /***/ },
-/* 7 */
+/* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(2), __webpack_require__(3)], __WEBPACK_AMD_DEFINE_RESULT__ = function (require, exports, Animation_1, animationStateManager_1) {
@@ -1138,10 +1105,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	//# sourceMappingURL=Timeline.js.map
 
 /***/ },
-/* 8 */
+/* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(7), __webpack_require__(2)], __WEBPACK_AMD_DEFINE_RESULT__ = function (require, exports, Timeline_1, Animation_1) {
+	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(6), __webpack_require__(2)], __WEBPACK_AMD_DEFINE_RESULT__ = function (require, exports, Timeline_1, Animation_1) {
 	    "use strict";
 	    class PercentageTimeline extends Timeline_1.default {
 	        constructor(duration) {
@@ -1190,7 +1157,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	//# sourceMappingURL=PercentageTimeline.js.map
 
 /***/ },
-/* 9 */
+/* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(2)], __WEBPACK_AMD_DEFINE_RESULT__ = function (require, exports, Animation_1) {

@@ -5,55 +5,55 @@ define(["require", "exports"], function (require, exports) {
     var forwardPause = function (animation) {
         animation.notify({
             type: "pause",
-            progress: animation._progress
+            progress: animation.progress
         });
-        animation._currentState = animationStateManager.forwardPausedState;
+        animation.currentState = animationStateManager.forwardPausedState;
         animation.animationManager.unregister(animation);
         return animation;
     };
     var reversePause = function (animation) {
         animation.notify({
             type: "pause",
-            progress: animation._progress
+            progress: animation.progress
         });
-        animation._currentState = animationStateManager.reversePausedState;
+        animation.currentState = animationStateManager.reversePausedState;
         animation.animationManager.unregister(animation);
         return animation;
     };
     var play = function (animation) {
         animation.notify({
             type: "play",
-            progress: animation._progress
+            progress: animation.progress
         });
         var now = animation.animationManager.now();
-        animation._currentTime = now;
-        animation._currentState = animationStateManager.forwardState;
+        animation.currentTime = now;
+        animation.currentState = animationStateManager.forwardState;
         animation.animationManager.register(animation);
         animation.render();
         return animation;
     };
     var stop = function (animation) {
         var now = animation.animationManager.now();
-        animation._currentTime = now;
-        animation._currentState = animationStateManager.stoppedState;
+        animation.currentTime = now;
+        animation.currentState = animationStateManager.stoppedState;
         animation.animationManager.unregister(animation);
         return animation;
     };
     var stopWithNotifications = function (animation) {
         animation.notify({
             type: "stop",
-            progress: animation._progress
+            progress: animation.progress
         });
         return stop(animation);
     };
     var reverse = function (animation) {
         animation.notify({
             type: "reverse",
-            progress: animation._progress
+            progress: animation.progress
         });
         var now = animation.animationManager.now();
-        animation._currentTime = now;
-        animation._currentState = animationStateManager.reverseState;
+        animation.currentTime = now;
+        animation.currentState = animationStateManager.reverseState;
         animation.animationManager.register(animation);
         return animation;
     };
@@ -123,10 +123,10 @@ define(["require", "exports"], function (require, exports) {
         }
     };
     var render = function (animation, currentTime, progress) {
-        var lastProgress = animation._progress;
+        var lastProgress = animation.progress;
         progress = getProgressValueWithBounds(progress);
-        animation._currentTime = typeof currentTime !== "number" ? animation.animationManager.now() : currentTime;
-        animation._progress = progress;
+        animation.currentTime = typeof currentTime !== "number" ? animation.animationManager.now() : currentTime;
+        animation.progress = progress;
         animation.render();
         animation.notify({
             type: "tick",
@@ -136,17 +136,17 @@ define(["require", "exports"], function (require, exports) {
     };
     animationStateManager.forwardPausedState = {
         seek: function (animation, progress, now) {
-            var lastProgress = animation._progress;
+            var lastProgress = animation.progress;
             if (lastProgress > progress) {
-                animation._currentState = animationStateManager.reversePausedState;
-                animation._currentState.seek(animation, progress, now);
-                animation._currentState = animationStateManager.forwardPausedState;
+                animation.currentState = animationStateManager.reversePausedState;
+                animation.currentState.seek(animation, progress, now);
+                animation.currentState = animationStateManager.forwardPausedState;
                 return;
             }
-            if (animation._progress > 1) {
+            if (animation.progress > 1) {
                 return;
             }
-            if (animation._progress <= 0) {
+            if (animation.progress <= 0) {
                 animation.notify({
                     type: "start",
                     progress: 0
@@ -170,17 +170,17 @@ define(["require", "exports"], function (require, exports) {
     };
     animationStateManager.reversePausedState = {
         seek: function (animation, progress, now) {
-            var lastProgress = animation._progress;
+            var lastProgress = animation.progress;
             if (lastProgress < progress) {
-                animation._currentState = animationStateManager.forwardPausedState;
-                animation._currentState.seek(animation, progress, now);
-                animation._currentState = animationStateManager.reversePausedState;
+                animation.currentState = animationStateManager.forwardPausedState;
+                animation.currentState.seek(animation, progress, now);
+                animation.currentState = animationStateManager.reversePausedState;
                 return;
             }
-            if (animation._progress < 0) {
+            if (animation.progress < 0) {
                 return;
             }
-            if (animation._progress >= 1) {
+            if (animation.progress >= 1) {
                 animation.notify({
                     type: "end"
                 });
@@ -207,10 +207,10 @@ define(["require", "exports"], function (require, exports) {
         pause: forwardPause,
         reverse: reverse,
         tick: function (animation, now) {
-            var lastTime = animation._currentTime;
+            var lastTime = animation.currentTime;
             if (now > lastTime) {
-                var change = (now - lastTime) * animation._timeScale;
-                var progress = animation._progress + (change / animation._duration);
+                var change = (now - lastTime) * animation.timeScale;
+                var progress = animation.progress + (change / animation.duration);
                 if (progress >= 1) {
                     progress = 1;
                     animation.iterations++;
@@ -243,10 +243,10 @@ define(["require", "exports"], function (require, exports) {
         pause: reversePause,
         reverse: emptyFnWithReturnAnimation,
         tick: function (animation, now) {
-            var lastTime = animation._currentTime;
+            var lastTime = animation.currentTime;
             if (now > lastTime) {
-                var change = (now - lastTime) * animation._timeScale;
-                var progress = animation._progress - (change / animation._duration);
+                var change = (now - lastTime) * animation.timeScale;
+                var progress = animation.progress - (change / animation.duration);
                 if (progress <= 0) {
                     progress = 0;
                     animation.iterations++;
@@ -280,8 +280,8 @@ define(["require", "exports"], function (require, exports) {
             if (progress < 0) {
                 progress = 0;
             }
-            animation._progress = progress;
-            animation._currentTime = now;
+            animation.progress = progress;
+            animation.currentTime = now;
             return animation;
         },
         play: play,

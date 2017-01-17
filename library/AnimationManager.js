@@ -1,4 +1,4 @@
-define(["require", "exports", "./requestAnimationFrame"], function (require, exports, requestAnimationFrame_1) {
+define(["require", "exports"], function (require, exports) {
     "use strict";
     class AnimationManager {
         constructor(timer) {
@@ -24,7 +24,7 @@ define(["require", "exports", "./requestAnimationFrame"], function (require, exp
         checkRequestToStartOrStop() {
             var animations = this._animations;
             if (this._currentRequestAnimationFrame === null && animations.length > 0) {
-                this._currentRequestAnimationFrame = requestAnimationFrame_1.default(this._requestCallback);
+                this._currentRequestAnimationFrame = requestAnimationFrame(this._requestCallback);
             }
         }
         tick(time) {
@@ -42,14 +42,14 @@ define(["require", "exports", "./requestAnimationFrame"], function (require, exp
                     animationsCopy.forEach((animation) => {
                         animation.tick(time);
                     });
-                    this._currentRequestAnimationFrame = requestAnimationFrame_1.default(this._requestCallback);
+                    this._currentRequestAnimationFrame = requestAnimationFrame(this._requestCallback);
                 }
                 else {
                     this._currentRequestAnimationFrame = null;
                 }
             }
             else {
-                this._currentRequestAnimationFrame = requestAnimationFrame_1.default(this._requestCallback);
+                this._currentRequestAnimationFrame = requestAnimationFrame(this._requestCallback);
             }
         }
         now() {
