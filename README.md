@@ -22,7 +22,7 @@ import React, { Component } from "react";
 import { CssAnimation } from "clarity-animation";
 
 const myStyles = {
-    backgroundColor: "#ffffff",
+    backgroundColor: "rgba(100,100,200,0.5)",
     width: "100px",
     height: "100px"
 };
@@ -39,7 +39,7 @@ class MyComponent extends Component {
                     to: "#ff0000"
                 }
             },
-            duration: 1000,
+            duration: 10000,
             easing: "easeOutExpo"
         });
 
