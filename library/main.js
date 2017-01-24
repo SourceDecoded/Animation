@@ -1,4 +1,4 @@
-define(["require", "exports", "./library/Animation", "./library/Timeline", "./library/PercentageTimeline", "./library/StyleAnimation"], function (require, exports, Animation_1, Timeline_1, PercentageTimeline_1, StyleAnimation_1) {
+define(["require", "exports", "./Animation", "./Timeline", "./PercentageTimeline", "./StyleAnimation"], function (require, exports, Animation_1, Timeline_1, PercentageTimeline_1, StyleAnimation_1) {
     "use strict";
     exports.Animation = Animation_1.default;
     exports.Timeline = Timeline_1.default;

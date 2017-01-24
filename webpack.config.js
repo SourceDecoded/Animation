@@ -2,11 +2,11 @@ var path = require("path");
 
 module.exports = {
     entry: [
-        "./main.js"
+        "./library/main.js"
     ],
     output: {
         filename: 'main.js',
-        library: "clarity-animation",
+        library: "clarityAnimation",
         libraryTarget: "umd",
         path: './dist'
     }

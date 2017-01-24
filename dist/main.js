@@ -4,9 +4,9 @@
 	else if(typeof define === 'function' && define.amd)
 		define([], factory);
 	else if(typeof exports === 'object')
-		exports["clarity-animation"] = factory();
+		exports["clarityAnimation"] = factory();
 	else
-		root["clarity-animation"] = factory();
+		root["clarityAnimation"] = factory();
 })(this, function() {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
@@ -1009,7 +1009,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return animationItem.offset;
 	    };
 	    var renderByOffsetAndDuration = function (animationItem) {
-	        return animationItem.offset + animationItem.animation._duration;
+	        return animationItem.offset + animationItem.animation.duration;
 	    };
 	    class Timeline extends Animation_1.default {
 	        constructor(config) {

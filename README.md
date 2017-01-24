@@ -11,6 +11,56 @@ with a variety of technologies. It can be used with CommonJs, AMD, or SystemJs. 
 decide which module system works for you and import clarity-animation. This also 
 means that if you use transpilers like Babel or Typescript you can also use it.
 
+## Clarity Animation
+```bash
+npm install clarity-animation
+```
+
+After running the npm command, downloading [requirejs](http://requirejs.org/docs/download.html)
+, and adding a index.html file, the folder structure would look something like this.
+
+    - index.html
+    - node_modules
+        -clarity-animation
+        
+Copy the contents of this example and paste it into the index.html file.
+
+```html
+<html>
+    <head>
+        <title>Using Animation</title>
+    </head>
+    <body>
+        <script src="./node_modules/clarity-animation/dist/main.js"></script>
+        <script>
+                var CssAnimation = clarityAnimation.CssAnimation;
+                var target = {
+                    backgroundColor: "#123456"
+                };
+
+                var animation = new CssAnimation({
+                    target: target,
+                    properties: {
+                        backgroundColor: {
+                            from: target.backgroundColor,
+                            to: "#ff0000"
+                        }
+                    },
+                    duration: 1000,
+                    easing: "easeOutExpo"
+                });
+                                    
+                animation.observe("tick", function(){
+                    document.body.style.backgroundColor = target.backgroundColor;
+                });
+
+                animation.playToEndAsync();
+        </script>
+    </body>
+</html>
+```
+
+
 ## Clarity Animation with Reactjs
 In the root of your Reactjs folder install Clarity Animation with npm. 
 ```bash

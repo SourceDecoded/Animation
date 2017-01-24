@@ -1,0 +1,42 @@
+<html>
+    <head>
+        <title>Script Tag Exmaple</title>
+        <style>
+            .box {
+                width: 100px;
+                height:100px;
+                border: 1px solid #000000;
+            }
+        </style>
+    </head>
+    <body>
+
+        <div id="my-box" class="box"></div>
+
+        <script src="../dist/main.js"></script>
+        <script>
+                var CssAnimation = clarityAnimation.CssAnimation;
+                var target = {
+                    backgroundColor: "#123456"
+                };
+
+                var animation = new CssAnimation({
+                    target: target,
+                    properties: {
+                        backgroundColor: {
+                            from: target.backgroundColor,
+                            to: "#ff0000"
+                        }
+                    },
+                    duration: 1000,
+                    easing: "easeOutExpo"
+                });
+                                    
+                animation.observe("tick", function(){
+                    document.body.style.backgroundColor = target.backgroundColor;
+                });
+
+                animation.playToEndAsync();
+        </script>
+    </body>
+</html>
