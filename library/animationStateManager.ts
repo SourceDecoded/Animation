@@ -264,7 +264,7 @@ animationStateManager.forwardState = {
 
                 if (animation.iterations >= animation.repeat) {
                     this.seek(animation, progress, now);
-                    stop(animation);
+                    stopWithNotifications(animation);
                 } else {
                     this.seek(animation, progress, now);
                     if (animation.repeatDirection === 0) {
@@ -304,7 +304,7 @@ animationStateManager.reverseState = {
 
                 if (animation.iterations >= animation.repeat) {
                     this.seek(animation, progress, now);
-                    stop(animation);
+                    stopWithNotifications(animation);
                 } else {
                     this.seek(animation, progress, now);
                     if (animation.repeatDirection === 0) {

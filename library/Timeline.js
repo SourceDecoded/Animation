@@ -31,7 +31,7 @@ define(["require", "exports", "./Animation", "./animationStateManager"], functio
         });
     };
     var orderByDesc = function (array, expr) {
-        return this.sort(function (a, b) {
+        return array.sort(function (a, b) {
             var aValue = expr(a);
             var bValue = expr(b);
             if (aValue instanceof Date) {

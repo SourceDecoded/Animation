@@ -61,12 +61,14 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 1 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(2), __webpack_require__(6), __webpack_require__(7), __webpack_require__(8)], __WEBPACK_AMD_DEFINE_RESULT__ = function (require, exports, Animation_1, Timeline_1, PercentageTimeline_1, ElementAnimation_1) {
+	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(2), __webpack_require__(6), __webpack_require__(7), __webpack_require__(8), __webpack_require__(9), __webpack_require__(10)], __WEBPACK_AMD_DEFINE_RESULT__ = function (require, exports, Animation_1, Timeline_1, PercentageTimeline_1, ElementAnimation_1, ElementPathAnimation_1, CssAnimation_1) {
 	    "use strict";
 	    exports.Animation = Animation_1.default;
 	    exports.Timeline = Timeline_1.default;
 	    exports.PercentageTimeline = PercentageTimeline_1.default;
 	    exports.ElementAnimation = ElementAnimation_1.default;
+	    exports.ElementPathAnimation = ElementPathAnimation_1.default;
+	    exports.CssAnimation = CssAnimation_1.default;
 	}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 	//# sourceMappingURL=main.js.map
 
@@ -589,7 +591,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    animation.iterations++;
 	                    if (animation.iterations >= animation.repeat) {
 	                        this.seek(animation, progress, now);
-	                        stop(animation);
+	                        stopWithNotifications(animation);
 	                    }
 	                    else {
 	                        this.seek(animation, progress, now);
@@ -625,7 +627,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    animation.iterations++;
 	                    if (animation.iterations >= animation.repeat) {
 	                        this.seek(animation, progress, now);
-	                        stop(animation);
+	                        stopWithNotifications(animation);
 	                    }
 	                    else {
 	                        this.seek(animation, progress, now);
@@ -976,7 +978,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        });
 	    };
 	    var orderByDesc = function (array, expr) {
-	        return this.sort(function (a, b) {
+	        return array.sort(function (a, b) {
 	            var aValue = expr(a);
 	            var bValue = expr(b);
 	            if (aValue instanceof Date) {
@@ -1263,6 +1265,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	                return element.style[property] = currentValues[property];
 	            });
 	        }
+	        setElement(element) {
+	            this.element = element;
+	            this.prepareTransformValues();
+	        }
 	        render() {
 	            let progress = this.progress;
 	            let properties = this.properties;
@@ -1496,6 +1502,479 @@ return /******/ (function(modules) { // webpackBootstrap
 	    exports.default = ElementAnimation;
 	}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 	//# sourceMappingURL=ElementAnimation.js.map
+
+/***/ },
+/* 9 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(2)], __WEBPACK_AMD_DEFINE_RESULT__ = function (require, exports, Animation_js_1) {
+	    "use strict";
+	    const isVector = function (vector) {
+	        if (typeof vector.x !== "number" &&
+	            typeof vector.y !== "number" &&
+	            typeof vector.z !== "number") {
+	            return false;
+	        }
+	        return true;
+	    };
+	    const assertVector = function (vector) {
+	        let vectorString;
+	        if (!isVector(vector)) {
+	            try {
+	                vectorString = JSON.stringify(vector);
+	            }
+	            catch (e) {
+	                vectorString = "Couldn't stringify the vector because of recursive objects.";
+	            }
+	            throw new Error("Invalid vector: " + vectorString);
+	        }
+	    };
+	    const assertControlsAreVectors = function (controls) {
+	        if (!Array.isArray(controls)) {
+	            throw new Error("The animations controls need to be an array of vectors.");
+	        }
+	        let passed = controls.every(isVector);
+	        if (!passed) {
+	            throw new Error("Invalid control vectors.");
+	        }
+	    };
+	    const normalizeVector = function (vector) {
+	        if (typeof vector.x !== "number") {
+	            vector.x = 0;
+	        }
+	        if (typeof vector.y !== "number") {
+	            vector.y = 0;
+	        }
+	        if (typeof vector.z !== "number") {
+	            vector.z = 0;
+	        }
+	    };
+	    const calculatePosition = function (from, to, percent) {
+	        return ((to - from) * percent) + from;
+	    };
+	    class ElementPathAnimation extends Animation_js_1.default {
+	        constructor(config) {
+	            super(config);
+	            config = config || {};
+	            this.target = config.target;
+	            this.duration = config.duration;
+	            this.unit = config.unit;
+	            this.from = config.from;
+	            this.to = config.to;
+	            this.controls = config.controls || [];
+	            this.points = [];
+	            this.calculationMatrix = [];
+	            if (!(this.target instanceof Element)) {
+	                throw new Error("The target must be an Element.");
+	            }
+	            if (typeof this.duration !== "number") {
+	                throw new Error("The animation's duration must be a number.");
+	            }
+	            if (typeof this.unit !== "string") {
+	                throw new Error("The animation's unit should be a string");
+	            }
+	            assertVector(this.from);
+	            assertVector(this.to);
+	            assertControlsAreVectors(this.controls);
+	            this.change = {
+	                x: this.to.x - this.from.x,
+	                y: this.to.y - this.from.y,
+	                z: this.to.z - this.from.z
+	            };
+	            this.points = this.controls.slice(0);
+	            this.points.unshift(this.from);
+	            this.points.push(this.to);
+	            this.points.forEach(normalizeVector);
+	            this.prepareTransformValues(this.target);
+	        }
+	        prepareTransformValues(element) {
+	            if (typeof element.style.scaleX === "undefined") {
+	                element._scaleX = "1";
+	                element._scaleY = "1";
+	                element._scaleZ = "1";
+	                element._rotateX = "0deg";
+	                element._rotateY = "0deg";
+	                element._rotateZ = "0deg";
+	                element._translateX = "0";
+	                element._translateY = "0";
+	                element._translateZ = "0";
+	            }
+	        }
+	        applyTransform() {
+	            let element = this.target;
+	            let transform = "scaleX(" + element._scaleX + ") scaleY(" + element._scaleY + ") scaleZ(" + element._scaleZ + ")";
+	            transform += " rotateX(" + element._rotateX + ") rotateY(" + element._rotateY + ") rotateZ(" + element._rotateZ + ")";
+	            transform += " translateX(" + element._translateX + ") translateY(" + element._translateY + ") translateZ(" + element._translateZ + ")";
+	            element.style.webkitTransform = transform;
+	            element.style.mozTransform = transform;
+	            element.style.msTransform = transform;
+	            element.style.transform = transform;
+	        }
+	        reduce(points, percent, index, easing) {
+	            if (typeof index === "undefined") {
+	                index = 0;
+	            }
+	            let easingPercent = easing(this.progress * this.duration, 0, 1, this.duration);
+	            this.calculationMatrix[index] = points;
+	            let reducedPoints = this.calculationMatrix[index + 1] || [];
+	            points.reduce(function (reducedPoints, currentValue, index) {
+	                if (index !== points.length - 1) {
+	                    let vector = reducedPoints[index] = reducedPoints[index] || { x: 0, y: 0, z: 0 };
+	                    vector.x = calculatePosition(currentValue.x, points[index + 1].x, easingPercent);
+	                    vector.y = calculatePosition(currentValue.y, points[index + 1].y, easingPercent);
+	                    vector.z = calculatePosition(currentValue.z, points[index + 1].z, easingPercent);
+	                }
+	                return reducedPoints;
+	            }, reducedPoints);
+	            if (reducedPoints.length > 1) {
+	                return this.reduce(reducedPoints, percent, index + 1, easing);
+	            }
+	            return reducedPoints;
+	        }
+	        render() {
+	            let target = this.target;
+	            let unit = this.unit;
+	            let progress = this.progress;
+	            let easing = this.easingFunction;
+	            let currentPosition = this.reduce(this.points, progress, 0, easing);
+	            target._translateX = currentPosition[0].x + unit;
+	            target._translateY = currentPosition[0].y + unit;
+	            // According to spec, translateZ cannot be any unit but px.
+	            target._translateZ = currentPosition[0].z + "px";
+	            this.applyTransform();
+	            return this;
+	        }
+	    }
+	    Object.defineProperty(exports, "__esModule", { value: true });
+	    exports.default = ElementPathAnimation;
+	}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+	//# sourceMappingURL=ElementPathAnimation.js.map
+
+/***/ },
+/* 10 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(2)], __WEBPACK_AMD_DEFINE_RESULT__ = function (require, exports, Animation_1) {
+	    "use strict";
+	    var numberUnitRegEx = /^(\-?\d*\.?\d+)+(.*?)$/i;
+	    var rgbRegEx = /^rgb\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)$/i;
+	    var rgbaRegEx = /^rgba\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+|\d\.\d+)\s*\)$/i;
+	    var colorAliases = {
+	        "transparent": "rgba(0,0,0,0)"
+	    };
+	    var parseHex = function (hex) {
+	        if (hex.indexOf("#") !== 0) {
+	            throw new Error("Invalid Hex.");
+	        }
+	        var rgb = {
+	            red: 0,
+	            green: 0,
+	            blue: 0,
+	            alpha: 1
+	        };
+	        if (hex.length === 4) {
+	            rgb.red = parseInt(hex.charAt(1) + hex.charAt(1), 16);
+	            rgb.green = parseInt(hex.charAt(2) + hex.charAt(2), 16);
+	            rgb.blue = parseInt(hex.charAt(3) + hex.charAt(3), 16);
+	        }
+	        else {
+	            rgb.red = parseInt(hex.substr(1, 2), 16);
+	            rgb.green = parseInt(hex.substr(3, 2), 16);
+	            rgb.blue = parseInt(hex.substr(5, 2), 16);
+	        }
+	        return rgb;
+	    };
+	    var convertHexToRgb = function (hex) {
+	        var rgb = parseHex(hex);
+	        return "rgb(" + rgb.red + "," + rgb.green + "," + rgb.blue + ")";
+	    };
+	    var getRgbWithInRangeValue = function (value) {
+	        value = value < 0 ? 0 : value;
+	        value = value > 255 ? 255 : value;
+	        return value;
+	    };
+	    var mapping = {
+	        width: { handler: "numberUnitHandler", alias: "width" },
+	        height: { handler: "numberUnitHandler", alias: "height" },
+	        lineHeight: { handler: "numberUnitHandler", alias: "line-height" },
+	        top: { handler: "numberUnitHandler", alias: "top" },
+	        right: { handler: "numberUnitHandler", alias: "right" },
+	        bottom: { handler: "numberUnitHandler", alias: "bottom" },
+	        left: { handler: "numberUnitHandler", alias: "left" },
+	        fontSize: { handler: "numberUnitHandler", alias: "font-size" },
+	        borderTopWidth: { handler: "numberUnitHandler", alias: "border-top-width" },
+	        borderBottomWidth: { handler: "numberUnitHandler", alias: "border-bottom-width" },
+	        borderRightWidth: { handler: "numberUnitHandler", alias: "border-right-width" },
+	        borderLeftWidth: { handler: "numberUnitHandler", alias: "border-left-width" },
+	        borderTopColor: { handler: "colorHandler", alias: "border-top-color" },
+	        borderBottomColor: { handler: "colorHandler", alias: "border-bottom-color" },
+	        borderLeftColor: { handler: "colorHandler", alias: "border-left-color" },
+	        borderRightColor: { handler: "colorHandler", alias: "border-right-color" },
+	        marginTop: { handler: "numberUnitHandler", alias: "margin-top" },
+	        marginBottom: { handler: "numberUnitHandler", alias: "margin-bottom" },
+	        marginLeft: { handler: "numberUnitHandler", alias: "margin-left" },
+	        marginRight: { handler: "numberUnitHandler", alias: "margin-right" },
+	        paddingTop: { handler: "numberUnitHandler", alias: "padding-top" },
+	        paddingBottom: { handler: "numberUnitHandler", alias: "padding-bottom" },
+	        paddingLeft: { handler: "numberUnitHandler", alias: "padding-left" },
+	        paddingRight: { handler: "numberUnitHandler", alias: "padding-right" },
+	        opacity: { handler: "decimalHandler", alias: "opacity" },
+	        color: { handler: "colorHandler", alias: "color" },
+	        backgroundColor: { handler: "colorHandler", alias: "background-color" },
+	        rotateX: { handler: "unitTransformHandler", alias: "rotateX" },
+	        rotateY: { handler: "unitTransformHandler", alias: "rotateY" },
+	        rotateZ: { handler: "unitTransformHandler", alias: "rotateX" },
+	        scaleX: { handler: "decimalTransformHandler", alias: "scaleX" },
+	        scaleY: { handler: "decimalTransformHandler", alias: "scaleY" },
+	        scaleZ: { handler: "decimalTransformHandler", alias: "scaleZ" },
+	        translateX: { handler: "unitTransformHandler", alias: "translateX" },
+	        translateY: { handler: "unitTransformHandler", alias: "translateY" },
+	        translateZ: { handler: "unitTransformHandler", alias: "translateZ" },
+	    };
+	    class CssAnimation extends Animation_1.default {
+	        constructor(config) {
+	            super(config);
+	            this.prepareTransformValues();
+	            this.mapping = mapping;
+	        }
+	        render() {
+	            var progress = this.progress;
+	            var properties = this.properties;
+	            var propertyHandlerName;
+	            var property;
+	            var value;
+	            for (property in properties) {
+	                propertyHandlerName = this.mapping[property].handler;
+	                var handler = this[propertyHandlerName];
+	                if (typeof handler !== "function") {
+	                    throw new Error("Doesn't support '" + property + "' style animations.");
+	                }
+	                this[propertyHandlerName](property, progress);
+	            }
+	            return this;
+	        }
+	        getEndingValue(property) {
+	            var endingValue = this.properties[property];
+	            if (typeof endingValue === "object" && endingValue !== null) {
+	                endingValue = endingValue.to;
+	            }
+	            return endingValue;
+	        }
+	        getBeginningValue(property) {
+	            var beginningValue = this.beginningValues[property];
+	            var properties = this.properties;
+	            if (typeof beginningValue === "undefined") {
+	                // If there isn't a default from get the value off the object.
+	                if (typeof properties[property].from !== "undefined") {
+	                    beginningValue = properties[property].from;
+	                }
+	                else {
+	                    beginningValue = this.target[property];
+	                }
+	                if (beginningValue === "" || typeof beginningValue === "undefined") {
+	                    throw new Error("Couldn't find beginning value for property '" + property + "'.");
+	                }
+	                this.beginningValues[property] = beginningValue;
+	            }
+	            if (typeof beginningValue === "undefined") {
+	                throw new Error("Couldn't find beginning value for property: " + property + ". Try setting a 'from' value in the configuration of the aniimation.");
+	            }
+	            return beginningValue;
+	        }
+	        calculateColor(property, progress) {
+	            var value;
+	            var beginningValue = this.getBeginningValue(property);
+	            var endingValue = this.getEndingValue(property);
+	            var duration = this.duration;
+	            var easingFunction = this.easingFunction;
+	            beginningValue = colorAliases[beginningValue.toLowerCase()] || beginningValue;
+	            endingValue = colorAliases[endingValue.toLowerCase()] || endingValue;
+	            if (beginningValue.indexOf("#") === 0) {
+	                beginningValue = convertHexToRgb(beginningValue);
+	            }
+	            if (endingValue.indexOf("#") === 0) {
+	                endingValue = convertHexToRgb(endingValue);
+	            }
+	            return this.rgbHandler(beginningValue, endingValue, progress, duration, easingFunction);
+	        }
+	        colorHandler(property, progress) {
+	            var value = this.calculateColor(property, progress);
+	            value = this.properties[property].isImportant ? value + " !important" : value;
+	            this.target[property] = value;
+	        }
+	        numberHandler(beginningValue, endingValue, progress, duration, easingFunction) {
+	            var value;
+	            var change = endingValue - beginningValue;
+	            var currentTime = progress * duration;
+	            if (change !== 0) {
+	                value = easingFunction(currentTime, beginningValue, change, duration);
+	            }
+	            else {
+	                value = endingValue;
+	            }
+	            return value.toFixed(5);
+	        }
+	        decimalTransformHandler(property, progress) {
+	            var target = this.target;
+	            var beginningValue = parseFloat(this.getBeginningValue(property));
+	            var endingValue = parseFloat(this.getEndingValue(property));
+	            var duration = this.duration;
+	            var easingFunction = this.easingFunction;
+	            var value = this.numberHandler(beginningValue, endingValue, progress, duration, easingFunction);
+	            target[property] = value;
+	            this.applyTransform();
+	        }
+	        unitTransformHandler(property, progress) {
+	            var target = this.target;
+	            var value;
+	            value = this.calculateNumberUnit(property, progress);
+	            target[property] = value;
+	            this.applyTransform();
+	        }
+	        calculateNumberUnit(property, progress) {
+	            var value;
+	            var beginningValue = this.getBeginningValue(property);
+	            var endingValue = this.getEndingValue(property);
+	            var duration = this.duration;
+	            var easingFunction = this.easingFunction;
+	            var beginningResults = numberUnitRegEx.exec(beginningValue);
+	            var endingResults = numberUnitRegEx.exec(endingValue);
+	            var unit = beginningResults[2];
+	            if (typeof unit === "undefined") {
+	                throw new Error("Please use units for the '" + property + "', e.g. 10px, or 10%, 10em");
+	            }
+	            // To much precision hurts.
+	            var beginningFloat = Math.round(parseFloat(beginningResults[1]) * 100) / 100;
+	            var endingFloat = Math.round(parseFloat(endingResults[1]) * 100) / 100;
+	            var value = this.numberHandler(beginningFloat, endingFloat, progress, duration, easingFunction);
+	            return value += unit;
+	        }
+	        numberUnitHandler(property, progress) {
+	            var value = this.calculateNumberUnit(property, progress);
+	            value = this.properties[property].isImportant ? value + " !important" : value;
+	            this.target[property] = value;
+	        }
+	        caclulateDecimal(property, progress) {
+	            var value;
+	            var beginningValue = this.getBeginningValue(property);
+	            var endingValue = this.getEndingValue(property);
+	            var duration = this.duration;
+	            var easingFunction = this.easingFunction;
+	            beginningValue = parseFloat(beginningValue);
+	            endingValue = parseFloat(endingValue);
+	            return this.numberHandler(beginningValue, endingValue, progress, duration, easingFunction);
+	        }
+	        decimalHandler(property, progress) {
+	            var value = this.caclulateDecimal(property, progress);
+	            value = this.properties[property].isImportant ? value + " !important" : value;
+	            this.target[property] = value;
+	        }
+	        rgbaHandler(beginningValue, endingValue, progress, duration, easingFunction) {
+	            var value;
+	            var beginningValues = beginningValue.match(rgbaRegEx);
+	            var endingValues = endingValue.match(rgbaRegEx);
+	            if (beginningValues === null || endingValues === null) {
+	                throw new Error("Cannot parse rgb, rgba isn't supported yet.");
+	            }
+	            var redBeginningValue = parseInt(beginningValues[1], 10);
+	            var redEndingValue = parseInt(endingValues[1], 10);
+	            var greenBeginningValue = parseInt(beginningValues[2], 10);
+	            var greenEndingValue = parseInt(endingValues[2], 10);
+	            var blueBeginningValue = parseInt(beginningValues[3], 10);
+	            var blueEndingValue = parseInt(endingValues[3], 10);
+	            var red = parseInt(this.numberHandler(redBeginningValue, redEndingValue, progress, duration, easingFunction), 10);
+	            var green = parseInt(this.numberHandler(greenBeginningValue, greenEndingValue, progress, duration, easingFunction), 10);
+	            var blue = parseInt(this.numberHandler(blueBeginningValue, blueEndingValue, progress, duration, easingFunction), 10);
+	            red = getRgbWithInRangeValue(red);
+	            green = getRgbWithInRangeValue(green);
+	            blue = getRgbWithInRangeValue(blue);
+	            value = "rgb(" + red + "," + green + "," + blue + ")";
+	            return value;
+	        }
+	        ;
+	        rgbHandler(beginningValue, endingValue, progress, duration, easingFunction) {
+	            var value;
+	            var beginningValues = beginningValue.match(rgbRegEx);
+	            var endingValues = endingValue.match(rgbRegEx);
+	            var redBeginningValue;
+	            var redEndingValue;
+	            var greenBeginningValue;
+	            var greenEndingValue;
+	            var blueBeginningValue;
+	            var blueEndingValue;
+	            var beginningAlphaValue;
+	            var endingAlphaValue;
+	            var red;
+	            var green;
+	            var blue;
+	            var alpha;
+	            if (beginningValues === null || endingValues === null) {
+	                beginningValues = beginningValues || beginningValue.match(rgbaRegEx);
+	                endingValues = endingValues || endingValue.match(rgbaRegEx);
+	                if (beginningValues === null || endingValues === null) {
+	                    throw new Error("Couldn't parse rgb or rgba from values from one or both: " + beginningValue + ", " + endingValue);
+	                }
+	                redBeginningValue = parseInt(beginningValues[1], 10);
+	                redEndingValue = parseInt(endingValues[1], 10);
+	                greenBeginningValue = parseInt(beginningValues[2], 10);
+	                greenEndingValue = parseInt(endingValues[2], 10);
+	                blueBeginningValue = parseInt(beginningValues[3], 10);
+	                blueEndingValue = parseInt(endingValues[3], 10);
+	                beginningAlphaValue = parseFloat(beginningValues[4] || 1);
+	                endingAlphaValue = parseFloat(endingValues[4] || 1);
+	                red = parseInt(this.numberHandler(redBeginningValue, redEndingValue, progress, duration, easingFunction), 10);
+	                green = parseInt(this.numberHandler(greenBeginningValue, greenEndingValue, progress, duration, easingFunction), 10);
+	                blue = parseInt(this.numberHandler(blueBeginningValue, blueEndingValue, progress, duration, easingFunction), 10);
+	                alpha = this.numberHandler(beginningAlphaValue, endingAlphaValue, progress, duration, easingFunction);
+	                red = getRgbWithInRangeValue(red);
+	                green = getRgbWithInRangeValue(green);
+	                blue = getRgbWithInRangeValue(blue);
+	                value = "rgba(" + red + "," + green + "," + blue + ", " + alpha + ")";
+	                return value;
+	            }
+	            redBeginningValue = parseInt(beginningValues[1], 10);
+	            redEndingValue = parseInt(endingValues[1], 10);
+	            greenBeginningValue = parseInt(beginningValues[2], 10);
+	            greenEndingValue = parseInt(endingValues[2], 10);
+	            blueBeginningValue = parseInt(beginningValues[3], 10);
+	            blueEndingValue = parseInt(endingValues[3], 10);
+	            red = parseInt(this.numberHandler(redBeginningValue, redEndingValue, progress, duration, easingFunction), 10);
+	            green = parseInt(this.numberHandler(greenBeginningValue, greenEndingValue, progress, duration, easingFunction), 10);
+	            blue = parseInt(this.numberHandler(blueBeginningValue, blueEndingValue, progress, duration, easingFunction), 10);
+	            red = getRgbWithInRangeValue(red);
+	            green = getRgbWithInRangeValue(green);
+	            blue = getRgbWithInRangeValue(blue);
+	            value = "rgb(" + red + "," + green + "," + blue + ")";
+	            return value;
+	        }
+	        prepareTransformValues() {
+	            var target = this.target;
+	            target.scaleX = target.scaleX || "1";
+	            target.scaleY = target.scaleY || "1";
+	            target.scaleZ = target.scaleZ || "1";
+	            target.rotateX = target.rotateX || "0deg";
+	            target.rotateY = target.rotateY || "0deg";
+	            target.rotateZ = target.rotateZ || "0deg";
+	            target.translateX = target.translateX || "0";
+	            target.translateY = target.translateY || "0";
+	            target.translateZ = target.translateZ || "0";
+	        }
+	        ;
+	        applyTransform() {
+	            var target = this.target;
+	            var transform = "scaleX(" + target.scaleX + ") scaleY(" + target.scaleY + ") scaleZ(" + target.scaleZ + ")";
+	            transform += " rotateX(" + target.rotateX + ") rotateY(" + target.rotateY + ") rotateZ(" + target.rotateZ + ")";
+	            transform += " translateX(" + target.translateX + ") translateY(" + target.translateY + ") translateZ(" + target.translateZ + ")";
+	            this.target["webkitTransform"] = transform;
+	            this.target["mozTransform"] = transform;
+	            this.target["msTransform"] = transform;
+	            this.target["transform"] = transform;
+	        }
+	    }
+	    Object.defineProperty(exports, "__esModule", { value: true });
+	    exports.default = CssAnimation;
+	}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+	//# sourceMappingURL=CssAnimation.js.map
 
 /***/ }
 /******/ ])

@@ -19,32 +19,42 @@ npm install clarity-animation
 After running the npm command, downloading [requirejs](http://requirejs.org/docs/download.html)
 , and adding a index.html file, the folder structure would look something like this.
 
-    - index.html
-    - node_modules
-        -clarity-animation
+    * index.html
+    * node_modules
+        * clarity-animation
         
 Copy the contents of this example and paste it into the index.html file.
 
 ```html
 <html>
     <head>
-        <title>Using Animation</title>
+        <title>Script Tag Exmaple</title>
+        <style>
+            .box {
+                width: 100px;
+                height:100px;
+                border: 1px solid #000000;
+            }
+        </style>
     </head>
     <body>
+
+        <div id="my-box" class="box"></div>
+
         <script src="./node_modules/clarity-animation/dist/main.js"></script>
         <script>
                 var ElementAnimation = clarityAnimation.ElementAnimation;
-                var body = document.body;
+                var box = document.querySelector("#my-box");
 
                 var animation = new ElementAnimation({
-                    target: body,
+                    target: box,
                     properties: {
                         backgroundColor: {
-                            from: target.backgroundColor,
+                            from: "rgba(0,0,0,0)",
                             to: "#ff0000"
                         }
                     },
-                    duration: 1000,
+                    duration: 10000,
                     easing: "easeOutExpo"
                 });
 

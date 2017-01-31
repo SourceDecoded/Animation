@@ -216,7 +216,7 @@ define(["require", "exports"], function (require, exports) {
                     animation.iterations++;
                     if (animation.iterations >= animation.repeat) {
                         this.seek(animation, progress, now);
-                        stop(animation);
+                        stopWithNotifications(animation);
                     }
                     else {
                         this.seek(animation, progress, now);
@@ -252,7 +252,7 @@ define(["require", "exports"], function (require, exports) {
                     animation.iterations++;
                     if (animation.iterations >= animation.repeat) {
                         this.seek(animation, progress, now);
-                        stop(animation);
+                        stopWithNotifications(animation);
                     }
                     else {
                         this.seek(animation, progress, now);

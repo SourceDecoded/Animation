@@ -46,7 +46,7 @@ var orderBy = function (array, expr) {
 };
 
 var orderByDesc = function (array, expr) {
-    return this.sort(function (a, b) {
+    return array.sort(function (a, b) {
         var aValue = expr(a);
         var bValue = expr(b);
 
