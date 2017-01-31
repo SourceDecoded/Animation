@@ -75,7 +75,7 @@ define(["require", "exports", "./Animation"], function (require, exports, Animat
         translateY: { handler: "unitTransformHandler", alias: "translateY" },
         translateZ: { handler: "unitTransformHandler", alias: "translateZ" },
     };
-    class StyleAnimation extends Animation_1.default {
+    class CssAnimation extends Animation_1.default {
         constructor(config) {
             super(config);
             this.prepareTransformValues();
@@ -316,6 +316,6 @@ define(["require", "exports", "./Animation"], function (require, exports, Animat
         }
     }
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.default = StyleAnimation;
+    exports.default = CssAnimation;
 });
-//# sourceMappingURL=StyleAnimation.js.map
+//# sourceMappingURL=CssAnimation.js.map

@@ -129,6 +129,11 @@ export default class ElementAnimation extends Animation {
         });
     }
 
+    setElement(element: HTMLElement){
+        this.element = element;
+        this.prepareTransformValues();
+    }
+
     render() {
         let progress = this.progress;
         let properties = this.properties;
@@ -433,4 +438,4 @@ export default class ElementAnimation extends Animation {
 
         this.currentValues[property] = value;
     }
-}
+} 

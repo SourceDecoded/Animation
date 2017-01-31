@@ -33,13 +33,11 @@ Copy the contents of this example and paste it into the index.html file.
     <body>
         <script src="./node_modules/clarity-animation/dist/main.js"></script>
         <script>
-                var CssAnimation = clarityAnimation.CssAnimation;
-                var target = {
-                    backgroundColor: "#123456"
-                };
+                var ElementAnimation = clarityAnimation.ElementAnimation;
+                var body = document.body;
 
-                var animation = new CssAnimation({
-                    target: target,
+                var animation = new ElementAnimation({
+                    target: body,
                     properties: {
                         backgroundColor: {
                             from: target.backgroundColor,
@@ -48,10 +46,6 @@ Copy the contents of this example and paste it into the index.html file.
                     },
                     duration: 1000,
                     easing: "easeOutExpo"
-                });
-                                    
-                animation.observe("tick", function(){
-                    document.body.style.backgroundColor = target.backgroundColor;
                 });
 
                 animation.playToEndAsync();
