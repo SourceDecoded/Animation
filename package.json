@@ -1,6 +1,6 @@
 {
   "name": "clarity-animation",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Unopinionated animation library.",
   "main": "./dist/main.js",
   "scripts": {
