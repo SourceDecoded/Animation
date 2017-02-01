@@ -1,10 +1,12 @@
 Getting Started with Clarity Animation
 ===
-
 Install Clarity Animation with npm.
 ```bash
 npm install clarity-animation
 ```
+
+[Examples](https://sourcedecoded.github.io/Animation/)
+
 ## Use Cases
 Because Clarity Animation uses UMD (Universal Module Declaration) it can work
 with a variety of technologies. It can be used with CommonJs, AMD, or SystemJs. Just 
@@ -30,6 +32,21 @@ timelines. Really the complexity of the animations is limitless but the ease of 
 With in the clarity-animation package is an example folder. Please browse through the examples. 
 It will teach you many things that documentation wont. They also provide a foundation of ideas
 that can be used while building animations.
+
+## Whats included?
+* Animation
+* CssAnimation
+* ElementAnimation
+* ElementPathAnimation
+* Timeline
+* PercentageTimeline
+
+There are six different classes to make animations with. There is the root class Animation, 
+from which all classes are derived. CssAnimation animates an object with properties that resemble
+css names and understands the units involved with those property names. ElementAnimation animates elements. ElementPathAnimation 
+animates elements through bezier curves with points and controls. Timeline allows you to compose many 
+animations into a concert of animations using offsets. PercentageTimeline does the same 
+as the Timeline but instead uses the principles of startAt and endAt to compose the animations.
 
 ## Clarity Animation
 ```bash
@@ -320,15 +337,145 @@ This section will discuss the possibilities of ElementAnimation.
 * translateY
 * translateZ
 
-## ElementAnimation 
 ```js
     var div = document.createElement("div");
     var animation = new ElementAnimation({
         target: div,
-        properties: {},
+        properties: {
+            backgroundColor: {
+                from: "rgba(0,0,0,1)",
+                to: "rgba(100,0,100,0.5)"
+            }
+        },
         duration: 2000,
         easing: "easeOutExpo"
     });
+
+```
+
+Timeline
+===
+```js
+    var div = document.createElement("div");
+    var div2 = document.createElement("div");
+
+    var opacityAnimation = new ElementAnimation({
+        target: div,
+        properties: {
+            opacity: {
+                from: 0,
+                to: 1
+            }
+        },
+        duration: 2000,
+        easing: "easing"
+    });
+
+    var moveAnimation = new ElementAnimation({
+        target: div,
+        properties: {
+            left: {
+                from: "0px",
+                to: "100px"
+            }
+        },
+        duration: 2000,
+        easing: "easeOutExpo"
+    });
+
+    moveDiv2Animation = new ElementAnimation({
+        target: div2,
+        properties: {
+            left: {
+                from: "100px",
+                to: "200px"
+            }
+        },
+        duration: 2000,
+        easing: "easeOutExpo"
+    });
+
+    var timeline = new Timeline();
+    timeline.add({
+        animation: opacityAnimation,
+        offset: 0
+    },{
+        animation: moveAnimation,
+        offset: 0
+    },{
+        animation: moveDiv2Animation,
+        offset: 0
+    });
+
+    timeline.play();
+
+```
+
+PercentageTimeline
+===
+PercentageTimeline really works well when thinking about a concert of animations.
+You just need to think about when something will start and finish. If you need 
+an animation to start at the beginning and end half way through, and another 
+animation to start half way through and end three quarters of the way through. This 
+is the class for you. After deciding the composition, you can adjust the duration until
+its perfect.
+
+```js
+    var div = document.createElement("div");
+    var div2 = document.createElement("div");
+
+    var opacityAnimation = new ElementAnimation({
+        target: div,
+        properties: {
+            opacity: {
+                from: 0,
+                to: 1
+            }
+        },
+        duration: 2000,
+        easing: "easing"
+    });
+
+    var moveAnimation = new ElementAnimation({
+        target: div,
+        properties: {
+            left: {
+                from: "0px",
+                to: "100px"
+            }
+        },
+        duration: 2000,
+        easing: "easeOutExpo"
+    });
+
+    moveDiv2Animation = new ElementAnimation({
+        target: div2,
+        properties: {
+            left: {
+                from: "100px",
+                to: "200px"
+            }
+        },
+        duration: 2000,
+        easing: "easeOutExpo"
+    });
+
+    var timeline = new PercentageTimeline(2000);
+    timeline.add({
+        animation: opacityAnimation,
+        startAt: 0,
+        endAt: 1
+    },{
+        animation: moveAnimation,
+        startAt: 0,
+        endAt: 0.5
+    },{
+        animation: moveDiv2Animation,
+        startAt: 0.5,
+        endAt: 1
+    });
+
+    timeline.play();
 
 ```
 
