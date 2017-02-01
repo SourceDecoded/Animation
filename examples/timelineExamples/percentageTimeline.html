@@ -1,0 +1,138 @@
+<html>
+
+<head>
+    <title>Percentage Timeline Example</title>
+    <style>
+            .box {
+                background-color: rgba(100,100,100,0.5);
+                position:relative;
+                width: 100px;
+                height:100px;
+                transform-origin: 50%;
+            }
+
+            body {
+                perspective: 1000px;
+            }
+            .animation-container {
+                width: 400px;
+                height: 400px;
+                background-color: #fff;
+                border: 1px solid #333;
+                position:relative;
+                overflow:hidden;
+                box-sizing: border-box;
+            }
+
+            .animation-container > .controls {
+                background-color: #999;
+                position:absolute;
+                bottom: 0;
+                left:0;
+                width:100%;
+            }
+        </style>
+</head>
+
+<body>
+    <h1>Percentage Timeline</h1>
+    <p>
+        With PercentageTimeline you think differently about composing your animations. Instead of thinking with offsets, you think
+        about percentages. When the animation should start and end. Then decided the duration of the timeline. This is a
+        better way of tweeking with the effects. Should the whole thing be faster or slower. Should this start sooner or
+        later. In most cases this is the Timeline you'll want to use.
+
+        Play with the startAt and endAt of all the animations, then adjust the duration on the percentage timeline to really get a feel for 
+        what is happening.
+    </p>
+    <div style="width:400px;">
+<div class="animation-container">
+    <div id="my-box" class="box"></div>
+</div>
+<div class="controls" id="player-container"></div>
+</div>
+
+<script src="../../dist/main.js"></script>
+<script src="../player.js"></script>
+<script>
+    var ElementAnimation = clarityAnimation.ElementAnimation;
+    var ElementPathAnimation = clarityAnimation.ElementPathAnimation;
+    var PercentageTimeline = clarityAnimation.PercentageTimeline;
+
+    var box = document.querySelector("#my-box");
+    var playerContainer = document.querySelector("#player-container");
+
+    var backgroundColorAnimation = new ElementAnimation({
+        target: box,
+        properties: {
+            backgroundColor: {
+                from: "rgba(100,100,100,0.5)",
+                to: "#ff0000"
+            }
+        },
+        easing: "linear"
+    });
+
+    var rotateXAnimation = new ElementAnimation({
+        target: box,
+        properties: {
+            rotateX: {
+                from: "0deg",
+                to: "360deg"
+            }
+        },
+        easing: "easeOutExpo"
+    });
+
+    var rotateYAnimation = new ElementAnimation({
+        target: box,
+        properties: {
+            rotateZ: {
+                from: "0deg",
+                to: "360deg"
+            }
+        },
+        easing: "easeInOutElastic"
+    });
+
+    var translateAnimation = new ElementAnimation({
+        target: box,
+        properties: {
+            top: {
+                from: "0px",
+                to: "300px"
+            },
+            left: {
+                from: "0px",
+                to: "300px"
+            }
+        },
+        easing: "easeOutQuad"
+    });
+
+    var timeline = new PercentageTimeline(3000);
+    timeline.add(
+        {
+            animation: backgroundColorAnimation,
+            startAt: 0,
+            endAt: 0.50
+        }, {
+            animation: rotateXAnimation,
+            startAt: 0.20,
+            endAt: 0.5
+        }, {
+            animation: rotateYAnimation,
+            startAt: 0.45,
+            endAt: 0.75
+        }, {
+            animation: translateAnimation,
+            startAt: 0.20,
+            endAt: 1
+        }
+    );
+
+    var player = new Player(playerContainer, timeline);
+</script>
+</body>
+
+</html>
