@@ -61,7 +61,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 1 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(2), __webpack_require__(6), __webpack_require__(7), __webpack_require__(8), __webpack_require__(9), __webpack_require__(10)], __WEBPACK_AMD_DEFINE_RESULT__ = function (require, exports, Animation_1, Timeline_1, PercentageTimeline_1, ElementAnimation_1, ElementPathAnimation_1, CssAnimation_1) {
+	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(2), __webpack_require__(6), __webpack_require__(7), __webpack_require__(8), __webpack_require__(9), __webpack_require__(10), __webpack_require__(5)], __WEBPACK_AMD_DEFINE_RESULT__ = function (require, exports, Animation_1, Timeline_1, PercentageTimeline_1, ElementAnimation_1, ElementPathAnimation_1, CssAnimation_1, easings_1) {
 	    "use strict";
 	    exports.Animation = Animation_1.default;
 	    exports.Timeline = Timeline_1.default;
@@ -69,6 +69,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    exports.ElementAnimation = ElementAnimation_1.default;
 	    exports.ElementPathAnimation = ElementPathAnimation_1.default;
 	    exports.CssAnimation = CssAnimation_1.default;
+	    exports.easings = easings_1.default;
 	}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 	//# sourceMappingURL=main.js.map
 

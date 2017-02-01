@@ -4,6 +4,7 @@ import PercentageTimeline from "./PercentageTimeline";
 import ElementAnimation from "./ElementAnimation";
 import ElementPathAnimation from "./ElementPathAnimation";
 import CssAnimation from "./CssAnimation";
+import easings from "./easings";
 
 export {
     Animation,
@@ -11,5 +12,6 @@ export {
     PercentageTimeline,
     ElementAnimation,
     CssAnimation,
-    ElementPathAnimation
+    ElementPathAnimation,
+    easings
 };
