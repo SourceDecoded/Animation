@@ -1,0 +1,50 @@
+<html>
+
+<head>
+    <title>Script Tag Exmaple</title>
+    <style>
+            .box {
+                width: 100px;
+                height:100px;
+                border: 1px solid #000000;
+            }
+            body{
+                perspective: 800px;
+            }
+        </style>
+</head>
+
+<body>
+
+    <div id="my-box" class="box"></div>
+    <button id="play">Play</button>
+
+    <script src="../scripts/clarity-animation.js"></script>
+    <script>
+            var ElementAnimation = clarityAnimation.ElementAnimation;
+            var box = document.querySelector("#my-box");
+            var playButton = document.querySelector("#play");
+
+            var animation = new ElementAnimation({
+                target: box,
+                properties: {
+                    backgroundColor: {
+                        from: "rgba(0,0,0,0)",
+                        to: "#ff0000"
+                    },
+                    rotateZ: {
+                        from: "0deg",
+                        to: "360deg"
+                    }
+                },
+                duration: 3000,
+                easing: "easeInOutBack"
+            });
+
+            playButton.addEventListener("click", function(){
+                animation.seek(0).play();
+            });
+        </script>
+</body>
+
+</html>
