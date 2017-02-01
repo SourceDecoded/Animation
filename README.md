@@ -232,8 +232,6 @@ animation.observe("tick", function(){
 
 ```
 
-```
-
 ## play( )
 Plays the animation from its current position to the end.
 ```js
@@ -258,7 +256,7 @@ Restarts the animation from the beginning.
 ...
 animation.restart();
 ...
-
+```
 
 ## playToEndAsync( ):Promise
 Plays the animation from its current position to the end, and returns a Promise. When the animation makes it to the end of the animation, the promise is resolved. If any other actions are taken on the animation the promise will not be fulfilled.
