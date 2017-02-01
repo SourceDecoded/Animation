@@ -94,8 +94,8 @@
             return 3 * ratio;
         };
 
-        var buildEasingsDropdown = function(){
-            Object.keys(easings).map(function(name){
+        var buildEasingsDropdown = function () {
+            Object.keys(easings).map(function (name) {
                 var option = document.createElement("option");
                 option.value = name;
                 option.innerHTML = name;
@@ -120,7 +120,8 @@
             easing: "easeInOutBack"
         });
 
-        playButton.addEventListener("click", function () {
+        var updateAnimationFromInputs = function () {
+            animation.stop();
             animation.iterations = 0;
             animation.repeatDirection = getDirection();
             animation.repeat = getRepeat();
@@ -128,6 +129,10 @@
             animation.easingFunction = easings[easingsInput.value];
             animation.setTimeScale(getScale());
             animation.seek(0).play();
+        };
+
+        playButton.addEventListener("click", function () {
+            updateAnimationFromInputs();
         });
 
         stopButton.addEventListener("click", function () {
@@ -145,6 +150,22 @@
 
         animation.observe("tick", function () {
             progressInput.value = animation.progress * 100;
+        });
+
+        easingsInput.addEventListener("change", function () {
+            updateAnimationFromInputs();
+        });
+
+        durationInput.addEventListener("change", function () {
+            updateAnimationFromInputs();
+        });
+
+        defaultRadio.addEventListener("change", function () {
+            updateAnimationFromInputs();
+        });
+
+        alternateRadio.addEventListener("change", function () {
+            updateAnimationFromInputs();
         });
 
         buildEasingsDropdown();
