@@ -1,6 +1,6 @@
 {
   "name": "clarity-animation",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "Unopinionated animation library.",
   "main": "./dist/main.js",
   "scripts": {
@@ -9,14 +9,21 @@
   "keywords": [
     "animation",
     "web",
-    "animation",
+    "animations",
     "transitions",
     "web",
     "transitions",
     "tweening",
     "react",
     "polymer",
-    "angular"
+    "angular",
+    "css",
+    "react-animations",
+    "polymer-animation",
+    "react-css",
+    "polymer-animation",
+    "interval",
+    "frame"
   ],
   "repository": {
     "type": "git",

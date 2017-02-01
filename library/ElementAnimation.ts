@@ -45,6 +45,24 @@ const getRgbWithInRangeValue = function (value) {
     return value;
 };
 
+// TODO: 
+const propertyShorthands = {
+    borderWidth: function(value, properties){
+
+    },
+    borderColor: function(value, properties){
+
+    },
+    scale: function(value, properties){
+
+    },
+    translate: function(value, properties){
+
+    },
+    rotate: function(value, properties){
+
+    }
+};
 
 export default class ElementAnimation extends Animation {
     private element: HTMLElement;

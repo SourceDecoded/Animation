@@ -37,6 +37,19 @@ define(["require", "exports", "./Animation"], function (require, exports, Animat
         value = value > 255 ? 255 : value;
         return value;
     };
+    // TODO: 
+    const propertyShorthands = {
+        borderWidth: function (value, properties) {
+        },
+        borderColor: function (value, properties) {
+        },
+        scale: function (value, properties) {
+        },
+        translate: function (value, properties) {
+        },
+        rotate: function (value, properties) {
+        }
+    };
     class ElementAnimation extends Animation_1.default {
         constructor(config) {
             super(config);
