@@ -192,6 +192,9 @@ Copy the contents of this example and paste it into the index.html file.
 </html>
 ```
 
+Documentation
+===
+
 ## Animation Easings
 * linear (Default)
 * easeInQuad
@@ -226,12 +229,53 @@ Copy the contents of this example and paste it into the index.html file.
 * easeInOutBounce
 
 
-Animation
-====
-This class can animation any property on any object as long as its a number.
+## Repeating 
+There are two properties to control repeating. The first is the "repeat" property on the animation,
+and the "repeatDirection". The "repeat" property controls how many times
+the animation will repeat. You can use "Infinity" to mean.... well infinity and 
+any integer to express the amount of times you would like the animation to repeat.
+
+For "repeatDirection" you can use two values, 0 or 1. We have two static properties on
+the Animation class to help remember what is what. 0 is the default repeat which starts from the
+beginning, and 1 which is the alternating repeat. Alternating means that the animation will
+go back and forward like a swing. 
 
 ```js
+...
+animation.repeat = Infinity;
+animation.repeatDirection = Animation.REPEAT_DEFAUT; 
+...
+// or
+animation.repeat = 10;
+animation.repeatDirection = Animation.REPEAT_ALTERATE; 
+```
 
+Animation
+====
+This class can animate any property on any object as long as its a number. 
+If you would like to animate SVGs this is the class for you. 
+
+```js
+var obj = {
+    width: 0,
+    height: 0
+};
+
+var animation = new clarityAnimation.Animation({
+    target: obj,
+    properties: {
+        width: {
+            from: 0,
+            to: 100
+        },
+        height: {
+            from: 0,
+            to: 100
+        }
+    },
+    duration: 1000,
+    easing: "easeOutExpo"
+});
 ```
 
 ElementAnimation
@@ -420,4 +464,20 @@ var scale = animation.getTimeScale();
 
 ```
 
+## getProgress()
+```js
+...
+var progress = animation.getProgress();
+...
+
+```
+
+## render()
+This forces an update on the properties being animated.
+```js
+...
+animation.render();
+...
+
+```
 
