@@ -156,6 +156,10 @@
             updateAnimationFromInputs();
         });
 
+        repeatInput.addEventListener("change", function () {
+            updateAnimationFromInputs();
+        });
+
         durationInput.addEventListener("change", function () {
             updateAnimationFromInputs();
         });
@@ -167,6 +171,8 @@
         alternateRadio.addEventListener("change", function () {
             updateAnimationFromInputs();
         });
+
+
 
         buildEasingsDropdown();
     </script>
