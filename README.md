@@ -296,7 +296,7 @@ Or use
 ```js
 animation.seek(0.3).render();
 ```
-Use stop and seek if you don't want the use to know that animation is positioned some 
+Use stop and seek if you don't want the viewer to know that animation is positioned to some 
 other time then what is rendered.
 ```js
 ...
