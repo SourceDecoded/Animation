@@ -5,7 +5,13 @@ Install Clarity Animation with npm.
 npm install clarity-animation
 ```
 
-[Examples](https://sourcedecoded.github.io/Animation/)
+* [List of Examples](https://sourcedecoded.github.io/Animation/)
+* [Basic](https://sourcedecoded.github.io/Animation/examples/basic.html)
+* [Animation Controls](https://sourcedecoded.github.io/Animation/examples/controls.html)
+* [PercentageTimeline](https://sourcedecoded.github.io/Animation/examples/percentageTimeline.html)
+* [Repeat](https://sourcedecoded.github.io/Animation/examples/repeat.html)
+* [Timeline](https://sourcedecoded.github.io/Animation/examples/timeline.html)
+
 
 ## Use Cases
 Because Clarity Animation uses UMD (Universal Module Declaration) it can work
