@@ -279,10 +279,10 @@ define(["require", "exports", "./animationStateManager", "./AnimationManager", "
             }
             return this;
         }
-        static get REPEAT_DEFAUT() {
+        static get REPEAT_DEFAULT() {
             return 0;
         }
-        static get REPEAT_ALTERATE() {
+        static get REPEAT_ALTERNATE() {
             return 1;
         }
     }

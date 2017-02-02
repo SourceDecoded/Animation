@@ -266,11 +266,11 @@ go back and forward like a swing.
 ```js
 ...
 animation.repeat = Infinity;
-animation.repeatDirection = Animation.REPEAT_DEFAUT; 
+animation.repeatDirection = Animation.REPEAT_DEFAULT; 
 ...
 // or
 animation.repeat = 10;
-animation.repeatDirection = Animation.REPEAT_ALTERATE; 
+animation.repeatDirection = Animation.REPEAT_ALTERNATE; 
 ```
 
 Animation
