@@ -72,6 +72,15 @@ define(["require", "exports", "./Animation", "./animationStateManager"], functio
             this.animationItems = new Map();
             this.iterationCount = 1;
             this.lastCurrentTime = 0;
+            this._duration = 0;
+            Object.defineProperty(this, "duration", {
+                get: () => {
+                    return this._duration;
+                },
+                set: (value) => {
+                    // Do nothing.
+                }
+            });
         }
         calculateDuration() {
             return Array.from(this.animationItems.values()).reduce(function (duration, animationItem) {
@@ -82,7 +91,7 @@ define(["require", "exports", "./Animation", "./animationStateManager"], functio
                 return duration;
             }, 0);
         }
-        add() {
+        add(...allAnimationItems) {
             var animationItems = Array.prototype.slice.call(arguments, 0);
             var self = this;
             animationItems.forEach(function (animationItem) {
@@ -95,9 +104,17 @@ define(["require", "exports", "./Animation", "./animationStateManager"], functio
                 self.animationItems.set(animationItem, animationItem);
             });
             this.duration = this.calculateDuration();
+            this.forwardArrayAnimations = Array.from(this.animationItems.values());
+            this.reverseArrayAnimations = this.forwardArrayAnimations.slice(0);
+            orderBy(this.forwardArrayAnimations, renderByOffset);
+            orderByDesc(this.reverseArrayAnimations, renderByOffsetAndDuration);
         }
         remove(animationItem) {
             this.animationItems.delete(animationItem);
+            this.forwardArrayAnimations = Array.from(this.animationItems.values());
+            this.reverseArrayAnimations = this.forwardArrayAnimations.slice(0);
+            orderBy(this.forwardArrayAnimations, renderByOffset);
+            orderByDesc(this.reverseArrayAnimations, renderByOffsetAndDuration);
         }
         render() {
             var progress = this.progress;
@@ -106,13 +123,13 @@ define(["require", "exports", "./Animation", "./animationStateManager"], functio
             var timeScale = this.timeScale;
             var now = Date.now();
             var currentState = this.currentState;
-            var animationItems = Array.from(this.animationItems.values());
+            var animationItems;
             if (this.currentState === animationStateManager_1.default.reverseState ||
                 this.currentState === animationStateManager_1.default.reversePausedState) {
-                orderByDesc(animationItems, renderByOffsetAndDuration);
+                animationItems = this.reverseArrayAnimations;
             }
             else {
-                orderBy(animationItems, renderByOffset);
+                animationItems = this.forwardArrayAnimations;
             }
             animationItems.forEach(function (animationItem) {
                 var duration = animationItem.animation.duration;

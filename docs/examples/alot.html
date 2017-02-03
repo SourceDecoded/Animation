@@ -1,0 +1,221 @@
+<html>
+
+<head>
+    <title>Alot</title>
+    <style>
+        .box {
+            width: 100px;
+            height: 100px;
+            border: 1px solid #000000;
+            background-color: #ffaa00;
+            position: relative;
+        }
+        
+        .controls {
+            margin-top: 50px;
+            background-color: #ccc;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+        }
+        
+        body {
+            perspective: 800px;
+            width: 100%;
+            height: 100%;
+            padding: 0;
+            margin: 0;
+            overflow: hidden;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Alot</h1>
+    <div id="controls" class="controls">
+        <div>
+            <button id="play">Play</button><button id="stop">Stop</button>
+        </div>
+        <div>
+            Progress <br/>
+            <input id="progress" type="range" value="0" min="0" max="100" defaultValue="0" />
+        </div>
+        <div>
+            Time Scale <br />
+            <input id="scale" type="range" value="50" min="0" max="100" defaultValue="50" />
+        </div>
+        <div>
+            Duration <input id="duration" value="10000" /> ( Milliseconds )
+        </div>
+        <div>
+            Easing
+            <select id="easings">
+               
+            </select>
+        </div>
+        <div>
+            Repeat
+            <input id="repeat" value="10" /> times.
+        </div>
+        <div>
+            Repeat Direction
+            <input id="default" name="direction" type="radio" value="default" checked /> Default
+            <input id="alternate" name="direction" type="radio" value="alternate" /> Alternate
+        </div>
+    </div>
+
+    <script src="../scripts/clarity-animation.js"></script>
+    <script>
+        var ElementAnimation = clarityAnimation.ElementAnimation;
+        var PercentageTimeline = clarityAnimation.PercentageTimeline;
+
+        var easings = clarityAnimation.easings;
+
+        var controls = document.querySelector("#controls");
+        var playButton = document.querySelector("#play");
+        var stopButton = document.querySelector("#stop");
+        var defaultRadio = document.querySelector("#default");
+        var alternateRadio = document.querySelector("#alternate");
+        var repeatInput = document.querySelector("#repeat");
+        var durationInput = document.querySelector("#duration");
+        var progressInput = document.querySelector("#progress");
+        var scaleInput = document.querySelector("#scale");
+        var easingsInput = document.querySelector("#easings");
+
+        var getDirection = function () {
+            return defaultRadio.checked ? ElementAnimation.REPEAT_DEFAULT : ElementAnimation.REPEAT_ALTERNATE;
+        };
+
+        var getRepeat = function () {
+            var value = parseInt(repeatInput.value, 10);
+            return isNaN(value) ? 1 : value;
+        };
+
+        var getDuration = function () {
+            var value = parseInt(durationInput.value, 10);
+            return isNaN(value) ? 1 : value;
+        };
+
+        var getScale = function () {
+            var ratio = scaleInput.value / 100;
+            return 3 * ratio;
+        };
+
+        var buildEasingsDropdown = function () {
+            Object.keys(easings).map(function (name) {
+                var option = document.createElement("option");
+                option.value = name;
+                option.innerHTML = name;
+
+                easingsInput.appendChild(option);
+            });
+        };
+
+        var randomRange = function (range) {
+            return parseInt(Math.random() * range, 10);
+        };
+
+        var createBox = function () {
+            var box = document.createElement("div");
+            box.style.backgroundColor = "rgb(" + randomRange(255) + "," + randomRange(255) + "," + randomRange(255) + ")";
+            box.style.border = "1px solid #000";
+            box.style.width = "100px";
+            box.style.height = "100px";
+            box.style.position = "absolute";
+            return box;
+        };
+
+        var animation = new PercentageTimeline(10000);
+        var elementAnimation;
+        var box;
+        var startAt;
+
+        for (var x = 0; x < 500; x++) {
+            box = createBox();
+            document.body.insertBefore(box, controls)
+            elementAnimation = new ElementAnimation({
+                target: box,
+                properties: {
+                    translateX: {
+                        from: "0px",
+                        to: (Math.random() * 800) + "px"
+                    },
+                    translateY: {
+                        from: "0px",
+                        to: (Math.random() * 800) + "px"
+                    }
+                },
+                duration: Math.random() * 10000,
+                easing: "easeInOutBack"
+            });
+
+
+            startAt = Math.random() * 0.5;
+            endAt = startAt + (Math.random() * 0.5);
+
+            animation.add({
+                animation: elementAnimation,
+                startAt: startAt,
+                endAt: endAt
+            });
+        }
+
+
+        var updateAnimationFromInputs = function () {
+            animation.stop();
+            animation.iterations = 0;
+            animation.repeatDirection = getDirection();
+            animation.repeat = getRepeat();
+            animation.duration = getDuration();
+            animation.easingFunction = easings[easingsInput.value];
+            animation.setTimeScale(getScale());
+            animation.seek(0).play();
+        };
+
+        playButton.addEventListener("click", function () {
+            updateAnimationFromInputs();
+        });
+
+        stopButton.addEventListener("click", function () {
+            animation.stop();
+        });
+
+        progressInput.addEventListener("input", function () {
+            var progress = progressInput.value / 100;
+            animation.pause().seek(progress)
+        });
+
+        scaleInput.addEventListener("input", function () {
+            animation.setTimeScale(getScale());
+        });
+
+        animation.observe("tick", function () {
+            progressInput.value = animation.progress * 100;
+        });
+
+        easingsInput.addEventListener("change", function () {
+            updateAnimationFromInputs();
+        });
+
+        repeatInput.addEventListener("change", function () {
+            updateAnimationFromInputs();
+        });
+
+        durationInput.addEventListener("change", function () {
+            updateAnimationFromInputs();
+        });
+
+        defaultRadio.addEventListener("change", function () {
+            updateAnimationFromInputs();
+        });
+
+        alternateRadio.addEventListener("change", function () {
+            updateAnimationFromInputs();
+        });
+
+        buildEasingsDropdown();
+    </script>
+</body>
+
+</html>

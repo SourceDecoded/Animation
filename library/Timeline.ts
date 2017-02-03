@@ -91,15 +91,29 @@ var renderByOffsetAndDuration = function (animationItem) {
 };
 
 export default class Timeline extends Animation {
-     animationItems: Map<AnimationItem, AnimationItem>;
-     iterationCount;
-     lastCurrentTime;
+    animationItems: Map<AnimationItem, AnimationItem>;
+    iterationCount;
+    lastCurrentTime;
+    forwardArrayAnimations;
+    reverseArrayAnimations;
+    _duration;
 
     constructor(config?) {
         super(config);
         this.animationItems = new Map<AnimationItem, AnimationItem>();
         this.iterationCount = 1;
         this.lastCurrentTime = 0;
+
+        this._duration = 0;
+
+        Object.defineProperty(this, "duration", {
+            get: () => {
+                return this._duration;
+            },
+            set: (value) => {
+               // Do nothing.
+            }
+        });
     }
 
     calculateDuration() {
@@ -112,7 +126,7 @@ export default class Timeline extends Animation {
         }, 0);
     }
 
-    add() {
+    add(...allAnimationItems ) {
         var animationItems = Array.prototype.slice.call(arguments, 0);
         var self = this;
 
@@ -129,10 +143,21 @@ export default class Timeline extends Animation {
         });
 
         this.duration = this.calculateDuration();
+
+        this.forwardArrayAnimations = Array.from(this.animationItems.values());
+        this.reverseArrayAnimations = this.forwardArrayAnimations.slice(0);
+
+        orderBy(this.forwardArrayAnimations, renderByOffset);
+        orderByDesc(this.reverseArrayAnimations, renderByOffsetAndDuration);
     }
 
     remove(animationItem) {
         this.animationItems.delete(animationItem);
+        this.forwardArrayAnimations = Array.from(this.animationItems.values());
+        this.reverseArrayAnimations = this.forwardArrayAnimations.slice(0);
+
+        orderBy(this.forwardArrayAnimations, renderByOffset);
+        orderByDesc(this.reverseArrayAnimations, renderByOffsetAndDuration);
     }
 
     render() {
@@ -142,14 +167,13 @@ export default class Timeline extends Animation {
         var timeScale = this.timeScale;
         var now = Date.now();
         var currentState = this.currentState;
-
-        var animationItems = Array.from(this.animationItems.values());
+        var animationItems;
 
         if (this.currentState === animationStateManager.reverseState ||
             this.currentState === animationStateManager.reversePausedState) {
-            orderByDesc(animationItems, renderByOffsetAndDuration);
+            animationItems = this.reverseArrayAnimations;
         } else {
-            orderBy(animationItems, renderByOffset);
+            animationItems = this.forwardArrayAnimations;
         }
 
         animationItems.forEach(function (animationItem) {
