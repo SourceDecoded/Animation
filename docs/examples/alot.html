@@ -46,7 +46,7 @@
             <input id="scale" type="range" value="50" min="0" max="100" defaultValue="50" />
         </div>
         <div>
-            Duration <input id="duration" value="2000" /> ( Milliseconds )
+            Duration <input id="duration" value="10000" /> ( Milliseconds )
         </div>
         <div>
             Easing
@@ -126,12 +126,12 @@
             return box;
         };
 
-        var animation = new PercentageTimeline(20000);
+        var animation = new PercentageTimeline(10000);
         var elementAnimation;
         var box;
         var startAt;
 
-        for (var x = 0; x < 100; x++) {
+        for (var x = 0; x < 500; x++) {
             box = createBox();
             document.body.insertBefore(box, controls)
             elementAnimation = new ElementAnimation({
