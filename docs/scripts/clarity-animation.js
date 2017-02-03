@@ -1366,6 +1366,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	            this.animationItems = new Map();
 	            this.iterationCount = 1;
 	            this.lastCurrentTime = 0;
+	            this._duration = 0;
+	            Object.defineProperty(this, "duration", {
+	                get: () => {
+	                    return this._duration;
+	                },
+	                set: (value) => {
+	                    // Do nothing.
+	                }
+	            });
 	        }
 	        calculateDuration() {
 	            return Array.from(this.animationItems.values()).reduce(function (duration, animationItem) {
