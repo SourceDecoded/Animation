@@ -3,13 +3,21 @@ define(["require", "exports", "./Timeline", "./Animation"], function (require, e
     class PercentageTimeline extends Timeline_1.default {
         constructor(duration) {
             super();
-            this.duration = duration;
+            this._duration = duration;
+            Object.defineProperty(this, "duration", {
+                get: () => {
+                    return this._duration;
+                },
+                set: (value) => {
+                    this._duration = value;
+                    this._calculateAnimations();
+                }
+            });
         }
         _calculateAnimations() {
-            var self = this;
-            self.animationItems.forEach(function (animationItem) {
-                var offset = animationItem.startAt * self.duration;
-                var duration = (animationItem.endAt * self.duration) - offset;
+            this.animationItems.forEach((animationItem) => {
+                var offset = animationItem.startAt * this._duration;
+                var duration = (animationItem.endAt * this._duration) - offset;
                 animationItem.offset = offset;
                 animationItem.animation.duration = duration;
             });
@@ -17,7 +25,7 @@ define(["require", "exports", "./Timeline", "./Animation"], function (require, e
         add() {
             var self = this;
             var animationItems = Array.prototype.slice.call(arguments, 0);
-            animationItems.forEach(function (animationItem) {
+            animationItems.forEach((animationItem) => {
                 if (typeof animationItem.startAt !== "number") {
                     throw new Error("animationItem needs to have an startAt percentage property set.");
                 }
@@ -33,11 +41,11 @@ define(["require", "exports", "./Timeline", "./Animation"], function (require, e
                 if (animationItem.startAt > animationItem.endAt) {
                     throw new Error("endAt needs to be greater than startAt.");
                 }
-                self.animationItems.set(animationItem, animationItem);
-                self._calculateAnimations();
-                if (animationItem.animation instanceof Timeline_1.default) {
-                    animationItem.animation._calculateAnimations();
-                }
+                var offset = animationItem.startAt * self.duration;
+                var duration = (animationItem.endAt * self.duration) - offset;
+                animationItem.offset = offset;
+                animationItem.animation.duration = duration;
+                super.add(animationItem);
             });
         }
     }
