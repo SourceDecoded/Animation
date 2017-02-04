@@ -24,8 +24,9 @@ there isn't any module system and assign clarityAnimation to the global object.
 So go out and make applications prettier. Happy animating!
 
 ## Clarity Animation Mission
-The clarity-animation package wants to solve your complicated animation needs in simplest of patterns. Making a application beautiful shouldn't be hard. So if there is a better way to 
-describle animations and timelines let us know, and lets have a great conversation.
+The clarity-animation package wants to solve your complicated animation needs in simplest of patterns. 
+Making a application beautiful shouldn't be hard. So if there is a better way to 
+describe animations and timelines let us know, and lets have a great conversation.
 
 ## Animations vs Timelines
 In clarity-animation there are two basic things you need to use, the Animation classes and Timeline classes.
