@@ -8,11 +8,7 @@ npm install clarity-animation
 * [List of Examples](https://sourcedecoded.github.io/Animation/)
 * [Basic](https://sourcedecoded.github.io/Animation/examples/basic.html)
 * [Animation Controls](https://sourcedecoded.github.io/Animation/examples/controls.html)
-<<<<<<< HEAD
 * [Load Test (Lots of animations)](https://sourcedecoded.github.io/Animation/examples/alot.html)
-=======
-* [Load Test](https://sourcedecoded.github.io/Animation/examples/alot.html)
->>>>>>> da6a7155ff3fa06b854b089d69812cc7c5daa452
 * [PercentageTimeline](https://sourcedecoded.github.io/Animation/examples/percentageTimeline.html)
 * [Repeat](https://sourcedecoded.github.io/Animation/examples/repeat.html)
 * [Timeline](https://sourcedecoded.github.io/Animation/examples/timeline.html)
