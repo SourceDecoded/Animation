@@ -8,7 +8,11 @@ npm install clarity-animation
 * [List of Examples](https://sourcedecoded.github.io/Animation/)
 * [Basic](https://sourcedecoded.github.io/Animation/examples/basic.html)
 * [Animation Controls](https://sourcedecoded.github.io/Animation/examples/controls.html)
+<<<<<<< HEAD
 * [Load Test (Lots of animations)](https://sourcedecoded.github.io/Animation/examples/alot.html)
+=======
+* [Load Test](https://sourcedecoded.github.io/Animation/examples/alot.html)
+>>>>>>> da6a7155ff3fa06b854b089d69812cc7c5daa452
 * [PercentageTimeline](https://sourcedecoded.github.io/Animation/examples/percentageTimeline.html)
 * [Repeat](https://sourcedecoded.github.io/Animation/examples/repeat.html)
 * [Timeline](https://sourcedecoded.github.io/Animation/examples/timeline.html)
@@ -44,13 +48,14 @@ that can be used while building animations.
 ## Whats included?
 * Animation
 * CssAnimation
+* CustomRenderAnimation
 * ElementAnimation
 * ElementPathAnimation
-* Timeline
+* Timeline 
 * PercentageTimeline
 
-There are six different classes to make animations with. There is the root class Animation, 
-from which all classes are derived. CssAnimation animates an object with properties that resemble
+There are seven different classes to make animations with. There is the root class Animation, 
+from which all classes are derived. CustomRenderAnimation which allows you to provider a custom renderer. CssAnimation animates an object with properties that resemble
 css names and understands the units involved with those property names. ElementAnimation animates elements. ElementPathAnimation 
 animates elements through bezier curves with points and controls. Timeline allows you to compose many 
 animations into a concert of animations using offsets. PercentageTimeline does the same 
@@ -288,6 +293,32 @@ var obj = {
 
 var animation = new clarityAnimation.Animation({
     target: obj,
+    properties: {
+        width: {
+            from: 0,
+            to: 100
+        },
+        height: {
+            from: 0,
+            to: 100
+        }
+    },
+    duration: 1000,
+    easing: "easeOutExpo"
+});
+```
+
+CustomRenderAnimation
+===
+This class allows you to decide how to render the current values. Check out the [svg example](https://sourcedecoded.github.io/Animation/examples/svg.html).
+
+```js
+var animation = new clarityAnimation.CustomRenderAnimation({
+    renderer: (values)=>{
+        Object.keys(values).forEach((propertyName)=>{
+            svgCircle.setAttribute(propertyName, values[propertyName]);
+        });
+    },
     properties: {
         width: {
             from: 0,
