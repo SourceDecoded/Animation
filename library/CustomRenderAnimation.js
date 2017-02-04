@@ -67,11 +67,12 @@ define(["require", "exports", "./Animation"], function (require, exports, Animat
             },
             name: "decimalHandler"
         }];
-    class SvgAnimation extends Animation_1.default {
+    class CustomRenderAnimation extends Animation_1.default {
         constructor(config) {
             super(config);
             this.element = config.target;
             this.target = {};
+            this.renderer = config.renderer || function (values) { };
             this.assignHandlers();
         }
         assignHandlers() {
@@ -109,8 +110,9 @@ define(["require", "exports", "./Animation"], function (require, exports, Animat
                     throw new Error("Unassigned Handler.");
                 }
                 var value = handler.apply(this, [property, progress]);
-                this.element.setAttribute(propertyName, value);
+                this.target[propertyName] = value;
             });
+            this.renderer(this.target);
             return this;
         }
         nullableHandler(property, progress) {
@@ -255,6 +257,6 @@ define(["require", "exports", "./Animation"], function (require, exports, Animat
         }
     }
     Object.defineProperty(exports, "__esModule", { value: true });
-    exports.default = SvgAnimation;
+    exports.default = CustomRenderAnimation;
 });
-//# sourceMappingURL=SvgAnimation.js.map
+//# sourceMappingURL=CustomRenderAnimation.js.map

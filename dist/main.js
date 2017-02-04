@@ -61,7 +61,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 1 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(3), __webpack_require__(7), __webpack_require__(8), __webpack_require__(2), __webpack_require__(9), __webpack_require__(10), __webpack_require__(11), __webpack_require__(6)], __WEBPACK_AMD_DEFINE_RESULT__ = function (require, exports, Animation_1, Timeline_1, PercentageTimeline_1, ElementAnimation_1, ElementPathAnimation_1, CssAnimation_1, SvgAnimation_1, easings_1) {
+	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(3), __webpack_require__(7), __webpack_require__(8), __webpack_require__(2), __webpack_require__(9), __webpack_require__(10), __webpack_require__(11), __webpack_require__(6)], __WEBPACK_AMD_DEFINE_RESULT__ = function (require, exports, Animation_1, Timeline_1, PercentageTimeline_1, ElementAnimation_1, ElementPathAnimation_1, CssAnimation_1, CustomRenderAnimation_1, easings_1) {
 	    "use strict";
 	    exports.Animation = Animation_1.default;
 	    exports.Timeline = Timeline_1.default;
@@ -69,7 +69,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    exports.ElementAnimation = ElementAnimation_1.default;
 	    exports.ElementPathAnimation = ElementPathAnimation_1.default;
 	    exports.CssAnimation = CssAnimation_1.default;
-	    exports.SvgAnimation = SvgAnimation_1.default;
+	    exports.CustomRenderAnimation = CustomRenderAnimation_1.default;
 	    exports.easings = easings_1.default;
 	}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
 	//# sourceMappingURL=main.js.map
@@ -2076,11 +2076,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	            },
 	            name: "decimalHandler"
 	        }];
-	    class SvgAnimation extends Animation_1.default {
+	    class CustomRenderAnimation extends Animation_1.default {
 	        constructor(config) {
 	            super(config);
 	            this.element = config.target;
 	            this.target = {};
+	            this.renderer = config.renderer || function (values) { };
 	            this.assignHandlers();
 	        }
 	        assignHandlers() {
@@ -2118,8 +2119,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    throw new Error("Unassigned Handler.");
 	                }
 	                var value = handler.apply(this, [property, progress]);
-	                this.element.setAttribute(propertyName, value);
+	                this.target[propertyName] = value;
 	            });
+	            this.renderer(this.target);
 	            return this;
 	        }
 	        nullableHandler(property, progress) {
@@ -2264,9 +2266,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	    }
 	    Object.defineProperty(exports, "__esModule", { value: true });
-	    exports.default = SvgAnimation;
+	    exports.default = CustomRenderAnimation;
 	}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
-	//# sourceMappingURL=SvgAnimation.js.map
+	//# sourceMappingURL=CustomRenderAnimation.js.map
 
 /***/ }
 /******/ ])

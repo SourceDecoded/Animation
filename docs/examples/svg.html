@@ -16,11 +16,15 @@
 
     <script src="../scripts/clarity-animation.js"></script>
     <script>
-        var SvgAnimation = clarityAnimation.SvgAnimation;
+        var CustomRenderAnimation = clarityAnimation.CustomRenderAnimation;
         var circle = document.querySelector("#circle");
 
-        var animation = new SvgAnimation({
-            target: circle,
+        var animation = new CustomRenderAnimation({
+            renderer: (values) => {
+                Object.keys(values).forEach((propertyName)=>{
+                    circle.setAttribute(propertyName, values[propertyName]);
+                });
+            },
             properties: {
                 "stroke-width": {
                     from: 4,
@@ -39,11 +43,10 @@
             easing: "easeOutQuad"
         });
 
-        animation.repeatDirection = SvgAnimation.REPEAT_ALTERNATE;
+        animation.repeatDirection = CustomRenderAnimation.REPEAT_ALTERNATE;
         animation.repeat = Infinity;
 
         animation.play();
-
     </script>
 </body>
 
