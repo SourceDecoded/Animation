@@ -78,12 +78,15 @@ var valueHandlers = [{
 }];
 
 
-export default class SvgAnimation extends Animation {
+export default class CustomRenderAnimation extends Animation {
     element;
+    renderer: (values: any) => void;
+
     constructor(config) {
         super(config);
         this.element = config.target;
         this.target = {};
+        this.renderer = config.renderer || function (values) { };
 
         this.assignHandlers();
     }
@@ -123,7 +126,6 @@ export default class SvgAnimation extends Animation {
         var progress = this.progress;
         var properties = this.properties;
 
-
         Object.keys(properties).forEach((propertyName) => {
             var property = properties[propertyName];
             var handlerName = property.handlerName;
@@ -134,9 +136,11 @@ export default class SvgAnimation extends Animation {
             }
 
             var value = handler.apply(this, [property, progress]);
-            
-            this.element.setAttribute(propertyName, value);
+
+            this.target[propertyName] = value;
         });
+
+        this.renderer(this.target);
 
         return this;
     }

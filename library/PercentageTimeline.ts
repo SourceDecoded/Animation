@@ -2,7 +2,7 @@
 import Animation from "./Animation";
 
 export default class PercentageTimeline extends Timeline {
-    private _duration;
+     _duration;
 
     constructor(duration) {
         super();
