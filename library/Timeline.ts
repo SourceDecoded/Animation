@@ -142,7 +142,7 @@ export default class Timeline extends Animation {
             self.animationItems.set(animationItem, animationItem);
         });
 
-        this.duration = this.calculateDuration();
+        this._duration = this.calculateDuration();
 
         this.forwardArrayAnimations = Array.from(this.animationItems.values());
         this.reverseArrayAnimations = this.forwardArrayAnimations.slice(0);
