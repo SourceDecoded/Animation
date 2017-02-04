@@ -8,7 +8,11 @@ npm install clarity-animation
 * [List of Examples](https://sourcedecoded.github.io/Animation/)
 * [Basic](https://sourcedecoded.github.io/Animation/examples/basic.html)
 * [Animation Controls](https://sourcedecoded.github.io/Animation/examples/controls.html)
+<<<<<<< HEAD
+* [Load Test (Lots of animations)](https://sourcedecoded.github.io/Animation/examples/alot.html)
+=======
 * [Load Test](https://sourcedecoded.github.io/Animation/examples/alot.html)
+>>>>>>> da6a7155ff3fa06b854b089d69812cc7c5daa452
 * [PercentageTimeline](https://sourcedecoded.github.io/Animation/examples/percentageTimeline.html)
 * [Repeat](https://sourcedecoded.github.io/Animation/examples/repeat.html)
 * [Timeline](https://sourcedecoded.github.io/Animation/examples/timeline.html)
@@ -24,8 +28,9 @@ there isn't any module system and assign clarityAnimation to the global object.
 So go out and make applications prettier. Happy animating!
 
 ## Clarity Animation Mission
-The clarity-animation package wants to solve your complicated animation needs in simplest of patterns. Making a application beautiful shouldn't be hard. So if there is a better way to 
-describle animations and timelines let us know, and lets have a great conversation.
+The clarity-animation package wants to solve your complicated animation needs in simplest of patterns. 
+Making a application beautiful shouldn't be hard. So if there is a better way to 
+describe animations and timelines let us know, and lets have a great conversation.
 
 ## Animations vs Timelines
 In clarity-animation there are two basic things you need to use, the Animation classes and Timeline classes.
