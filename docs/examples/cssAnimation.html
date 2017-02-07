@@ -1,0 +1,59 @@
+<html>
+
+<head>
+    <title>Css Example</title>
+    <style>
+        .box {
+            background-color: rgba(100, 100, 100, 0.5);
+            position: relative;
+            width: 100px;
+            height: 100px;
+            position: relative;
+            top: 0;
+            left: 0;
+        }
+        
+        body {
+            perspective: 1000px;
+        }
+    </style>
+</head>
+
+<body>
+    <div>
+        <h1>Css Example</h1>
+        <p>
+
+        </p>
+    </div>
+
+    <div id="my-box" class="box"></div>
+
+    <script src="../scripts/clarity-animation.js"></script>
+    <script>
+        var CssAnimation = clarityAnimation.CssAnimation;
+        var box = document.querySelector("#my-box");
+
+        var animation = new CssAnimation({
+            renderer: function (values) {
+                Object.keys(values).forEach(function (key) {
+                    box.style[key] = values[key];
+                });
+            },
+            properties: {
+                translateX: {
+                    from: "0%",
+                    to: "100%"
+                }
+            },
+            easing: "easeOutQuad",
+            duration: 1000
+        });
+
+        animation.play();
+        animation.repeat = Infinity;
+        animation.repeatDirection = CssAnimation.REPEAT_ALTERNATE;
+    </script>
+</body>
+
+</html>

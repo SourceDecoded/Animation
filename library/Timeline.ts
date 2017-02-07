@@ -111,7 +111,17 @@ export default class Timeline extends Animation {
                 return this._duration;
             },
             set: (value) => {
-               // Do nothing.
+                var oldValue = this._duration;
+
+                this.animationItems.forEach((animationItem) => {
+                    var offsetRatio = animationItem.offset / oldValue;
+                    var offsetDuration = animationItem.animation.duration / oldValue;
+
+                    animationItem.offset = offsetRatio * value;
+                    animationItem.animation.duration = offsetDuration * value;
+                });
+
+                this._duration = value;
             }
         });
     }
@@ -126,7 +136,7 @@ export default class Timeline extends Animation {
         }, 0);
     }
 
-    add(...allAnimationItems ) {
+    add(...allAnimationItems) {
         var animationItems = Array.prototype.slice.call(arguments, 0);
         var self = this;
 
@@ -162,7 +172,7 @@ export default class Timeline extends Animation {
 
     render() {
         var progress = this.progress;
-        var timelineDuration = this.duration;
+        var timelineDuration = this._duration;
         var currentTime = progress * timelineDuration;
         var timeScale = this.timeScale;
         var now = Date.now();
