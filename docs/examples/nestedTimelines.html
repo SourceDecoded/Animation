@@ -3,49 +3,50 @@
 <head>
     <title>Nested Timelines Example</title>
     <style>
-            .box {
-                background-color: rgba(100,100,100,0.5);
-                position:relative;
-                width: 100px;
-                height:100px;
-                transform-origin: 50%;
-            }
-
-            body {
-                perspective: 1000px;
-            }
-            .animation-container {
-                width: 400px;
-                height: 400px;
-                background-color: #fff;
-                border: 1px solid #333;
-                position:relative;
-                overflow:hidden;
-                box-sizing: border-box;
-            }
-
-            .container {
-                width: 400px;
-            }
-
-            .animation-container > .controls {
-                background-color: #999;
-                position:absolute;
-                bottom: 0;
-                left:0;
-                width:100%;
-            }
-        </style>
+        .box {
+            background-color: rgba(100, 100, 100, 0.5);
+            position: relative;
+            width: 100px;
+            height: 100px;
+            transform-origin: 50%;
+        }
+        
+        body {
+            perspective: 1000px;
+        }
+        
+        .animation-container {
+            width: 400px;
+            height: 400px;
+            background-color: #fff;
+            border: 1px solid #333;
+            position: relative;
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+        
+        .container {
+            width: 400px;
+        }
+        
+        .animation-container > .controls {
+            background-color: #999;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+        }
+    </style>
 </head>
 
 <body>
     <div>
         <h1>Nested Timelines Example</h1>
         <p>
-            
+
         </p>
     </div>
-    
+
     <div class="container">
         <div class="animation-container">
             <div id="my-box" class="box"></div>
@@ -58,7 +59,7 @@
     <script>
         var ElementAnimation = clarityAnimation.ElementAnimation;
         var ElementPathAnimation = clarityAnimation.ElementPathAnimation;
-        var PercentageTimeline = clarityAnimation.PercentageTimeline;
+        var Timeline = clarityAnimation.Timeline;
 
         var box = document.querySelector("#my-box");
         var playerContainer = document.querySelector("#player-container");
@@ -71,66 +72,74 @@
                     to: "#ff0000"
                 }
             },
-            easing: "linear"
+            easing: "linear",
+            duration: 1000
         });
 
-        var rotateXAnimation = new ElementAnimation({
-            target: box,
-            properties: {
-                rotateX: {
-                    from: "0deg",
-                    to: "360deg"
-                }
-            },
-            easing: "easeOutExpo"
-        });
-
-        var rotateYAnimation = new ElementAnimation({
-            target: box,
-            properties: {
-                rotateZ: {
-                    from: "0deg",
-                    to: "360deg"
-                }
-            },
-            easing: "easeInOutElastic"
-        });
-
-        var translateAnimation = new ElementAnimation({
-            target: box,
-            properties: {
-                top: {
-                    from: "0px",
-                    to: "300px"
+        var rotateAnimation = new Timeline();
+        rotateAnimation.add({
+            animation: new ElementAnimation({
+                target: box,
+                properties: {
+                    rotateZ: {
+                        from: "0deg",
+                        to: "360deg"
+                    }
                 },
-                left: {
-                    from: "0px",
-                    to: "300px"
-                }
-            },
-            easing: "easeOutQuad"
+                easing: "easeInOutElastic",
+                duration: 1000
+            }),
+            offset: 0
+        }, {
+                animation: new ElementAnimation({
+                    target: box,
+                    properties: {
+                        rotateX: {
+                            from: "0deg",
+                            to: "360deg"
+                        }
+                    },
+                    easing: "easeOutExpo",
+                    duration: 1000
+                }),
+                offset: 200
+            });
+
+        var translateAnimation = new Timeline();
+        translateAnimation.add({
+            animation: new ElementAnimation({
+                target: box,
+                properties: {
+                    top: {
+                        from: "0px",
+                        to: "300px"
+                    },
+                    left: {
+                        from: "0px",
+                        to: "300px"
+                    }
+                },
+                easing: "easeOutQuad",
+                duration: 1000
+            }),
+            offset: 200
         });
 
-        var timeline = new PercentageTimeline(3000);
+        var timeline = new Timeline();
         timeline.add(
             {
                 animation: backgroundColorAnimation,
-                startAt: 0,
-                endAt: 0.50
+                offset: 0
             }, {
-                animation: rotateXAnimation,
-                startAt: 0.20,
-                endAt: 0.5
-            }, {
-                animation: rotateYAnimation,
-                startAt: 0.45,
-                endAt: 0.75
+                animation: rotateAnimation,
+                offset: 200
             }, {
                 animation: translateAnimation,
-                startAt: 0.20,
-                endAt: 1
+                offset: 300
             }
         );
+
+        timeline.duration = 5000;
 
         var player = new Player(playerContainer, timeline);
     </script>

@@ -1375,7 +1375,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    var oldValue = this._duration;
 	                    this.animationItems.forEach((animationItem) => {
 	                        var offsetRatio = animationItem.offset / oldValue;
-	                        var offsetDuration = animationItem.animation.duration;
+	                        var offsetDuration = animationItem.animation.duration / oldValue;
 	                        animationItem.offset = offsetRatio * value;
 	                        animationItem.animation.duration = offsetDuration * value;
 	                    });

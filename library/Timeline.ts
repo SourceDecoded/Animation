@@ -115,7 +115,7 @@ export default class Timeline extends Animation {
 
                 this.animationItems.forEach((animationItem) => {
                     var offsetRatio = animationItem.offset / oldValue;
-                    var offsetDuration = animationItem.animation.duration;
+                    var offsetDuration = animationItem.animation.duration / oldValue;
 
                     animationItem.offset = offsetRatio * value;
                     animationItem.animation.duration = offsetDuration * value;
