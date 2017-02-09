@@ -1,6 +1,7 @@
 ﻿import animationStateManager from "./animationStateManager";
 import AnimationManager from "./AnimationManager";
 import easings from "./easings";
+import "./../node_modules/babel-polyfill/dist/polyfill";
 
 var delayAsync = function (milliseconds) {
     return new Promise((resolve, reject) => {

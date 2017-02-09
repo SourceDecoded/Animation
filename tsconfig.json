@@ -1,8 +1,14 @@
 {
     "compilerOptions": {
-        "target": "es2015",
-        "module":"amd",
+        "target": "es5",
+        "module": "amd",
         "sourceMap": true,
-        "typeRoots" : ["./typings/globals"]
+        "lib": [
+            "es2015",
+            "dom"
+        ],
+        "typeRoots": [
+            "./typings/globals"
+        ]
     }
 }

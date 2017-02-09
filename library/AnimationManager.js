@@ -1,7 +1,28 @@
 define(["require", "exports"], function (require, exports) {
     "use strict";
-    class AnimationManager {
-        constructor(timer) {
+    (function () {
+        var lastTime = 0;
+        var vendors = ['ms', 'moz', 'webkit', 'o'];
+        for (var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
+            window.requestAnimationFrame = window[vendors[x] + 'RequestAnimationFrame'];
+            window.cancelAnimationFrame = window[vendors[x] + 'CancelAnimationFrame']
+                || window[vendors[x] + 'CancelRequestAnimationFrame'];
+        }
+        if (!window.requestAnimationFrame)
+            window.requestAnimationFrame = function (callback, element) {
+                var currTime = new Date().getTime();
+                var timeToCall = Math.max(0, 16 - (currTime - lastTime));
+                var id = window.setTimeout(function () { callback(currTime + timeToCall); }, timeToCall);
+                lastTime = currTime + timeToCall;
+                return id;
+            };
+        if (!window.cancelAnimationFrame)
+            window.cancelAnimationFrame = function (id) {
+                clearTimeout(id);
+            };
+    }());
+    var AnimationManager = (function () {
+        function AnimationManager(timer) {
             this._currentRequestAnimationFrame = null;
             this._animations = [];
             this._lastTime = 0;
@@ -14,20 +35,20 @@ define(["require", "exports"], function (require, exports) {
             this._requestCallback = this._requestCallback.bind(this);
             this.setFramesPerSecond(this._fps);
         }
-        setFramesPerSecond(fps) {
+        AnimationManager.prototype.setFramesPerSecond = function (fps) {
             this._fps = fps;
             this._refreshRateInMilliseconds = 1000 / fps;
-        }
-        getFramesPerSecond() {
+        };
+        AnimationManager.prototype.getFramesPerSecond = function () {
             return this._fps;
-        }
-        checkRequestToStartOrStop() {
+        };
+        AnimationManager.prototype.checkRequestToStartOrStop = function () {
             var animations = this._animations;
             if (this._currentRequestAnimationFrame === null && animations.length > 0) {
                 this._currentRequestAnimationFrame = requestAnimationFrame(this._requestCallback);
             }
-        }
-        tick(time) {
+        };
+        AnimationManager.prototype.tick = function (time) {
             var x;
             var animation;
             var animationsCopy;
@@ -39,7 +60,7 @@ define(["require", "exports"], function (require, exports) {
                 this._lastTime = time;
                 if (length > 0) {
                     animationsCopy = animations.slice(0);
-                    animationsCopy.forEach((animation) => {
+                    animationsCopy.forEach(function (animation) {
                         animation.tick(time);
                     });
                     this._currentRequestAnimationFrame = requestAnimationFrame(this._requestCallback);
@@ -51,24 +72,25 @@ define(["require", "exports"], function (require, exports) {
             else {
                 this._currentRequestAnimationFrame = requestAnimationFrame(this._requestCallback);
             }
-        }
-        now() {
+        };
+        AnimationManager.prototype.now = function () {
             return this._timer.now();
-        }
-        register(animation) {
+        };
+        AnimationManager.prototype.register = function (animation) {
             var index = this._animations.indexOf(animation);
             if (index === -1) {
                 this._animations.push(animation);
                 this.checkRequestToStartOrStop();
             }
-        }
-        unregister(animation) {
+        };
+        AnimationManager.prototype.unregister = function (animation) {
             var index = this._animations.indexOf(animation);
             if (index >= 0) {
                 this._animations.splice(index, 1);
             }
-        }
-    }
+        };
+        return AnimationManager;
+    }());
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = AnimationManager;
 });

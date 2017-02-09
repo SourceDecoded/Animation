@@ -1,7 +1,7 @@
-define(["require", "exports", "./animationStateManager", "./AnimationManager", "./easings"], function (require, exports, animationStateManager_1, AnimationManager_1, easings_1) {
+define(["require", "exports", "./animationStateManager", "./AnimationManager", "./easings", "./../node_modules/babel-polyfill/dist/polyfill"], function (require, exports, animationStateManager_1, AnimationManager_1, easings_1) {
     "use strict";
     var delayAsync = function (milliseconds) {
-        return new Promise((resolve, reject) => {
+        return new Promise(function (resolve, reject) {
             setTimeout(resolve, milliseconds);
         });
     };
@@ -15,13 +15,13 @@ define(["require", "exports", "./animationStateManager", "./AnimationManager", "
     };
     var animationManager = new AnimationManager_1.default();
     /**Stateful Observer */
-    class Observer {
+    var Observer = (function () {
         /**
          * Creates an Observer.
          * @param {function} callback - The function that is invoked when the observer is notified.
          * @param {function} unbind - The function that is called when the observer is disposed.
          */
-        constructor(callback, unbind) {
+        function Observer(callback, unbind) {
             this._callback = callback;
             this._isStopped = false;
             this._isDisposed = false;
@@ -30,33 +30,34 @@ define(["require", "exports", "./animationStateManager", "./AnimationManager", "
         /**
          * Stops the observing.
          */
-        stop() {
+        Observer.prototype.stop = function () {
             this._isStopped = true;
-        }
+        };
         /**
          * Starts the observing;
          */
-        start() {
+        Observer.prototype.start = function () {
             this._isStopped = false;
-        }
+        };
         /**
          * Notifies the callback with this event.
          * @param {event} event - Emitted event.
          */
-        callback(event) {
+        Observer.prototype.callback = function (event) {
             if (!this._isStopped && !this._isDisposed) {
                 this._callback(event);
             }
-        }
+        };
         /**
          * Disposes the observer.
          */
-        dispose() {
+        Observer.prototype.dispose = function () {
             return this._unbind();
-        }
-    }
+        };
+        return Observer;
+    }());
     /**Class to manage an animation.*/
-    class Animation {
+    var Animation = (function () {
         /**
          * Creates an animation.
          * #### Possible Configuration
@@ -66,7 +67,7 @@ define(["require", "exports", "./animationStateManager", "./AnimationManager", "
          * - properties : object
          * @param {config} config - Configuration of the animation.
          */
-        constructor(config) {
+        function Animation(config) {
             config = config || {};
             this.target = config.target || {};
             this.currentTime = 0;
@@ -104,60 +105,60 @@ define(["require", "exports", "./animationStateManager", "./AnimationManager", "
                 this.easingFunction = easings_1.default.linear;
             }
         }
-        _saveBeginningValues() {
+        Animation.prototype._saveBeginningValues = function () {
             var target = this.target;
             var beginningValues = this.beginningValues;
             var properties = this.properties;
             Object.keys(properties).forEach(function (property) {
                 beginningValues[property] = target[property];
             });
-        }
+        };
         /**
          * Plays the animation forward.
          * @returns {Animation}
          */
-        play() {
+        Animation.prototype.play = function () {
             return this.currentState.play(this);
-        }
+        };
         /**
          * Stops the animation.
          * @returns {Animation}
          */
-        stop() {
+        Animation.prototype.stop = function () {
             this.currentState.stop(this);
             return this;
-        }
+        };
         /**
          * Allows observing on a particular percentage ratio tick.
          * @param {number} ratio - The ratio of completeness between 0-1.
          * @param {function} callback - The function notified at the given ratio.
          * @returns {Observer}
          */
-        observeAtTick(ratio, callback) {
+        Animation.prototype.observeAtTick = function (ratio, callback) {
             var percentage = ratio * 100;
             if (typeof percentage === "number" && percentage >= 0 && percentage <= 100) {
                 percentage = parseInt(percentage);
                 return this.observe(percentage.toString(), callback);
             }
             throw new Error("Invalid Argument Exception: percentage must be a decimal, and with in 0-1");
-        }
+        };
         /**
          * Play the animation to the end.
          * @param {number} [startAt] - What ratio of completeness to start at. (0-1)
          * @returns {Promise}
          */
-        playToEndAsync(startAt) {
+        Animation.prototype.playToEndAsync = function (startAt) {
             if (typeof startAt === "number" && startAt >= 0 && startAt <= 1) {
                 this.progress = startAt;
             }
             return this.playToPercentageAsync(100);
-        }
+        };
         /**
          * Play to the given percentage.
          * @param {number} percentage - The percentage to play to.
          * @returns {Promise}
          */
-        playToPercentageAsync(percentage) {
+        Animation.prototype.playToPercentageAsync = function (percentage) {
             var self = this;
             var ratio = percentage / 100;
             percentage = parseInt(percentage, 10);
@@ -167,7 +168,7 @@ define(["require", "exports", "./animationStateManager", "./AnimationManager", "
             if (typeof percentage !== "number" || percentage < 0 || percentage > 100) {
                 throw new Error("Expected fraction to be a number within range (0-100).");
             }
-            return new Promise((resolve, reject) => {
+            return new Promise(function (resolve, reject) {
                 self.stop();
                 var disposeAllObservers = function () {
                     reverseObserver.dispose();
@@ -190,14 +191,14 @@ define(["require", "exports", "./animationStateManager", "./AnimationManager", "
             }).then(function () {
                 return delayAsync(0);
             });
-        }
-        reverseToStartAsync(startAt) {
+        };
+        Animation.prototype.reverseToStartAsync = function (startAt) {
             if (typeof startAt === "number" && startAt >= 0 && startAt <= 1) {
                 this.progress = startAt;
             }
             return this.reverseToPercentageAsync(0);
-        }
-        reverseToPercentageAsync(percentage) {
+        };
+        Animation.prototype.reverseToPercentageAsync = function (percentage) {
             var self = this;
             var ratio = percentage / 100;
             percentage = parseInt(percentage, 10);
@@ -230,47 +231,47 @@ define(["require", "exports", "./animationStateManager", "./AnimationManager", "
             }).then(function () {
                 return delayAsync(0);
             });
-        }
-        pause() {
+        };
+        Animation.prototype.pause = function () {
             return this.currentState.pause(this);
-        }
-        restart() {
+        };
+        Animation.prototype.restart = function () {
             return this.currentState.restart(this);
-        }
-        reverse() {
+        };
+        Animation.prototype.reverse = function () {
             return this.currentState.reverse(this);
-        }
-        notify(event) {
+        };
+        Animation.prototype.notify = function (event) {
             var type = event.type;
             if (Array.isArray(this.observers[type])) {
                 this.observers[type].forEach(function (observer) {
                     observer.callback(event);
                 });
             }
-        }
-        tick(time) {
+        };
+        Animation.prototype.tick = function (time) {
             var value = this.currentState.tick(this, time);
             return value;
-        }
-        invalidate() {
+        };
+        Animation.prototype.invalidate = function () {
             this.progress = 0;
             this.currentState = animationStateManager_1.default.pausedState;
             return this;
-        }
-        getProgress() {
+        };
+        Animation.prototype.getProgress = function () {
             return this.progress;
-        }
-        setTimeScale(timeScale) {
+        };
+        Animation.prototype.setTimeScale = function (timeScale) {
             this.timeScale = timeScale;
-        }
-        getTimeScale() {
+        };
+        Animation.prototype.getTimeScale = function () {
             return this.timeScale;
-        }
-        seek(progressValue, now) {
+        };
+        Animation.prototype.seek = function (progressValue, now) {
             this.currentState.seek(this, progressValue, now);
             return this;
-        }
-        observe(type, callback) {
+        };
+        Animation.prototype.observe = function (type, callback) {
             var self = this;
             if (typeof type !== "string") {
                 throw new Error("Need to supply a type.");
@@ -287,8 +288,8 @@ define(["require", "exports", "./animationStateManager", "./AnimationManager", "
             });
             callbacks.push(observer);
             return observer;
-        }
-        render() {
+        };
+        Animation.prototype.render = function () {
             var self = this;
             var progress = this.progress;
             var beginningValues = this.beginningValues;
@@ -331,14 +332,23 @@ define(["require", "exports", "./animationStateManager", "./AnimationManager", "
                 }
             }
             return this;
-        }
-        static get REPEAT_DEFAULT() {
-            return 0;
-        }
-        static get REPEAT_ALTERNATE() {
-            return 1;
-        }
-    }
+        };
+        Object.defineProperty(Animation, "REPEAT_DEFAULT", {
+            get: function () {
+                return 0;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        Object.defineProperty(Animation, "REPEAT_ALTERNATE", {
+            get: function () {
+                return 1;
+            },
+            enumerable: true,
+            configurable: true
+        });
+        return Animation;
+    }());
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = Animation;
 });

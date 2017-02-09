@@ -1,3 +1,8 @@
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
 define(["require", "exports", "./Animation", "./animationStateManager"], function (require, exports, Animation_1, animationStateManager_1) {
     "use strict";
     var orderBy = function (array, expr) {
@@ -66,30 +71,32 @@ define(["require", "exports", "./Animation", "./animationStateManager"], functio
     var renderByOffsetAndDuration = function (animationItem) {
         return animationItem.offset + animationItem.animation.duration;
     };
-    class Timeline extends Animation_1.default {
-        constructor(config) {
-            super(config);
-            this.animationItems = new Map();
-            this.iterationCount = 1;
-            this.lastCurrentTime = 0;
-            this._duration = 0;
-            Object.defineProperty(this, "duration", {
-                get: () => {
-                    return this._duration;
+    var Timeline = (function (_super) {
+        __extends(Timeline, _super);
+        function Timeline(config) {
+            var _this = _super.call(this, config) || this;
+            _this.animationItems = new Map();
+            _this.iterationCount = 1;
+            _this.lastCurrentTime = 0;
+            _this._duration = 0;
+            Object.defineProperty(_this, "duration", {
+                get: function () {
+                    return _this._duration;
                 },
-                set: (value) => {
-                    var oldValue = this._duration;
-                    this.animationItems.forEach((animationItem) => {
+                set: function (value) {
+                    var oldValue = _this._duration;
+                    _this.animationItems.forEach(function (animationItem) {
                         var offsetRatio = animationItem.offset / oldValue;
                         var offsetDuration = animationItem.animation.duration / oldValue;
                         animationItem.offset = offsetRatio * value;
                         animationItem.animation.duration = offsetDuration * value;
                     });
-                    this._duration = value;
+                    _this._duration = value;
                 }
             });
+            return _this;
         }
-        calculateDuration() {
+        Timeline.prototype.calculateDuration = function () {
             return Array.from(this.animationItems.values()).reduce(function (duration, animationItem) {
                 var animationTotalDuration = animationItem.offset + animationItem.animation.duration;
                 if (animationTotalDuration > duration) {
@@ -97,8 +104,12 @@ define(["require", "exports", "./Animation", "./animationStateManager"], functio
                 }
                 return duration;
             }, 0);
-        }
-        add(...allAnimationItems) {
+        };
+        Timeline.prototype.add = function () {
+            var allAnimationItems = [];
+            for (var _i = 0; _i < arguments.length; _i++) {
+                allAnimationItems[_i] = arguments[_i];
+            }
             var animationItems = Array.prototype.slice.call(arguments, 0);
             var self = this;
             animationItems.forEach(function (animationItem) {
@@ -115,15 +126,15 @@ define(["require", "exports", "./Animation", "./animationStateManager"], functio
             this.reverseArrayAnimations = this.forwardArrayAnimations.slice(0);
             orderBy(this.forwardArrayAnimations, renderByOffset);
             orderByDesc(this.reverseArrayAnimations, renderByOffsetAndDuration);
-        }
-        remove(animationItem) {
+        };
+        Timeline.prototype.remove = function (animationItem) {
             this.animationItems.delete(animationItem);
             this.forwardArrayAnimations = Array.from(this.animationItems.values());
             this.reverseArrayAnimations = this.forwardArrayAnimations.slice(0);
             orderBy(this.forwardArrayAnimations, renderByOffset);
             orderByDesc(this.reverseArrayAnimations, renderByOffsetAndDuration);
-        }
-        render() {
+        };
+        Timeline.prototype.render = function () {
             var progress = this.progress;
             var timelineDuration = this._duration;
             var currentTime = progress * timelineDuration;
@@ -176,8 +187,9 @@ define(["require", "exports", "./Animation", "./animationStateManager"], functio
                 }
             });
             return this;
-        }
-    }
+        };
+        return Timeline;
+    }(Animation_1.default));
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = Timeline;
 });

@@ -1,3 +1,8 @@
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
 define(["require", "exports", "./Animation"], function (require, exports, Animation_1) {
     "use strict";
     var numberUnitRegEx = /^(\-?\d*\.?\d+)+(.*?)$/i;
@@ -43,39 +48,41 @@ define(["require", "exports", "./Animation"], function (require, exports, Animat
         return value;
     };
     var valueHandlers = [{
-            test: (value) => {
+            test: function (value) {
                 return isUnitNumber.test(value);
             },
-            map: (value) => {
+            map: function (value) {
                 return value;
             },
             name: "numberUnitHandler"
         }, {
-            test: (value) => {
+            test: function (value) {
                 return isColor.test(value);
             },
-            map: (value) => {
+            map: function (value) {
                 return convertHexToRgb(value);
             },
             name: "colorHandler"
         }, {
-            test: (value) => {
+            test: function (value) {
                 return typeof value === "number";
             },
-            map: (value) => {
+            map: function (value) {
                 return value;
             },
             name: "decimalHandler"
         }];
-    class CustomRenderAnimation extends Animation_1.default {
-        constructor(config) {
-            super(config);
-            this.element = config.target;
-            this.target = {};
-            this.renderer = config.renderer || function (values) { };
-            this.assignHandlers();
+    var CustomRenderAnimation = (function (_super) {
+        __extends(CustomRenderAnimation, _super);
+        function CustomRenderAnimation(config) {
+            var _this = _super.call(this, config) || this;
+            _this.element = config.target;
+            _this.target = {};
+            _this.renderer = config.renderer || function (values) { };
+            _this.assignHandlers();
+            return _this;
         }
-        assignHandlers() {
+        CustomRenderAnimation.prototype.assignHandlers = function () {
             var properties = this.properties;
             Object.keys(properties).forEach(function (name) {
                 var property = properties[name];
@@ -85,7 +92,7 @@ define(["require", "exports", "./Animation"], function (require, exports, Animat
                 if (property.from == null) {
                     throw new Error("Cannot animate \"" + name + "\" without specifying the \"from\" field.");
                 }
-                valueHandlers.some((handler) => {
+                valueHandlers.some(function (handler) {
                     if (handler.test(property.from) && handler.test(property.to)) {
                         property.from = handler.map(property.from);
                         property.to = handler.map(property.to);
@@ -98,27 +105,28 @@ define(["require", "exports", "./Animation"], function (require, exports, Animat
                     property.handlerName = "nullableHandler";
                 }
             });
-        }
-        render() {
+        };
+        CustomRenderAnimation.prototype.render = function () {
+            var _this = this;
             var progress = this.progress;
             var properties = this.properties;
-            Object.keys(properties).forEach((propertyName) => {
+            Object.keys(properties).forEach(function (propertyName) {
                 var property = properties[propertyName];
                 var handlerName = property.handlerName;
-                var handler = this[handlerName];
+                var handler = _this[handlerName];
                 if (typeof handler !== "function") {
                     throw new Error("Unassigned Handler.");
                 }
-                var value = handler.apply(this, [property, progress]);
-                this.target[propertyName] = value;
+                var value = handler.apply(_this, [property, progress]);
+                _this.target[propertyName] = value;
             });
             this.renderer(this.target);
             return this;
-        }
-        nullableHandler(property, progress) {
+        };
+        CustomRenderAnimation.prototype.nullableHandler = function (property, progress) {
             return property.from;
-        }
-        calculateColor(property, progress) {
+        };
+        CustomRenderAnimation.prototype.calculateColor = function (property, progress) {
             var value;
             var beginningValue = property.from;
             var endingValue = property.to;
@@ -127,12 +135,12 @@ define(["require", "exports", "./Animation"], function (require, exports, Animat
             beginningValue = colorAliases[beginningValue.toLowerCase()] || beginningValue;
             endingValue = colorAliases[endingValue.toLowerCase()] || endingValue;
             return this.rgbHandler(beginningValue, endingValue, progress, duration, easingFunction);
-        }
-        colorHandler(property, progress) {
+        };
+        CustomRenderAnimation.prototype.colorHandler = function (property, progress) {
             var value = this.calculateColor(property, progress);
             return value;
-        }
-        numberHandler(beginningValue, endingValue, progress, duration, easingFunction) {
+        };
+        CustomRenderAnimation.prototype.numberHandler = function (beginningValue, endingValue, progress, duration, easingFunction) {
             var value;
             var change = endingValue - beginningValue;
             var currentTime = progress * duration;
@@ -143,8 +151,8 @@ define(["require", "exports", "./Animation"], function (require, exports, Animat
                 value = endingValue;
             }
             return value.toFixed(5);
-        }
-        calculateNumberUnit(property, progress) {
+        };
+        CustomRenderAnimation.prototype.calculateNumberUnit = function (property, progress) {
             var value;
             var beginningValue = property.from;
             var endingValue = property.to;
@@ -158,12 +166,12 @@ define(["require", "exports", "./Animation"], function (require, exports, Animat
             var endingFloat = Math.round(parseFloat(endingResults[1]) * 100) / 100;
             var value = this.numberHandler(beginningFloat, endingFloat, progress, duration, easingFunction);
             return value += unit;
-        }
-        numberUnitHandler(property, progress) {
+        };
+        CustomRenderAnimation.prototype.numberUnitHandler = function (property, progress) {
             var value = this.calculateNumberUnit(property, progress);
             return value;
-        }
-        caclulateDecimal(property, progress) {
+        };
+        CustomRenderAnimation.prototype.caclulateDecimal = function (property, progress) {
             var value;
             var beginningValue = property.from;
             var endingValue = property.to;
@@ -172,12 +180,12 @@ define(["require", "exports", "./Animation"], function (require, exports, Animat
             beginningValue = parseFloat(beginningValue);
             endingValue = parseFloat(endingValue);
             return this.numberHandler(beginningValue, endingValue, progress, duration, easingFunction);
-        }
-        decimalHandler(property, progress) {
+        };
+        CustomRenderAnimation.prototype.decimalHandler = function (property, progress) {
             var value = this.caclulateDecimal(property, progress);
             return value;
-        }
-        rgbaHandler(beginningValue, endingValue, progress, duration, easingFunction) {
+        };
+        CustomRenderAnimation.prototype.rgbaHandler = function (beginningValue, endingValue, progress, duration, easingFunction) {
             var value;
             var beginningValues = beginningValue.match(rgbaRegEx);
             var endingValues = endingValue.match(rgbaRegEx);
@@ -198,9 +206,9 @@ define(["require", "exports", "./Animation"], function (require, exports, Animat
             blue = getRgbWithInRangeValue(blue);
             value = "rgb(" + red + "," + green + "," + blue + ")";
             return value;
-        }
+        };
         ;
-        rgbHandler(beginningValue, endingValue, progress, duration, easingFunction) {
+        CustomRenderAnimation.prototype.rgbHandler = function (beginningValue, endingValue, progress, duration, easingFunction) {
             var value;
             var beginningValues = beginningValue.match(rgbRegEx);
             var endingValues = endingValue.match(rgbRegEx);
@@ -254,8 +262,9 @@ define(["require", "exports", "./Animation"], function (require, exports, Animat
             blue = getRgbWithInRangeValue(blue);
             value = "rgb(" + red + "," + green + "," + blue + ")";
             return value;
-        }
-    }
+        };
+        return CustomRenderAnimation;
+    }(Animation_1.default));
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = CustomRenderAnimation;
 });
