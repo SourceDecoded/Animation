@@ -14,29 +14,58 @@ define(["require", "exports", "./animationStateManager", "./AnimationManager", "
         return observer;
     };
     var animationManager = new AnimationManager_1.default();
+    /**Stateful Observer */
     class Observer {
+        /**
+         * Creates an Observer.
+         * @param {function} callback - The function that is invoked when the observer is notified.
+         * @param {function} unbind - The function that is called when the observer is disposed.
+         */
         constructor(callback, unbind) {
             this._callback = callback;
             this._isStopped = false;
             this._isDisposed = false;
             this._unbind = unbind || function () { };
         }
+        /**
+         * Stops the observing.
+         */
         stop() {
             this._isStopped = true;
         }
+        /**
+         * Starts the observing;
+         */
         start() {
             this._isStopped = false;
         }
+        /**
+         * Notifies the callback with this event.
+         * @param {event} event - Emitted event.
+         */
         callback(event) {
             if (!this._isStopped && !this._isDisposed) {
                 this._callback(event);
             }
         }
+        /**
+         * Disposes the observer.
+         */
         dispose() {
             return this._unbind();
         }
     }
+    /**Class to manage an animation.*/
     class Animation {
+        /**
+         * Creates an animation.
+         * #### Possible Configuration
+         * - easing : string
+         * - duration : number (milliseconds)
+         * - target : object
+         * - properties : object
+         * @param {config} config - Configuration of the animation.
+         */
         constructor(config) {
             config = config || {};
             this.target = config.target || {};
@@ -83,13 +112,27 @@ define(["require", "exports", "./animationStateManager", "./AnimationManager", "
                 beginningValues[property] = target[property];
             });
         }
+        /**
+         * Plays the animation forward.
+         * @returns {Animation}
+         */
         play() {
             return this.currentState.play(this);
         }
+        /**
+         * Stops the animation.
+         * @returns {Animation}
+         */
         stop() {
             this.currentState.stop(this);
             return this;
         }
+        /**
+         * Allows observing on a particular percentage ratio tick.
+         * @param {number} ratio - The ratio of completeness between 0-1.
+         * @param {function} callback - The function notified at the given ratio.
+         * @returns {Observer}
+         */
         observeAtTick(ratio, callback) {
             var percentage = ratio * 100;
             if (typeof percentage === "number" && percentage >= 0 && percentage <= 100) {
@@ -98,12 +141,22 @@ define(["require", "exports", "./animationStateManager", "./AnimationManager", "
             }
             throw new Error("Invalid Argument Exception: percentage must be a decimal, and with in 0-1");
         }
+        /**
+         * Play the animation to the end.
+         * @param {number} [startAt] - What ratio of completeness to start at. (0-1)
+         * @returns {Promise}
+         */
         playToEndAsync(startAt) {
             if (typeof startAt === "number" && startAt >= 0 && startAt <= 1) {
                 this.progress = startAt;
             }
             return this.playToPercentageAsync(100);
         }
+        /**
+         * Play to the given percentage.
+         * @param {number} percentage - The percentage to play to.
+         * @returns {Promise}
+         */
         playToPercentageAsync(percentage) {
             var self = this;
             var ratio = percentage / 100;

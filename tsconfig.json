@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-        "target": "es6",
+        "target": "es2015",
         "module":"amd",
         "sourceMap": true,
         "typeRoots" : ["./typings/globals"]
