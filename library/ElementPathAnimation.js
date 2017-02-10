@@ -1,6 +1,11 @@
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
 define(["require", "exports", "./Animation.js"], function (require, exports, Animation_js_1) {
     "use strict";
-    const isVector = function (vector) {
+    var isVector = function (vector) {
         if (typeof vector.x !== "number" &&
             typeof vector.y !== "number" &&
             typeof vector.z !== "number") {
@@ -8,8 +13,8 @@ define(["require", "exports", "./Animation.js"], function (require, exports, Ani
         }
         return true;
     };
-    const assertVector = function (vector) {
-        let vectorString;
+    var assertVector = function (vector) {
+        var vectorString;
         if (!isVector(vector)) {
             try {
                 vectorString = JSON.stringify(vector);
@@ -20,16 +25,16 @@ define(["require", "exports", "./Animation.js"], function (require, exports, Ani
             throw new Error("Invalid vector: " + vectorString);
         }
     };
-    const assertControlsAreVectors = function (controls) {
+    var assertControlsAreVectors = function (controls) {
         if (!Array.isArray(controls)) {
             throw new Error("The animations controls need to be an array of vectors.");
         }
-        let passed = controls.every(isVector);
+        var passed = controls.every(isVector);
         if (!passed) {
             throw new Error("Invalid control vectors.");
         }
     };
-    const normalizeVector = function (vector) {
+    var normalizeVector = function (vector) {
         if (typeof vector.x !== "number") {
             vector.x = 0;
         }
@@ -40,45 +45,47 @@ define(["require", "exports", "./Animation.js"], function (require, exports, Ani
             vector.z = 0;
         }
     };
-    const calculatePosition = function (from, to, percent) {
+    var calculatePosition = function (from, to, percent) {
         return ((to - from) * percent) + from;
     };
-    class ElementPathAnimation extends Animation_js_1.default {
-        constructor(config) {
-            super(config);
+    var ElementPathAnimation = (function (_super) {
+        __extends(ElementPathAnimation, _super);
+        function ElementPathAnimation(config) {
+            var _this = _super.call(this, config) || this;
             config = config || {};
-            this.target = config.target;
-            this.duration = config.duration;
-            this.unit = config.unit;
-            this.from = config.from;
-            this.to = config.to;
-            this.controls = config.controls || [];
-            this.points = [];
-            this.calculationMatrix = [];
-            if (!(this.target instanceof Element)) {
+            _this.target = config.target;
+            _this.duration = config.duration;
+            _this.unit = config.unit;
+            _this.from = config.from;
+            _this.to = config.to;
+            _this.controls = config.controls || [];
+            _this.points = [];
+            _this.calculationMatrix = [];
+            if (!(_this.target instanceof Element)) {
                 throw new Error("The target must be an Element.");
             }
-            if (typeof this.duration !== "number") {
+            if (typeof _this.duration !== "number") {
                 throw new Error("The animation's duration must be a number.");
             }
-            if (typeof this.unit !== "string") {
+            if (typeof _this.unit !== "string") {
                 throw new Error("The animation's unit should be a string");
             }
-            assertVector(this.from);
-            assertVector(this.to);
-            assertControlsAreVectors(this.controls);
-            this.change = {
-                x: this.to.x - this.from.x,
-                y: this.to.y - this.from.y,
-                z: this.to.z - this.from.z
+            assertVector(_this.from);
+            assertVector(_this.to);
+            assertControlsAreVectors(_this.controls);
+            _this.change = {
+                x: _this.to.x - _this.from.x,
+                y: _this.to.y - _this.from.y,
+                z: _this.to.z - _this.from.z
             };
-            this.points = this.controls.slice(0);
-            this.points.unshift(this.from);
-            this.points.push(this.to);
-            this.points.forEach(normalizeVector);
-            this.prepareTransformValues(this.target);
+            _this.points = _this.controls.slice(0);
+            _this.points.unshift(_this.from);
+            _this.points.push(_this.to);
+            _this.points.forEach(normalizeVector);
+            _this.prepareTransformValues(_this.target);
+            return _this;
         }
-        prepareTransformValues(element) {
+        ElementPathAnimation.prototype.prepareTransformValues = function (element) {
             if (typeof element.style.scaleX === "undefined") {
                 element._scaleX = "1";
                 element._scaleY = "1";
@@ -90,27 +97,27 @@ define(["require", "exports", "./Animation.js"], function (require, exports, Ani
                 element._translateY = "0";
                 element._translateZ = "0";
             }
-        }
-        applyTransform() {
-            let element = this.target;
-            let transform = "scaleX(" + element._scaleX + ") scaleY(" + element._scaleY + ") scaleZ(" + element._scaleZ + ")";
+        };
+        ElementPathAnimation.prototype.applyTransform = function () {
+            var element = this.target;
+            var transform = "scaleX(" + element._scaleX + ") scaleY(" + element._scaleY + ") scaleZ(" + element._scaleZ + ")";
             transform += " rotateX(" + element._rotateX + ") rotateY(" + element._rotateY + ") rotateZ(" + element._rotateZ + ")";
             transform += " translateX(" + element._translateX + ") translateY(" + element._translateY + ") translateZ(" + element._translateZ + ")";
             element.style.webkitTransform = transform;
             element.style.mozTransform = transform;
             element.style.msTransform = transform;
             element.style.transform = transform;
-        }
-        reduce(points, percent, index, easing) {
+        };
+        ElementPathAnimation.prototype.reduce = function (points, percent, index, easing) {
             if (typeof index === "undefined") {
                 index = 0;
             }
-            let easingPercent = easing(this.progress * this.duration, 0, 1, this.duration);
+            var easingPercent = easing(this.progress * this.duration, 0, 1, this.duration);
             this.calculationMatrix[index] = points;
-            let reducedPoints = this.calculationMatrix[index + 1] || [];
+            var reducedPoints = this.calculationMatrix[index + 1] || [];
             points.reduce(function (reducedPoints, currentValue, index) {
                 if (index !== points.length - 1) {
-                    let vector = reducedPoints[index] = reducedPoints[index] || { x: 0, y: 0, z: 0 };
+                    var vector = reducedPoints[index] = reducedPoints[index] || { x: 0, y: 0, z: 0 };
                     vector.x = calculatePosition(currentValue.x, points[index + 1].x, easingPercent);
                     vector.y = calculatePosition(currentValue.y, points[index + 1].y, easingPercent);
                     vector.z = calculatePosition(currentValue.z, points[index + 1].z, easingPercent);
@@ -121,21 +128,22 @@ define(["require", "exports", "./Animation.js"], function (require, exports, Ani
                 return this.reduce(reducedPoints, percent, index + 1, easing);
             }
             return reducedPoints;
-        }
-        render() {
-            let target = this.target;
-            let unit = this.unit;
-            let progress = this.progress;
-            let easing = this.easingFunction;
-            let currentPosition = this.reduce(this.points, progress, 0, easing);
+        };
+        ElementPathAnimation.prototype.render = function () {
+            var target = this.target;
+            var unit = this.unit;
+            var progress = this.progress;
+            var easing = this.easingFunction;
+            var currentPosition = this.reduce(this.points, progress, 0, easing);
             target._translateX = currentPosition[0].x + unit;
             target._translateY = currentPosition[0].y + unit;
             // According to spec, translateZ cannot be any unit but px.
             target._translateZ = currentPosition[0].z + "px";
             this.applyTransform();
             return this;
-        }
-    }
+        };
+        return ElementPathAnimation;
+    }(Animation_js_1.default));
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = ElementPathAnimation;
 });

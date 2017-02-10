@@ -1,31 +1,40 @@
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
 define(["require", "exports", "./Timeline", "./Animation"], function (require, exports, Timeline_1, Animation_1) {
     "use strict";
-    class PercentageTimeline extends Timeline_1.default {
-        constructor(duration) {
-            super();
-            this._duration = duration;
-            Object.defineProperty(this, "duration", {
-                get: () => {
-                    return this._duration;
+    var PercentageTimeline = (function (_super) {
+        __extends(PercentageTimeline, _super);
+        function PercentageTimeline(duration) {
+            var _this = _super.call(this) || this;
+            _this._duration = duration;
+            Object.defineProperty(_this, "duration", {
+                get: function () {
+                    return _this._duration;
                 },
-                set: (value) => {
-                    this._duration = value;
-                    this._calculateAnimations();
+                set: function (value) {
+                    _this._duration = value;
+                    _this._calculateAnimations();
                 }
             });
+            return _this;
         }
-        _calculateAnimations() {
-            this.animationItems.forEach((animationItem) => {
-                var offset = animationItem.startAt * this._duration;
-                var duration = (animationItem.endAt * this._duration) - offset;
+        PercentageTimeline.prototype._calculateAnimations = function () {
+            var _this = this;
+            this.animationItems.forEach(function (animationItem) {
+                var offset = animationItem.startAt * _this._duration;
+                var duration = (animationItem.endAt * _this._duration) - offset;
                 animationItem.offset = offset;
                 animationItem.animation.duration = duration;
             });
-        }
-        add() {
+        };
+        PercentageTimeline.prototype.add = function () {
+            var _this = this;
             var self = this;
             var animationItems = Array.prototype.slice.call(arguments, 0);
-            animationItems.forEach((animationItem) => {
+            animationItems.forEach(function (animationItem) {
                 if (typeof animationItem.startAt !== "number") {
                     throw new Error("animationItem needs to have an startAt percentage property set.");
                 }
@@ -45,10 +54,11 @@ define(["require", "exports", "./Timeline", "./Animation"], function (require, e
                 var duration = (animationItem.endAt * self.duration) - offset;
                 animationItem.offset = offset;
                 animationItem.animation.duration = duration;
-                super.add(animationItem);
+                _super.prototype.add.call(_this, animationItem);
             });
-        }
-    }
+        };
+        return PercentageTimeline;
+    }(Timeline_1.default));
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = PercentageTimeline;
 });

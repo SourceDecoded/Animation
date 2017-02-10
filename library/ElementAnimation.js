@@ -1,16 +1,21 @@
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
 define(["require", "exports", "./Animation"], function (require, exports, Animation_1) {
     "use strict";
-    const numberUnitRegEx = /^(\-?\d*\.?\d+)+(.*?)$/i;
-    const rgbRegEx = /^rgb\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)$/i;
-    const rgbaRegEx = /^rgba\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+|\d\.\d+)\s*\)$/i;
-    const colorAliases = {
+    var numberUnitRegEx = /^(\-?\d*\.?\d+)+(.*?)$/i;
+    var rgbRegEx = /^rgb\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)$/i;
+    var rgbaRegEx = /^rgba\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+|\d\.\d+)\s*\)$/i;
+    var colorAliases = {
         "transparent": "rgba(0,0,0,0)"
     };
-    const parseHex = function (hex) {
+    var parseHex = function (hex) {
         if (hex.indexOf("#") !== 0) {
             throw new Error("Invalid Hex.");
         }
-        let rgb = {
+        var rgb = {
             red: 0,
             green: 0,
             blue: 0,
@@ -28,26 +33,27 @@ define(["require", "exports", "./Animation"], function (require, exports, Animat
         }
         return rgb;
     };
-    const convertHexToRgb = function (hex) {
-        let rgb = parseHex(hex);
+    var convertHexToRgb = function (hex) {
+        var rgb = parseHex(hex);
         return "rgb(" + rgb.red + "," + rgb.green + "," + rgb.blue + ")";
     };
-    const getRgbWithInRangeValue = function (value) {
+    var getRgbWithInRangeValue = function (value) {
         value = value < 0 ? 0 : value;
         value = value > 255 ? 255 : value;
         return value;
     };
-    class ElementAnimation extends Animation_1.default {
-        constructor(config) {
-            super(config);
-            this.element = null;
+    var ElementAnimation = (function (_super) {
+        __extends(ElementAnimation, _super);
+        function ElementAnimation(config) {
+            var _this = _super.call(this, config) || this;
+            _this.element = null;
             if (config.target instanceof Element) {
-                this.element = config.target;
+                _this.element = config.target;
                 config.target = config.target.style;
-                this.prepareTransformValues();
+                _this.prepareTransformValues();
             }
-            this.currentValues = {};
-            this.mapping = {
+            _this.currentValues = {};
+            _this.mapping = {
                 width: { handler: "numberUnitHandler", alias: "width" },
                 height: { handler: "numberUnitHandler", alias: "height" },
                 lineHeight: { handler: "numberUnitHandler", alias: "line-height" },
@@ -85,34 +91,35 @@ define(["require", "exports", "./Animation"], function (require, exports, Animat
                 translateY: { handler: "translateYHandler", alias: "translateY" },
                 translateZ: { handler: "translateZHandler", alias: "translateZ" }
             };
-            this.scaleYHandler = this.scaleXHandler;
-            this.scaleZHandler = this.scaleXHandler;
-            this.rotateXHandler = this.rotateXHandler.bind(this);
-            this.rotateYHandler = this.rotateXHandler.bind(this);
-            this.rotateZHandler = this.rotateXHandler.bind(this);
-            this.translateXHandler = this.rotateXHandler.bind(this);
-            this.translateYHandler = this.rotateXHandler.bind(this);
-            this.translateZHandler = this.rotateXHandler.bind(this);
+            _this.scaleYHandler = _this.scaleXHandler;
+            _this.scaleZHandler = _this.scaleXHandler;
+            _this.rotateXHandler = _this.rotateXHandler.bind(_this);
+            _this.rotateYHandler = _this.rotateXHandler.bind(_this);
+            _this.rotateZHandler = _this.rotateXHandler.bind(_this);
+            _this.translateXHandler = _this.rotateXHandler.bind(_this);
+            _this.translateYHandler = _this.rotateXHandler.bind(_this);
+            _this.translateZHandler = _this.rotateXHandler.bind(_this);
+            return _this;
         }
-        setCssText() {
-            let element = this.element;
-            let currentValues = this.currentValues;
+        ElementAnimation.prototype.setCssText = function () {
+            var element = this.element;
+            var currentValues = this.currentValues;
             Object.keys(currentValues).forEach(function (property) {
                 return element.style[property] = currentValues[property];
             });
-        }
-        setElement(element) {
+        };
+        ElementAnimation.prototype.setElement = function (element) {
             this.element = element;
             this.prepareTransformValues();
-        }
-        render() {
-            let progress = this.progress;
-            let properties = this.properties;
-            let propertyHandlerName;
-            let property;
+        };
+        ElementAnimation.prototype.render = function () {
+            var progress = this.progress;
+            var properties = this.properties;
+            var propertyHandlerName;
+            var property;
             for (property in properties) {
                 propertyHandlerName = this.mapping[property].handler;
-                let handler = this[propertyHandlerName];
+                var handler = this[propertyHandlerName];
                 if (typeof handler !== "function") {
                     throw new Error("Doesn't support '" + property + "' style animations.");
                 }
@@ -120,17 +127,17 @@ define(["require", "exports", "./Animation"], function (require, exports, Animat
             }
             this.setCssText();
             return this;
-        }
-        getEndingValue(property) {
-            let endingValue = this.properties[property];
+        };
+        ElementAnimation.prototype.getEndingValue = function (property) {
+            var endingValue = this.properties[property];
             if (typeof endingValue === "object" && endingValue !== null) {
                 endingValue = endingValue.to;
             }
             return endingValue;
-        }
-        getBeginningValue(property) {
-            let beginningValue = this.beginningValues[property];
-            let properties = this.properties;
+        };
+        ElementAnimation.prototype.getBeginningValue = function (property) {
+            var beginningValue = this.beginningValues[property];
+            var properties = this.properties;
             if (typeof beginningValue === "undefined") {
                 // If there isn't a default from get the value off the object.
                 if (typeof properties[property].from !== "undefined") {
@@ -148,45 +155,45 @@ define(["require", "exports", "./Animation"], function (require, exports, Animat
                 throw new Error("Couldn't find beginning value for property: " + property + ". Try setting a 'from' value in the configuration of the aniimation.");
             }
             return beginningValue;
-        }
-        rgbaHandler(beginningValue, endingValue, progress, duration, easingFunction) {
-            let value;
-            let beginningValues = beginningValue.match(rgbaRegEx);
-            let endingValues = endingValue.match(rgbaRegEx);
+        };
+        ElementAnimation.prototype.rgbaHandler = function (beginningValue, endingValue, progress, duration, easingFunction) {
+            var value;
+            var beginningValues = beginningValue.match(rgbaRegEx);
+            var endingValues = endingValue.match(rgbaRegEx);
             if (beginningValues === null || endingValues === null) {
                 throw new Error("Cannot parse rgb, rgba isn't supported yet.");
             }
-            let redBeginningValue = parseInt(beginningValues[1], 10);
-            let redEndingValue = parseInt(endingValues[1], 10);
-            let greenBeginningValue = parseInt(beginningValues[2], 10);
-            let greenEndingValue = parseInt(endingValues[2], 10);
-            let blueBeginningValue = parseInt(beginningValues[3], 10);
-            let blueEndingValue = parseInt(endingValues[3], 10);
-            let red = parseInt(this.numberHandler(redBeginningValue, redEndingValue, progress, duration, easingFunction), 10);
-            let green = parseInt(this.numberHandler(greenBeginningValue, greenEndingValue, progress, duration, easingFunction), 10);
-            let blue = parseInt(this.numberHandler(blueBeginningValue, blueEndingValue, progress, duration, easingFunction), 10);
+            var redBeginningValue = parseInt(beginningValues[1], 10);
+            var redEndingValue = parseInt(endingValues[1], 10);
+            var greenBeginningValue = parseInt(beginningValues[2], 10);
+            var greenEndingValue = parseInt(endingValues[2], 10);
+            var blueBeginningValue = parseInt(beginningValues[3], 10);
+            var blueEndingValue = parseInt(endingValues[3], 10);
+            var red = parseInt(this.numberHandler(redBeginningValue, redEndingValue, progress, duration, easingFunction), 10);
+            var green = parseInt(this.numberHandler(greenBeginningValue, greenEndingValue, progress, duration, easingFunction), 10);
+            var blue = parseInt(this.numberHandler(blueBeginningValue, blueEndingValue, progress, duration, easingFunction), 10);
             red = getRgbWithInRangeValue(red);
             green = getRgbWithInRangeValue(green);
             blue = getRgbWithInRangeValue(blue);
             value = "rgb(" + red + "," + green + "," + blue + ")";
             return value;
-        }
-        rgbHandler(beginningValue, endingValue, progress, duration, easingFunction) {
-            let value;
-            let beginningValues = beginningValue.match(rgbRegEx);
-            let endingValues = endingValue.match(rgbRegEx);
-            let redBeginningValue;
-            let redEndingValue;
-            let greenBeginningValue;
-            let greenEndingValue;
-            let blueBeginningValue;
-            let blueEndingValue;
-            let beginningAlphaValue;
-            let endingAlphaValue;
-            let red;
-            let green;
-            let blue;
-            let alpha;
+        };
+        ElementAnimation.prototype.rgbHandler = function (beginningValue, endingValue, progress, duration, easingFunction) {
+            var value;
+            var beginningValues = beginningValue.match(rgbRegEx);
+            var endingValues = endingValue.match(rgbRegEx);
+            var redBeginningValue;
+            var redEndingValue;
+            var greenBeginningValue;
+            var greenEndingValue;
+            var blueBeginningValue;
+            var blueEndingValue;
+            var beginningAlphaValue;
+            var endingAlphaValue;
+            var red;
+            var green;
+            var blue;
+            var alpha;
             if (beginningValues === null || endingValues === null) {
                 beginningValues = beginningValues || beginningValue.match(rgbaRegEx);
                 endingValues = endingValues || endingValue.match(rgbaRegEx);
@@ -225,9 +232,9 @@ define(["require", "exports", "./Animation"], function (require, exports, Animat
             blue = getRgbWithInRangeValue(blue);
             value = "rgb(" + red + "," + green + "," + blue + ")";
             return value;
-        }
-        prepareTransformValues() {
-            let element = this.element;
+        };
+        ElementAnimation.prototype.prepareTransformValues = function () {
+            var element = this.element;
             element.scaleX = element.scaleX || "1";
             element.scaleY = element.scaleY || "1";
             element.scaleZ = element.scaleZ || "1";
@@ -237,39 +244,39 @@ define(["require", "exports", "./Animation"], function (require, exports, Animat
             element.translateX = element.translateX || "0";
             element.translateY = element.translateY || "0";
             element.translateZ = element.translateZ || "0";
-        }
-        applyTransform() {
-            let element = this.element;
-            let transform = "scaleX(" + element.scaleX + ") scaleY(" + element.scaleY + ") scaleZ(" + element.scaleZ + ")";
+        };
+        ElementAnimation.prototype.applyTransform = function () {
+            var element = this.element;
+            var transform = "scaleX(" + element.scaleX + ") scaleY(" + element.scaleY + ") scaleZ(" + element.scaleZ + ")";
             transform += " rotateX(" + element.rotateX + ") rotateY(" + element.rotateY + ") rotateZ(" + element.rotateZ + ")";
             transform += " translateX(" + element.translateX + ") translateY(" + element.translateY + ") translateZ(" + element.translateZ + ")";
             this.currentValues["webkitTransform"] = transform;
             this.currentValues["mozTransform"] = transform;
             this.currentValues["msTransform"] = transform;
             this.currentValues["transform"] = transform;
-        }
-        scaleXHandler(property, progress) {
-            let element = this.element;
-            let beginningValue = parseFloat(this.getBeginningValue(property));
-            let endingValue = parseFloat(this.getEndingValue(property));
-            let duration = this.duration;
-            let easingFunction = this.easingFunction;
-            let value = this.numberHandler(beginningValue, endingValue, progress, duration, easingFunction);
+        };
+        ElementAnimation.prototype.scaleXHandler = function (property, progress) {
+            var element = this.element;
+            var beginningValue = parseFloat(this.getBeginningValue(property));
+            var endingValue = parseFloat(this.getEndingValue(property));
+            var duration = this.duration;
+            var easingFunction = this.easingFunction;
+            var value = this.numberHandler(beginningValue, endingValue, progress, duration, easingFunction);
             element[property] = value;
             this.applyTransform();
-        }
-        rotateXHandler(property, progress) {
-            let element = this.element;
-            let value;
+        };
+        ElementAnimation.prototype.rotateXHandler = function (property, progress) {
+            var element = this.element;
+            var value;
             value = this.calculateNumberUnit(property, progress);
             element[property] = value;
             this.applyTransform();
-        }
-        calculateColor(property, progress) {
-            let beginningValue = this.getBeginningValue(property);
-            let endingValue = this.getEndingValue(property);
-            let duration = this.duration;
-            let easingFunction = this.easingFunction;
+        };
+        ElementAnimation.prototype.calculateColor = function (property, progress) {
+            var beginningValue = this.getBeginningValue(property);
+            var endingValue = this.getEndingValue(property);
+            var duration = this.duration;
+            var easingFunction = this.easingFunction;
             beginningValue = colorAliases[beginningValue.toLowerCase()] || beginningValue;
             endingValue = colorAliases[endingValue.toLowerCase()] || endingValue;
             if (beginningValue.indexOf("#") === 0) {
@@ -279,16 +286,16 @@ define(["require", "exports", "./Animation"], function (require, exports, Animat
                 endingValue = convertHexToRgb(endingValue);
             }
             return this.rgbHandler(beginningValue, endingValue, progress, duration, easingFunction);
-        }
-        colorHandler(property, progress) {
-            let value = this.calculateColor(property, progress);
+        };
+        ElementAnimation.prototype.colorHandler = function (property, progress) {
+            var value = this.calculateColor(property, progress);
             value = this.properties[property].isImportant ? value + " !important" : value;
             this.currentValues[property] = value;
-        }
-        numberHandler(beginningValue, endingValue, progress, duration, easingFunction) {
-            let value;
-            let change = endingValue - beginningValue;
-            let currentTime = progress * duration;
+        };
+        ElementAnimation.prototype.numberHandler = function (beginningValue, endingValue, progress, duration, easingFunction) {
+            var value;
+            var change = endingValue - beginningValue;
+            var currentTime = progress * duration;
             if (change !== 0) {
                 value = easingFunction(currentTime, beginningValue, change, duration);
             }
@@ -296,44 +303,45 @@ define(["require", "exports", "./Animation"], function (require, exports, Animat
                 value = endingValue;
             }
             return value.toFixed(5);
-        }
-        calculateNumberUnit(property, progress) {
-            let beginningValue = this.getBeginningValue(property);
-            let endingValue = this.getEndingValue(property);
-            let duration = this.duration;
-            let easingFunction = this.easingFunction;
-            let beginningResults = numberUnitRegEx.exec(beginningValue);
-            let endingResults = numberUnitRegEx.exec(endingValue);
-            let unit = beginningResults[2];
+        };
+        ElementAnimation.prototype.calculateNumberUnit = function (property, progress) {
+            var beginningValue = this.getBeginningValue(property);
+            var endingValue = this.getEndingValue(property);
+            var duration = this.duration;
+            var easingFunction = this.easingFunction;
+            var beginningResults = numberUnitRegEx.exec(beginningValue);
+            var endingResults = numberUnitRegEx.exec(endingValue);
+            var unit = beginningResults[2];
             if (typeof unit === "undefined") {
                 throw new Error("Please use units for the '" + property + "', e.g. 10px, or 10%, 10em");
             }
             // To much precision hurts.
-            let beginningFloat = Math.round(parseFloat(beginningResults[1]) * 100) / 100;
-            let endingFloat = Math.round(parseFloat(endingResults[1]) * 100) / 100;
-            let value = this.numberHandler(beginningFloat, endingFloat, progress, duration, easingFunction);
+            var beginningFloat = Math.round(parseFloat(beginningResults[1]) * 100) / 100;
+            var endingFloat = Math.round(parseFloat(endingResults[1]) * 100) / 100;
+            var value = this.numberHandler(beginningFloat, endingFloat, progress, duration, easingFunction);
             return value += unit;
-        }
-        numberUnitHandler(property, progress) {
-            let value = this.calculateNumberUnit(property, progress);
+        };
+        ElementAnimation.prototype.numberUnitHandler = function (property, progress) {
+            var value = this.calculateNumberUnit(property, progress);
             value = this.properties[property].isImportant ? value + " !important" : value;
             this.currentValues[property] = value;
-        }
-        caclulateDecimal(property, progress) {
-            let beginningValue = this.getBeginningValue(property);
-            let endingValue = this.getEndingValue(property);
-            let duration = this.duration;
-            let easingFunction = this.easingFunction;
+        };
+        ElementAnimation.prototype.caclulateDecimal = function (property, progress) {
+            var beginningValue = this.getBeginningValue(property);
+            var endingValue = this.getEndingValue(property);
+            var duration = this.duration;
+            var easingFunction = this.easingFunction;
             beginningValue = parseFloat(beginningValue);
             endingValue = parseFloat(endingValue);
             return this.numberHandler(beginningValue, endingValue, progress, duration, easingFunction);
-        }
-        decimalHandler(property, progress) {
-            let value = this.caclulateDecimal(property, progress);
+        };
+        ElementAnimation.prototype.decimalHandler = function (property, progress) {
+            var value = this.caclulateDecimal(property, progress);
             value = this.properties[property].isImportant ? value + " !important" : value;
             this.currentValues[property] = value;
-        }
-    }
+        };
+        return ElementAnimation;
+    }(Animation_1.default));
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = ElementAnimation;
 });

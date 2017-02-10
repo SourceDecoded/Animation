@@ -78,19 +78,24 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(3)], __WEBPACK_AMD_DEFINE_RESULT__ = function (require, exports, Animation_1) {
+	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(3)], __WEBPACK_AMD_DEFINE_RESULT__ = function (require, exports, Animation_1) {
 	    "use strict";
-	    const numberUnitRegEx = /^(\-?\d*\.?\d+)+(.*?)$/i;
-	    const rgbRegEx = /^rgb\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)$/i;
-	    const rgbaRegEx = /^rgba\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+|\d\.\d+)\s*\)$/i;
-	    const colorAliases = {
+	    var numberUnitRegEx = /^(\-?\d*\.?\d+)+(.*?)$/i;
+	    var rgbRegEx = /^rgb\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)$/i;
+	    var rgbaRegEx = /^rgba\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+|\d\.\d+)\s*\)$/i;
+	    var colorAliases = {
 	        "transparent": "rgba(0,0,0,0)"
 	    };
-	    const parseHex = function (hex) {
+	    var parseHex = function (hex) {
 	        if (hex.indexOf("#") !== 0) {
 	            throw new Error("Invalid Hex.");
 	        }
-	        let rgb = {
+	        var rgb = {
 	            red: 0,
 	            green: 0,
 	            blue: 0,
@@ -108,26 +113,27 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	        return rgb;
 	    };
-	    const convertHexToRgb = function (hex) {
-	        let rgb = parseHex(hex);
+	    var convertHexToRgb = function (hex) {
+	        var rgb = parseHex(hex);
 	        return "rgb(" + rgb.red + "," + rgb.green + "," + rgb.blue + ")";
 	    };
-	    const getRgbWithInRangeValue = function (value) {
+	    var getRgbWithInRangeValue = function (value) {
 	        value = value < 0 ? 0 : value;
 	        value = value > 255 ? 255 : value;
 	        return value;
 	    };
-	    class ElementAnimation extends Animation_1.default {
-	        constructor(config) {
-	            super(config);
-	            this.element = null;
+	    var ElementAnimation = (function (_super) {
+	        __extends(ElementAnimation, _super);
+	        function ElementAnimation(config) {
+	            var _this = _super.call(this, config) || this;
+	            _this.element = null;
 	            if (config.target instanceof Element) {
-	                this.element = config.target;
+	                _this.element = config.target;
 	                config.target = config.target.style;
-	                this.prepareTransformValues();
+	                _this.prepareTransformValues();
 	            }
-	            this.currentValues = {};
-	            this.mapping = {
+	            _this.currentValues = {};
+	            _this.mapping = {
 	                width: { handler: "numberUnitHandler", alias: "width" },
 	                height: { handler: "numberUnitHandler", alias: "height" },
 	                lineHeight: { handler: "numberUnitHandler", alias: "line-height" },
@@ -165,34 +171,35 @@ return /******/ (function(modules) { // webpackBootstrap
 	                translateY: { handler: "translateYHandler", alias: "translateY" },
 	                translateZ: { handler: "translateZHandler", alias: "translateZ" }
 	            };
-	            this.scaleYHandler = this.scaleXHandler;
-	            this.scaleZHandler = this.scaleXHandler;
-	            this.rotateXHandler = this.rotateXHandler.bind(this);
-	            this.rotateYHandler = this.rotateXHandler.bind(this);
-	            this.rotateZHandler = this.rotateXHandler.bind(this);
-	            this.translateXHandler = this.rotateXHandler.bind(this);
-	            this.translateYHandler = this.rotateXHandler.bind(this);
-	            this.translateZHandler = this.rotateXHandler.bind(this);
+	            _this.scaleYHandler = _this.scaleXHandler;
+	            _this.scaleZHandler = _this.scaleXHandler;
+	            _this.rotateXHandler = _this.rotateXHandler.bind(_this);
+	            _this.rotateYHandler = _this.rotateXHandler.bind(_this);
+	            _this.rotateZHandler = _this.rotateXHandler.bind(_this);
+	            _this.translateXHandler = _this.rotateXHandler.bind(_this);
+	            _this.translateYHandler = _this.rotateXHandler.bind(_this);
+	            _this.translateZHandler = _this.rotateXHandler.bind(_this);
+	            return _this;
 	        }
-	        setCssText() {
-	            let element = this.element;
-	            let currentValues = this.currentValues;
+	        ElementAnimation.prototype.setCssText = function () {
+	            var element = this.element;
+	            var currentValues = this.currentValues;
 	            Object.keys(currentValues).forEach(function (property) {
 	                return element.style[property] = currentValues[property];
 	            });
-	        }
-	        setElement(element) {
+	        };
+	        ElementAnimation.prototype.setElement = function (element) {
 	            this.element = element;
 	            this.prepareTransformValues();
-	        }
-	        render() {
-	            let progress = this.progress;
-	            let properties = this.properties;
-	            let propertyHandlerName;
-	            let property;
+	        };
+	        ElementAnimation.prototype.render = function () {
+	            var progress = this.progress;
+	            var properties = this.properties;
+	            var propertyHandlerName;
+	            var property;
 	            for (property in properties) {
 	                propertyHandlerName = this.mapping[property].handler;
-	                let handler = this[propertyHandlerName];
+	                var handler = this[propertyHandlerName];
 	                if (typeof handler !== "function") {
 	                    throw new Error("Doesn't support '" + property + "' style animations.");
 	                }
@@ -200,17 +207,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 	            this.setCssText();
 	            return this;
-	        }
-	        getEndingValue(property) {
-	            let endingValue = this.properties[property];
+	        };
+	        ElementAnimation.prototype.getEndingValue = function (property) {
+	            var endingValue = this.properties[property];
 	            if (typeof endingValue === "object" && endingValue !== null) {
 	                endingValue = endingValue.to;
 	            }
 	            return endingValue;
-	        }
-	        getBeginningValue(property) {
-	            let beginningValue = this.beginningValues[property];
-	            let properties = this.properties;
+	        };
+	        ElementAnimation.prototype.getBeginningValue = function (property) {
+	            var beginningValue = this.beginningValues[property];
+	            var properties = this.properties;
 	            if (typeof beginningValue === "undefined") {
 	                // If there isn't a default from get the value off the object.
 	                if (typeof properties[property].from !== "undefined") {
@@ -228,45 +235,45 @@ return /******/ (function(modules) { // webpackBootstrap
 	                throw new Error("Couldn't find beginning value for property: " + property + ". Try setting a 'from' value in the configuration of the aniimation.");
 	            }
 	            return beginningValue;
-	        }
-	        rgbaHandler(beginningValue, endingValue, progress, duration, easingFunction) {
-	            let value;
-	            let beginningValues = beginningValue.match(rgbaRegEx);
-	            let endingValues = endingValue.match(rgbaRegEx);
+	        };
+	        ElementAnimation.prototype.rgbaHandler = function (beginningValue, endingValue, progress, duration, easingFunction) {
+	            var value;
+	            var beginningValues = beginningValue.match(rgbaRegEx);
+	            var endingValues = endingValue.match(rgbaRegEx);
 	            if (beginningValues === null || endingValues === null) {
 	                throw new Error("Cannot parse rgb, rgba isn't supported yet.");
 	            }
-	            let redBeginningValue = parseInt(beginningValues[1], 10);
-	            let redEndingValue = parseInt(endingValues[1], 10);
-	            let greenBeginningValue = parseInt(beginningValues[2], 10);
-	            let greenEndingValue = parseInt(endingValues[2], 10);
-	            let blueBeginningValue = parseInt(beginningValues[3], 10);
-	            let blueEndingValue = parseInt(endingValues[3], 10);
-	            let red = parseInt(this.numberHandler(redBeginningValue, redEndingValue, progress, duration, easingFunction), 10);
-	            let green = parseInt(this.numberHandler(greenBeginningValue, greenEndingValue, progress, duration, easingFunction), 10);
-	            let blue = parseInt(this.numberHandler(blueBeginningValue, blueEndingValue, progress, duration, easingFunction), 10);
+	            var redBeginningValue = parseInt(beginningValues[1], 10);
+	            var redEndingValue = parseInt(endingValues[1], 10);
+	            var greenBeginningValue = parseInt(beginningValues[2], 10);
+	            var greenEndingValue = parseInt(endingValues[2], 10);
+	            var blueBeginningValue = parseInt(beginningValues[3], 10);
+	            var blueEndingValue = parseInt(endingValues[3], 10);
+	            var red = parseInt(this.numberHandler(redBeginningValue, redEndingValue, progress, duration, easingFunction), 10);
+	            var green = parseInt(this.numberHandler(greenBeginningValue, greenEndingValue, progress, duration, easingFunction), 10);
+	            var blue = parseInt(this.numberHandler(blueBeginningValue, blueEndingValue, progress, duration, easingFunction), 10);
 	            red = getRgbWithInRangeValue(red);
 	            green = getRgbWithInRangeValue(green);
 	            blue = getRgbWithInRangeValue(blue);
 	            value = "rgb(" + red + "," + green + "," + blue + ")";
 	            return value;
-	        }
-	        rgbHandler(beginningValue, endingValue, progress, duration, easingFunction) {
-	            let value;
-	            let beginningValues = beginningValue.match(rgbRegEx);
-	            let endingValues = endingValue.match(rgbRegEx);
-	            let redBeginningValue;
-	            let redEndingValue;
-	            let greenBeginningValue;
-	            let greenEndingValue;
-	            let blueBeginningValue;
-	            let blueEndingValue;
-	            let beginningAlphaValue;
-	            let endingAlphaValue;
-	            let red;
-	            let green;
-	            let blue;
-	            let alpha;
+	        };
+	        ElementAnimation.prototype.rgbHandler = function (beginningValue, endingValue, progress, duration, easingFunction) {
+	            var value;
+	            var beginningValues = beginningValue.match(rgbRegEx);
+	            var endingValues = endingValue.match(rgbRegEx);
+	            var redBeginningValue;
+	            var redEndingValue;
+	            var greenBeginningValue;
+	            var greenEndingValue;
+	            var blueBeginningValue;
+	            var blueEndingValue;
+	            var beginningAlphaValue;
+	            var endingAlphaValue;
+	            var red;
+	            var green;
+	            var blue;
+	            var alpha;
 	            if (beginningValues === null || endingValues === null) {
 	                beginningValues = beginningValues || beginningValue.match(rgbaRegEx);
 	                endingValues = endingValues || endingValue.match(rgbaRegEx);
@@ -305,9 +312,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	            blue = getRgbWithInRangeValue(blue);
 	            value = "rgb(" + red + "," + green + "," + blue + ")";
 	            return value;
-	        }
-	        prepareTransformValues() {
-	            let element = this.element;
+	        };
+	        ElementAnimation.prototype.prepareTransformValues = function () {
+	            var element = this.element;
 	            element.scaleX = element.scaleX || "1";
 	            element.scaleY = element.scaleY || "1";
 	            element.scaleZ = element.scaleZ || "1";
@@ -317,39 +324,39 @@ return /******/ (function(modules) { // webpackBootstrap
 	            element.translateX = element.translateX || "0";
 	            element.translateY = element.translateY || "0";
 	            element.translateZ = element.translateZ || "0";
-	        }
-	        applyTransform() {
-	            let element = this.element;
-	            let transform = "scaleX(" + element.scaleX + ") scaleY(" + element.scaleY + ") scaleZ(" + element.scaleZ + ")";
+	        };
+	        ElementAnimation.prototype.applyTransform = function () {
+	            var element = this.element;
+	            var transform = "scaleX(" + element.scaleX + ") scaleY(" + element.scaleY + ") scaleZ(" + element.scaleZ + ")";
 	            transform += " rotateX(" + element.rotateX + ") rotateY(" + element.rotateY + ") rotateZ(" + element.rotateZ + ")";
 	            transform += " translateX(" + element.translateX + ") translateY(" + element.translateY + ") translateZ(" + element.translateZ + ")";
 	            this.currentValues["webkitTransform"] = transform;
 	            this.currentValues["mozTransform"] = transform;
 	            this.currentValues["msTransform"] = transform;
 	            this.currentValues["transform"] = transform;
-	        }
-	        scaleXHandler(property, progress) {
-	            let element = this.element;
-	            let beginningValue = parseFloat(this.getBeginningValue(property));
-	            let endingValue = parseFloat(this.getEndingValue(property));
-	            let duration = this.duration;
-	            let easingFunction = this.easingFunction;
-	            let value = this.numberHandler(beginningValue, endingValue, progress, duration, easingFunction);
+	        };
+	        ElementAnimation.prototype.scaleXHandler = function (property, progress) {
+	            var element = this.element;
+	            var beginningValue = parseFloat(this.getBeginningValue(property));
+	            var endingValue = parseFloat(this.getEndingValue(property));
+	            var duration = this.duration;
+	            var easingFunction = this.easingFunction;
+	            var value = this.numberHandler(beginningValue, endingValue, progress, duration, easingFunction);
 	            element[property] = value;
 	            this.applyTransform();
-	        }
-	        rotateXHandler(property, progress) {
-	            let element = this.element;
-	            let value;
+	        };
+	        ElementAnimation.prototype.rotateXHandler = function (property, progress) {
+	            var element = this.element;
+	            var value;
 	            value = this.calculateNumberUnit(property, progress);
 	            element[property] = value;
 	            this.applyTransform();
-	        }
-	        calculateColor(property, progress) {
-	            let beginningValue = this.getBeginningValue(property);
-	            let endingValue = this.getEndingValue(property);
-	            let duration = this.duration;
-	            let easingFunction = this.easingFunction;
+	        };
+	        ElementAnimation.prototype.calculateColor = function (property, progress) {
+	            var beginningValue = this.getBeginningValue(property);
+	            var endingValue = this.getEndingValue(property);
+	            var duration = this.duration;
+	            var easingFunction = this.easingFunction;
 	            beginningValue = colorAliases[beginningValue.toLowerCase()] || beginningValue;
 	            endingValue = colorAliases[endingValue.toLowerCase()] || endingValue;
 	            if (beginningValue.indexOf("#") === 0) {
@@ -359,16 +366,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	                endingValue = convertHexToRgb(endingValue);
 	            }
 	            return this.rgbHandler(beginningValue, endingValue, progress, duration, easingFunction);
-	        }
-	        colorHandler(property, progress) {
-	            let value = this.calculateColor(property, progress);
+	        };
+	        ElementAnimation.prototype.colorHandler = function (property, progress) {
+	            var value = this.calculateColor(property, progress);
 	            value = this.properties[property].isImportant ? value + " !important" : value;
 	            this.currentValues[property] = value;
-	        }
-	        numberHandler(beginningValue, endingValue, progress, duration, easingFunction) {
-	            let value;
-	            let change = endingValue - beginningValue;
-	            let currentTime = progress * duration;
+	        };
+	        ElementAnimation.prototype.numberHandler = function (beginningValue, endingValue, progress, duration, easingFunction) {
+	            var value;
+	            var change = endingValue - beginningValue;
+	            var currentTime = progress * duration;
 	            if (change !== 0) {
 	                value = easingFunction(currentTime, beginningValue, change, duration);
 	            }
@@ -376,44 +383,45 @@ return /******/ (function(modules) { // webpackBootstrap
 	                value = endingValue;
 	            }
 	            return value.toFixed(5);
-	        }
-	        calculateNumberUnit(property, progress) {
-	            let beginningValue = this.getBeginningValue(property);
-	            let endingValue = this.getEndingValue(property);
-	            let duration = this.duration;
-	            let easingFunction = this.easingFunction;
-	            let beginningResults = numberUnitRegEx.exec(beginningValue);
-	            let endingResults = numberUnitRegEx.exec(endingValue);
-	            let unit = beginningResults[2];
+	        };
+	        ElementAnimation.prototype.calculateNumberUnit = function (property, progress) {
+	            var beginningValue = this.getBeginningValue(property);
+	            var endingValue = this.getEndingValue(property);
+	            var duration = this.duration;
+	            var easingFunction = this.easingFunction;
+	            var beginningResults = numberUnitRegEx.exec(beginningValue);
+	            var endingResults = numberUnitRegEx.exec(endingValue);
+	            var unit = beginningResults[2];
 	            if (typeof unit === "undefined") {
 	                throw new Error("Please use units for the '" + property + "', e.g. 10px, or 10%, 10em");
 	            }
 	            // To much precision hurts.
-	            let beginningFloat = Math.round(parseFloat(beginningResults[1]) * 100) / 100;
-	            let endingFloat = Math.round(parseFloat(endingResults[1]) * 100) / 100;
-	            let value = this.numberHandler(beginningFloat, endingFloat, progress, duration, easingFunction);
+	            var beginningFloat = Math.round(parseFloat(beginningResults[1]) * 100) / 100;
+	            var endingFloat = Math.round(parseFloat(endingResults[1]) * 100) / 100;
+	            var value = this.numberHandler(beginningFloat, endingFloat, progress, duration, easingFunction);
 	            return value += unit;
-	        }
-	        numberUnitHandler(property, progress) {
-	            let value = this.calculateNumberUnit(property, progress);
+	        };
+	        ElementAnimation.prototype.numberUnitHandler = function (property, progress) {
+	            var value = this.calculateNumberUnit(property, progress);
 	            value = this.properties[property].isImportant ? value + " !important" : value;
 	            this.currentValues[property] = value;
-	        }
-	        caclulateDecimal(property, progress) {
-	            let beginningValue = this.getBeginningValue(property);
-	            let endingValue = this.getEndingValue(property);
-	            let duration = this.duration;
-	            let easingFunction = this.easingFunction;
+	        };
+	        ElementAnimation.prototype.caclulateDecimal = function (property, progress) {
+	            var beginningValue = this.getBeginningValue(property);
+	            var endingValue = this.getEndingValue(property);
+	            var duration = this.duration;
+	            var easingFunction = this.easingFunction;
 	            beginningValue = parseFloat(beginningValue);
 	            endingValue = parseFloat(endingValue);
 	            return this.numberHandler(beginningValue, endingValue, progress, duration, easingFunction);
-	        }
-	        decimalHandler(property, progress) {
-	            let value = this.caclulateDecimal(property, progress);
+	        };
+	        ElementAnimation.prototype.decimalHandler = function (property, progress) {
+	            var value = this.caclulateDecimal(property, progress);
 	            value = this.properties[property].isImportant ? value + " !important" : value;
 	            this.currentValues[property] = value;
-	        }
-	    }
+	        };
+	        return ElementAnimation;
+	    }(Animation_1.default));
 	    Object.defineProperty(exports, "__esModule", { value: true });
 	    exports.default = ElementAnimation;
 	}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
@@ -425,8 +433,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(4), __webpack_require__(5), __webpack_require__(6)], __WEBPACK_AMD_DEFINE_RESULT__ = function (require, exports, animationStateManager_1, AnimationManager_1, easings_1) {
 	    "use strict";
+	    //import "./../node_modules/babel-polyfill/dist/polyfill";
 	    var delayAsync = function (milliseconds) {
-	        return new Promise((resolve, reject) => {
+	        return new Promise(function (resolve, reject) {
 	            setTimeout(resolve, milliseconds);
 	        });
 	    };
@@ -439,30 +448,60 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return observer;
 	    };
 	    var animationManager = new AnimationManager_1.default();
-	    class Observer {
-	        constructor(callback, unbind) {
+	    /**Stateful Observer */
+	    var Observer = (function () {
+	        /**
+	         * Creates an Observer.
+	         * @param {function} callback - The function that is invoked when the observer is notified.
+	         * @param {function} unbind - The function that is called when the observer is disposed.
+	         */
+	        function Observer(callback, unbind) {
 	            this._callback = callback;
 	            this._isStopped = false;
 	            this._isDisposed = false;
 	            this._unbind = unbind || function () { };
 	        }
-	        stop() {
+	        /**
+	         * Stops the observing.
+	         */
+	        Observer.prototype.stop = function () {
 	            this._isStopped = true;
-	        }
-	        start() {
+	        };
+	        /**
+	         * Starts the observing;
+	         */
+	        Observer.prototype.start = function () {
 	            this._isStopped = false;
-	        }
-	        callback(event) {
+	        };
+	        /**
+	         * Notifies the callback with this event.
+	         * @param {event} event - Emitted event.
+	         */
+	        Observer.prototype.callback = function (event) {
 	            if (!this._isStopped && !this._isDisposed) {
 	                this._callback(event);
 	            }
-	        }
-	        dispose() {
+	        };
+	        /**
+	         * Disposes the observer.
+	         */
+	        Observer.prototype.dispose = function () {
 	            return this._unbind();
-	        }
-	    }
-	    class Animation {
-	        constructor(config) {
+	        };
+	        return Observer;
+	    }());
+	    /**Class to manage an animation.*/
+	    var Animation = (function () {
+	        /**
+	         * Creates an animation.
+	         * #### Possible Configuration
+	         * - easing : string
+	         * - duration : number (milliseconds)
+	         * - target : object
+	         * - properties : object
+	         * @param {config} config - Configuration of the animation.
+	         */
+	        function Animation(config) {
 	            config = config || {};
 	            this.target = config.target || {};
 	            this.currentTime = 0;
@@ -500,36 +539,60 @@ return /******/ (function(modules) { // webpackBootstrap
 	                this.easingFunction = easings_1.default.linear;
 	            }
 	        }
-	        _saveBeginningValues() {
+	        Animation.prototype._saveBeginningValues = function () {
 	            var target = this.target;
 	            var beginningValues = this.beginningValues;
 	            var properties = this.properties;
 	            Object.keys(properties).forEach(function (property) {
 	                beginningValues[property] = target[property];
 	            });
-	        }
-	        play() {
+	        };
+	        /**
+	         * Plays the animation forward.
+	         * @returns {Animation}
+	         */
+	        Animation.prototype.play = function () {
 	            return this.currentState.play(this);
-	        }
-	        stop() {
+	        };
+	        /**
+	         * Stops the animation.
+	         * @returns {Animation}
+	         */
+	        Animation.prototype.stop = function () {
 	            this.currentState.stop(this);
 	            return this;
-	        }
-	        observeAtTick(ratio, callback) {
+	        };
+	        /**
+	         * Allows observing on a particular percentage ratio tick.
+	         * @param {number} ratio - The ratio of completeness between 0-1.
+	         * @param {function} callback - The function notified at the given ratio.
+	         * @returns {Observer}
+	         */
+	        Animation.prototype.observeAtTick = function (ratio, callback) {
 	            var percentage = ratio * 100;
 	            if (typeof percentage === "number" && percentage >= 0 && percentage <= 100) {
 	                percentage = parseInt(percentage);
 	                return this.observe(percentage.toString(), callback);
 	            }
 	            throw new Error("Invalid Argument Exception: percentage must be a decimal, and with in 0-1");
-	        }
-	        playToEndAsync(startAt) {
+	        };
+	        /**
+	         * Play the animation to the end.
+	         * @param {number} [startAt] - What ratio of completeness to start at. (0-1)
+	         * @returns {Promise}
+	         */
+	        Animation.prototype.playToEndAsync = function (startAt) {
 	            if (typeof startAt === "number" && startAt >= 0 && startAt <= 1) {
 	                this.progress = startAt;
 	            }
 	            return this.playToPercentageAsync(100);
-	        }
-	        playToPercentageAsync(percentage) {
+	        };
+	        /**
+	         * Play to the given percentage.
+	         * @param {number} percentage - The percentage to play to.
+	         * @returns {Promise}
+	         */
+	        Animation.prototype.playToPercentageAsync = function (percentage) {
 	            var self = this;
 	            var ratio = percentage / 100;
 	            percentage = parseInt(percentage, 10);
@@ -539,7 +602,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            if (typeof percentage !== "number" || percentage < 0 || percentage > 100) {
 	                throw new Error("Expected fraction to be a number within range (0-100).");
 	            }
-	            return new Promise((resolve, reject) => {
+	            return new Promise(function (resolve, reject) {
 	                self.stop();
 	                var disposeAllObservers = function () {
 	                    reverseObserver.dispose();
@@ -562,14 +625,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }).then(function () {
 	                return delayAsync(0);
 	            });
-	        }
-	        reverseToStartAsync(startAt) {
+	        };
+	        Animation.prototype.reverseToStartAsync = function (startAt) {
 	            if (typeof startAt === "number" && startAt >= 0 && startAt <= 1) {
 	                this.progress = startAt;
 	            }
 	            return this.reverseToPercentageAsync(0);
-	        }
-	        reverseToPercentageAsync(percentage) {
+	        };
+	        Animation.prototype.reverseToPercentageAsync = function (percentage) {
 	            var self = this;
 	            var ratio = percentage / 100;
 	            percentage = parseInt(percentage, 10);
@@ -602,47 +665,47 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }).then(function () {
 	                return delayAsync(0);
 	            });
-	        }
-	        pause() {
+	        };
+	        Animation.prototype.pause = function () {
 	            return this.currentState.pause(this);
-	        }
-	        restart() {
+	        };
+	        Animation.prototype.restart = function () {
 	            return this.currentState.restart(this);
-	        }
-	        reverse() {
+	        };
+	        Animation.prototype.reverse = function () {
 	            return this.currentState.reverse(this);
-	        }
-	        notify(event) {
+	        };
+	        Animation.prototype.notify = function (event) {
 	            var type = event.type;
 	            if (Array.isArray(this.observers[type])) {
 	                this.observers[type].forEach(function (observer) {
 	                    observer.callback(event);
 	                });
 	            }
-	        }
-	        tick(time) {
+	        };
+	        Animation.prototype.tick = function (time) {
 	            var value = this.currentState.tick(this, time);
 	            return value;
-	        }
-	        invalidate() {
+	        };
+	        Animation.prototype.invalidate = function () {
 	            this.progress = 0;
 	            this.currentState = animationStateManager_1.default.pausedState;
 	            return this;
-	        }
-	        getProgress() {
+	        };
+	        Animation.prototype.getProgress = function () {
 	            return this.progress;
-	        }
-	        setTimeScale(timeScale) {
+	        };
+	        Animation.prototype.setTimeScale = function (timeScale) {
 	            this.timeScale = timeScale;
-	        }
-	        getTimeScale() {
+	        };
+	        Animation.prototype.getTimeScale = function () {
 	            return this.timeScale;
-	        }
-	        seek(progressValue, now) {
+	        };
+	        Animation.prototype.seek = function (progressValue, now) {
 	            this.currentState.seek(this, progressValue, now);
 	            return this;
-	        }
-	        observe(type, callback) {
+	        };
+	        Animation.prototype.observe = function (type, callback) {
 	            var self = this;
 	            if (typeof type !== "string") {
 	                throw new Error("Need to supply a type.");
@@ -659,8 +722,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	            });
 	            callbacks.push(observer);
 	            return observer;
-	        }
-	        render() {
+	        };
+	        Animation.prototype.render = function () {
 	            var self = this;
 	            var progress = this.progress;
 	            var beginningValues = this.beginningValues;
@@ -703,14 +766,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	                }
 	            }
 	            return this;
-	        }
-	        static get REPEAT_DEFAULT() {
-	            return 0;
-	        }
-	        static get REPEAT_ALTERNATE() {
-	            return 1;
-	        }
-	    }
+	        };
+	        Object.defineProperty(Animation, "REPEAT_DEFAULT", {
+	            get: function () {
+	                return 0;
+	            },
+	            enumerable: true,
+	            configurable: true
+	        });
+	        Object.defineProperty(Animation, "REPEAT_ALTERNATE", {
+	            get: function () {
+	                return 1;
+	            },
+	            enumerable: true,
+	            configurable: true
+	        });
+	        return Animation;
+	    }());
 	    Object.defineProperty(exports, "__esModule", { value: true });
 	    exports.default = Animation;
 	}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
@@ -1024,8 +1096,29 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports], __WEBPACK_AMD_DEFINE_RESULT__ = function (require, exports) {
 	    "use strict";
-	    class AnimationManager {
-	        constructor(timer) {
+	    (function () {
+	        var lastTime = 0;
+	        var vendors = ['ms', 'moz', 'webkit', 'o'];
+	        for (var x = 0; x < vendors.length && !window.requestAnimationFrame; ++x) {
+	            window.requestAnimationFrame = window[vendors[x] + 'RequestAnimationFrame'];
+	            window.cancelAnimationFrame = window[vendors[x] + 'CancelAnimationFrame']
+	                || window[vendors[x] + 'CancelRequestAnimationFrame'];
+	        }
+	        if (!window.requestAnimationFrame)
+	            window.requestAnimationFrame = function (callback, element) {
+	                var currTime = new Date().getTime();
+	                var timeToCall = Math.max(0, 16 - (currTime - lastTime));
+	                var id = window.setTimeout(function () { callback(currTime + timeToCall); }, timeToCall);
+	                lastTime = currTime + timeToCall;
+	                return id;
+	            };
+	        if (!window.cancelAnimationFrame)
+	            window.cancelAnimationFrame = function (id) {
+	                clearTimeout(id);
+	            };
+	    }());
+	    var AnimationManager = (function () {
+	        function AnimationManager(timer) {
 	            this._currentRequestAnimationFrame = null;
 	            this._animations = [];
 	            this._lastTime = 0;
@@ -1038,20 +1131,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	            this._requestCallback = this._requestCallback.bind(this);
 	            this.setFramesPerSecond(this._fps);
 	        }
-	        setFramesPerSecond(fps) {
+	        AnimationManager.prototype.setFramesPerSecond = function (fps) {
 	            this._fps = fps;
 	            this._refreshRateInMilliseconds = 1000 / fps;
-	        }
-	        getFramesPerSecond() {
+	        };
+	        AnimationManager.prototype.getFramesPerSecond = function () {
 	            return this._fps;
-	        }
-	        checkRequestToStartOrStop() {
+	        };
+	        AnimationManager.prototype.checkRequestToStartOrStop = function () {
 	            var animations = this._animations;
 	            if (this._currentRequestAnimationFrame === null && animations.length > 0) {
 	                this._currentRequestAnimationFrame = requestAnimationFrame(this._requestCallback);
 	            }
-	        }
-	        tick(time) {
+	        };
+	        AnimationManager.prototype.tick = function (time) {
 	            var x;
 	            var animation;
 	            var animationsCopy;
@@ -1063,7 +1156,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                this._lastTime = time;
 	                if (length > 0) {
 	                    animationsCopy = animations.slice(0);
-	                    animationsCopy.forEach((animation) => {
+	                    animationsCopy.forEach(function (animation) {
 	                        animation.tick(time);
 	                    });
 	                    this._currentRequestAnimationFrame = requestAnimationFrame(this._requestCallback);
@@ -1075,24 +1168,25 @@ return /******/ (function(modules) { // webpackBootstrap
 	            else {
 	                this._currentRequestAnimationFrame = requestAnimationFrame(this._requestCallback);
 	            }
-	        }
-	        now() {
+	        };
+	        AnimationManager.prototype.now = function () {
 	            return this._timer.now();
-	        }
-	        register(animation) {
+	        };
+	        AnimationManager.prototype.register = function (animation) {
 	            var index = this._animations.indexOf(animation);
 	            if (index === -1) {
 	                this._animations.push(animation);
 	                this.checkRequestToStartOrStop();
 	            }
-	        }
-	        unregister(animation) {
+	        };
+	        AnimationManager.prototype.unregister = function (animation) {
 	            var index = this._animations.indexOf(animation);
 	            if (index >= 0) {
 	                this._animations.splice(index, 1);
 	            }
-	        }
-	    }
+	        };
+	        return AnimationManager;
+	    }());
 	    Object.defineProperty(exports, "__esModule", { value: true });
 	    exports.default = AnimationManager;
 	}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
@@ -1292,7 +1386,12 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 7 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(3), __webpack_require__(4)], __WEBPACK_AMD_DEFINE_RESULT__ = function (require, exports, Animation_1, animationStateManager_1) {
+	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(3), __webpack_require__(4)], __WEBPACK_AMD_DEFINE_RESULT__ = function (require, exports, Animation_1, animationStateManager_1) {
 	    "use strict";
 	    var orderBy = function (array, expr) {
 	        return array.sort(function (a, b) {
@@ -1360,30 +1459,32 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var renderByOffsetAndDuration = function (animationItem) {
 	        return animationItem.offset + animationItem.animation.duration;
 	    };
-	    class Timeline extends Animation_1.default {
-	        constructor(config) {
-	            super(config);
-	            this.animationItems = new Map();
-	            this.iterationCount = 1;
-	            this.lastCurrentTime = 0;
-	            this._duration = 0;
-	            Object.defineProperty(this, "duration", {
-	                get: () => {
-	                    return this._duration;
+	    var Timeline = (function (_super) {
+	        __extends(Timeline, _super);
+	        function Timeline(config) {
+	            var _this = _super.call(this, config) || this;
+	            _this.animationItems = new Map();
+	            _this.iterationCount = 1;
+	            _this.lastCurrentTime = 0;
+	            _this._duration = 0;
+	            Object.defineProperty(_this, "duration", {
+	                get: function () {
+	                    return _this._duration;
 	                },
-	                set: (value) => {
-	                    var oldValue = this._duration;
-	                    this.animationItems.forEach((animationItem) => {
+	                set: function (value) {
+	                    var oldValue = _this._duration;
+	                    _this.animationItems.forEach(function (animationItem) {
 	                        var offsetRatio = animationItem.offset / oldValue;
 	                        var offsetDuration = animationItem.animation.duration / oldValue;
 	                        animationItem.offset = offsetRatio * value;
 	                        animationItem.animation.duration = offsetDuration * value;
 	                    });
-	                    this._duration = value;
+	                    _this._duration = value;
 	                }
 	            });
+	            return _this;
 	        }
-	        calculateDuration() {
+	        Timeline.prototype.calculateDuration = function () {
 	            return Array.from(this.animationItems.values()).reduce(function (duration, animationItem) {
 	                var animationTotalDuration = animationItem.offset + animationItem.animation.duration;
 	                if (animationTotalDuration > duration) {
@@ -1391,8 +1492,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	                }
 	                return duration;
 	            }, 0);
-	        }
-	        add(...allAnimationItems) {
+	        };
+	        Timeline.prototype.add = function () {
+	            var allAnimationItems = [];
+	            for (var _i = 0; _i < arguments.length; _i++) {
+	                allAnimationItems[_i] = arguments[_i];
+	            }
 	            var animationItems = Array.prototype.slice.call(arguments, 0);
 	            var self = this;
 	            animationItems.forEach(function (animationItem) {
@@ -1409,15 +1514,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	            this.reverseArrayAnimations = this.forwardArrayAnimations.slice(0);
 	            orderBy(this.forwardArrayAnimations, renderByOffset);
 	            orderByDesc(this.reverseArrayAnimations, renderByOffsetAndDuration);
-	        }
-	        remove(animationItem) {
+	        };
+	        Timeline.prototype.remove = function (animationItem) {
 	            this.animationItems.delete(animationItem);
 	            this.forwardArrayAnimations = Array.from(this.animationItems.values());
 	            this.reverseArrayAnimations = this.forwardArrayAnimations.slice(0);
 	            orderBy(this.forwardArrayAnimations, renderByOffset);
 	            orderByDesc(this.reverseArrayAnimations, renderByOffsetAndDuration);
-	        }
-	        render() {
+	        };
+	        Timeline.prototype.render = function () {
 	            var progress = this.progress;
 	            var timelineDuration = this._duration;
 	            var currentTime = progress * timelineDuration;
@@ -1470,8 +1575,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	                }
 	            });
 	            return this;
-	        }
-	    }
+	        };
+	        return Timeline;
+	    }(Animation_1.default));
 	    Object.defineProperty(exports, "__esModule", { value: true });
 	    exports.default = Timeline;
 	}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
@@ -1481,34 +1587,43 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 8 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(7), __webpack_require__(3)], __WEBPACK_AMD_DEFINE_RESULT__ = function (require, exports, Timeline_1, Animation_1) {
+	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(7), __webpack_require__(3)], __WEBPACK_AMD_DEFINE_RESULT__ = function (require, exports, Timeline_1, Animation_1) {
 	    "use strict";
-	    class PercentageTimeline extends Timeline_1.default {
-	        constructor(duration) {
-	            super();
-	            this._duration = duration;
-	            Object.defineProperty(this, "duration", {
-	                get: () => {
-	                    return this._duration;
+	    var PercentageTimeline = (function (_super) {
+	        __extends(PercentageTimeline, _super);
+	        function PercentageTimeline(duration) {
+	            var _this = _super.call(this) || this;
+	            _this._duration = duration;
+	            Object.defineProperty(_this, "duration", {
+	                get: function () {
+	                    return _this._duration;
 	                },
-	                set: (value) => {
-	                    this._duration = value;
-	                    this._calculateAnimations();
+	                set: function (value) {
+	                    _this._duration = value;
+	                    _this._calculateAnimations();
 	                }
 	            });
+	            return _this;
 	        }
-	        _calculateAnimations() {
-	            this.animationItems.forEach((animationItem) => {
-	                var offset = animationItem.startAt * this._duration;
-	                var duration = (animationItem.endAt * this._duration) - offset;
+	        PercentageTimeline.prototype._calculateAnimations = function () {
+	            var _this = this;
+	            this.animationItems.forEach(function (animationItem) {
+	                var offset = animationItem.startAt * _this._duration;
+	                var duration = (animationItem.endAt * _this._duration) - offset;
 	                animationItem.offset = offset;
 	                animationItem.animation.duration = duration;
 	            });
-	        }
-	        add() {
+	        };
+	        PercentageTimeline.prototype.add = function () {
+	            var _this = this;
 	            var self = this;
 	            var animationItems = Array.prototype.slice.call(arguments, 0);
-	            animationItems.forEach((animationItem) => {
+	            animationItems.forEach(function (animationItem) {
 	                if (typeof animationItem.startAt !== "number") {
 	                    throw new Error("animationItem needs to have an startAt percentage property set.");
 	                }
@@ -1528,10 +1643,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	                var duration = (animationItem.endAt * self.duration) - offset;
 	                animationItem.offset = offset;
 	                animationItem.animation.duration = duration;
-	                super.add(animationItem);
+	                _super.prototype.add.call(_this, animationItem);
 	            });
-	        }
-	    }
+	        };
+	        return PercentageTimeline;
+	    }(Timeline_1.default));
 	    Object.defineProperty(exports, "__esModule", { value: true });
 	    exports.default = PercentageTimeline;
 	}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
@@ -1541,9 +1657,14 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 9 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(3)], __WEBPACK_AMD_DEFINE_RESULT__ = function (require, exports, Animation_js_1) {
+	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(3)], __WEBPACK_AMD_DEFINE_RESULT__ = function (require, exports, Animation_js_1) {
 	    "use strict";
-	    const isVector = function (vector) {
+	    var isVector = function (vector) {
 	        if (typeof vector.x !== "number" &&
 	            typeof vector.y !== "number" &&
 	            typeof vector.z !== "number") {
@@ -1551,8 +1672,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 	        return true;
 	    };
-	    const assertVector = function (vector) {
-	        let vectorString;
+	    var assertVector = function (vector) {
+	        var vectorString;
 	        if (!isVector(vector)) {
 	            try {
 	                vectorString = JSON.stringify(vector);
@@ -1563,16 +1684,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	            throw new Error("Invalid vector: " + vectorString);
 	        }
 	    };
-	    const assertControlsAreVectors = function (controls) {
+	    var assertControlsAreVectors = function (controls) {
 	        if (!Array.isArray(controls)) {
 	            throw new Error("The animations controls need to be an array of vectors.");
 	        }
-	        let passed = controls.every(isVector);
+	        var passed = controls.every(isVector);
 	        if (!passed) {
 	            throw new Error("Invalid control vectors.");
 	        }
 	    };
-	    const normalizeVector = function (vector) {
+	    var normalizeVector = function (vector) {
 	        if (typeof vector.x !== "number") {
 	            vector.x = 0;
 	        }
@@ -1583,45 +1704,47 @@ return /******/ (function(modules) { // webpackBootstrap
 	            vector.z = 0;
 	        }
 	    };
-	    const calculatePosition = function (from, to, percent) {
+	    var calculatePosition = function (from, to, percent) {
 	        return ((to - from) * percent) + from;
 	    };
-	    class ElementPathAnimation extends Animation_js_1.default {
-	        constructor(config) {
-	            super(config);
+	    var ElementPathAnimation = (function (_super) {
+	        __extends(ElementPathAnimation, _super);
+	        function ElementPathAnimation(config) {
+	            var _this = _super.call(this, config) || this;
 	            config = config || {};
-	            this.target = config.target;
-	            this.duration = config.duration;
-	            this.unit = config.unit;
-	            this.from = config.from;
-	            this.to = config.to;
-	            this.controls = config.controls || [];
-	            this.points = [];
-	            this.calculationMatrix = [];
-	            if (!(this.target instanceof Element)) {
+	            _this.target = config.target;
+	            _this.duration = config.duration;
+	            _this.unit = config.unit;
+	            _this.from = config.from;
+	            _this.to = config.to;
+	            _this.controls = config.controls || [];
+	            _this.points = [];
+	            _this.calculationMatrix = [];
+	            if (!(_this.target instanceof Element)) {
 	                throw new Error("The target must be an Element.");
 	            }
-	            if (typeof this.duration !== "number") {
+	            if (typeof _this.duration !== "number") {
 	                throw new Error("The animation's duration must be a number.");
 	            }
-	            if (typeof this.unit !== "string") {
+	            if (typeof _this.unit !== "string") {
 	                throw new Error("The animation's unit should be a string");
 	            }
-	            assertVector(this.from);
-	            assertVector(this.to);
-	            assertControlsAreVectors(this.controls);
-	            this.change = {
-	                x: this.to.x - this.from.x,
-	                y: this.to.y - this.from.y,
-	                z: this.to.z - this.from.z
+	            assertVector(_this.from);
+	            assertVector(_this.to);
+	            assertControlsAreVectors(_this.controls);
+	            _this.change = {
+	                x: _this.to.x - _this.from.x,
+	                y: _this.to.y - _this.from.y,
+	                z: _this.to.z - _this.from.z
 	            };
-	            this.points = this.controls.slice(0);
-	            this.points.unshift(this.from);
-	            this.points.push(this.to);
-	            this.points.forEach(normalizeVector);
-	            this.prepareTransformValues(this.target);
+	            _this.points = _this.controls.slice(0);
+	            _this.points.unshift(_this.from);
+	            _this.points.push(_this.to);
+	            _this.points.forEach(normalizeVector);
+	            _this.prepareTransformValues(_this.target);
+	            return _this;
 	        }
-	        prepareTransformValues(element) {
+	        ElementPathAnimation.prototype.prepareTransformValues = function (element) {
 	            if (typeof element.style.scaleX === "undefined") {
 	                element._scaleX = "1";
 	                element._scaleY = "1";
@@ -1633,27 +1756,27 @@ return /******/ (function(modules) { // webpackBootstrap
 	                element._translateY = "0";
 	                element._translateZ = "0";
 	            }
-	        }
-	        applyTransform() {
-	            let element = this.target;
-	            let transform = "scaleX(" + element._scaleX + ") scaleY(" + element._scaleY + ") scaleZ(" + element._scaleZ + ")";
+	        };
+	        ElementPathAnimation.prototype.applyTransform = function () {
+	            var element = this.target;
+	            var transform = "scaleX(" + element._scaleX + ") scaleY(" + element._scaleY + ") scaleZ(" + element._scaleZ + ")";
 	            transform += " rotateX(" + element._rotateX + ") rotateY(" + element._rotateY + ") rotateZ(" + element._rotateZ + ")";
 	            transform += " translateX(" + element._translateX + ") translateY(" + element._translateY + ") translateZ(" + element._translateZ + ")";
 	            element.style.webkitTransform = transform;
 	            element.style.mozTransform = transform;
 	            element.style.msTransform = transform;
 	            element.style.transform = transform;
-	        }
-	        reduce(points, percent, index, easing) {
+	        };
+	        ElementPathAnimation.prototype.reduce = function (points, percent, index, easing) {
 	            if (typeof index === "undefined") {
 	                index = 0;
 	            }
-	            let easingPercent = easing(this.progress * this.duration, 0, 1, this.duration);
+	            var easingPercent = easing(this.progress * this.duration, 0, 1, this.duration);
 	            this.calculationMatrix[index] = points;
-	            let reducedPoints = this.calculationMatrix[index + 1] || [];
+	            var reducedPoints = this.calculationMatrix[index + 1] || [];
 	            points.reduce(function (reducedPoints, currentValue, index) {
 	                if (index !== points.length - 1) {
-	                    let vector = reducedPoints[index] = reducedPoints[index] || { x: 0, y: 0, z: 0 };
+	                    var vector = reducedPoints[index] = reducedPoints[index] || { x: 0, y: 0, z: 0 };
 	                    vector.x = calculatePosition(currentValue.x, points[index + 1].x, easingPercent);
 	                    vector.y = calculatePosition(currentValue.y, points[index + 1].y, easingPercent);
 	                    vector.z = calculatePosition(currentValue.z, points[index + 1].z, easingPercent);
@@ -1664,21 +1787,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	                return this.reduce(reducedPoints, percent, index + 1, easing);
 	            }
 	            return reducedPoints;
-	        }
-	        render() {
-	            let target = this.target;
-	            let unit = this.unit;
-	            let progress = this.progress;
-	            let easing = this.easingFunction;
-	            let currentPosition = this.reduce(this.points, progress, 0, easing);
+	        };
+	        ElementPathAnimation.prototype.render = function () {
+	            var target = this.target;
+	            var unit = this.unit;
+	            var progress = this.progress;
+	            var easing = this.easingFunction;
+	            var currentPosition = this.reduce(this.points, progress, 0, easing);
 	            target._translateX = currentPosition[0].x + unit;
 	            target._translateY = currentPosition[0].y + unit;
 	            // According to spec, translateZ cannot be any unit but px.
 	            target._translateZ = currentPosition[0].z + "px";
 	            this.applyTransform();
 	            return this;
-	        }
-	    }
+	        };
+	        return ElementPathAnimation;
+	    }(Animation_js_1.default));
 	    Object.defineProperty(exports, "__esModule", { value: true });
 	    exports.default = ElementPathAnimation;
 	}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
@@ -1688,7 +1812,12 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 10 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(11)], __WEBPACK_AMD_DEFINE_RESULT__ = function (require, exports, CustomRenderAnimation_1) {
+	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(11)], __WEBPACK_AMD_DEFINE_RESULT__ = function (require, exports, CustomRenderAnimation_1) {
 	    "use strict";
 	    var transformMappings = {
 	        scaleX: true,
@@ -1701,13 +1830,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	        translateY: true,
 	        translateZ: true
 	    };
-	    class CssAnimation extends CustomRenderAnimation_1.default {
-	        constructor(config) {
+	    var CssAnimation = (function (_super) {
+	        __extends(CssAnimation, _super);
+	        function CssAnimation(config) {
+	            var _this = this;
 	            config.originalRenderer = config.renderer;
-	            config.renderer = (values) => {
-	                var target = this.target;
+	            config.renderer = function (values) {
+	                var target = _this.target;
 	                var hasTransform = false;
-	                Object.keys(values).forEach((key) => {
+	                Object.keys(values).forEach(function (key) {
 	                    if (transformMappings[key]) {
 	                        hasTransform = true;
 	                        return;
@@ -1715,16 +1846,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    target[key] = values[key];
 	                });
 	                if (hasTransform) {
-	                    this.handleTransforms(values, target);
+	                    _this.handleTransforms(values, target);
 	                }
 	                if (config.target == null && typeof config.originalRenderer === "function") {
 	                    config.originalRenderer(target);
 	                }
 	            };
-	            super(config);
-	            this.target = config.target || {};
+	            _this = _super.call(this, config) || this;
+	            _this.target = config.target || {};
+	            return _this;
 	        }
-	        handleTransforms(values, target) {
+	        CssAnimation.prototype.handleTransforms = function (values, target) {
 	            if (values.scaleX != null ||
 	                values.scaleY != null ||
 	                values.scaleZ != null ||
@@ -1743,7 +1875,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                values.translateX = values.translateX || "0";
 	                values.translateY = values.translateY || "0";
 	                values.translateZ = values.translateZ || "0";
-	                let transform = "scaleX(" + values.scaleX + ") scaleY(" + values.scaleY + ") scaleZ(" + values.scaleZ + ")";
+	                var transform = "scaleX(" + values.scaleX + ") scaleY(" + values.scaleY + ") scaleZ(" + values.scaleZ + ")";
 	                transform += " rotateX(" + values.rotateX + ") rotateY(" + values.rotateY + ") rotateZ(" + values.rotateZ + ")";
 	                transform += " translateX(" + values.translateX + ") translateY(" + values.translateY + ") translateZ(" + values.translateZ + ")";
 	                this.target["webkitTransform"] = transform;
@@ -1751,8 +1883,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	                this.target["msTransform"] = transform;
 	                this.target["transform"] = transform;
 	            }
-	        }
-	    }
+	        };
+	        return CssAnimation;
+	    }(CustomRenderAnimation_1.default));
 	    Object.defineProperty(exports, "__esModule", { value: true });
 	    exports.default = CssAnimation;
 	}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
@@ -1762,7 +1895,12 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(3)], __WEBPACK_AMD_DEFINE_RESULT__ = function (require, exports, Animation_1) {
+	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;var __extends = (this && this.__extends) || function (d, b) {
+	    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+	    function __() { this.constructor = d; }
+	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+	};
+	!(__WEBPACK_AMD_DEFINE_ARRAY__ = [__webpack_require__, exports, __webpack_require__(3)], __WEBPACK_AMD_DEFINE_RESULT__ = function (require, exports, Animation_1) {
 	    "use strict";
 	    var numberUnitRegEx = /^(\-?\d*\.?\d+)+(.*?)$/i;
 	    var rgbRegEx = /^rgb\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)$/i;
@@ -1807,39 +1945,41 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return value;
 	    };
 	    var valueHandlers = [{
-	            test: (value) => {
+	            test: function (value) {
 	                return isUnitNumber.test(value);
 	            },
-	            map: (value) => {
+	            map: function (value) {
 	                return value;
 	            },
 	            name: "numberUnitHandler"
 	        }, {
-	            test: (value) => {
+	            test: function (value) {
 	                return isColor.test(value);
 	            },
-	            map: (value) => {
+	            map: function (value) {
 	                return convertHexToRgb(value);
 	            },
 	            name: "colorHandler"
 	        }, {
-	            test: (value) => {
+	            test: function (value) {
 	                return typeof value === "number";
 	            },
-	            map: (value) => {
+	            map: function (value) {
 	                return value;
 	            },
 	            name: "decimalHandler"
 	        }];
-	    class CustomRenderAnimation extends Animation_1.default {
-	        constructor(config) {
-	            super(config);
-	            this.element = config.target;
-	            this.target = {};
-	            this.renderer = config.renderer || function (values) { };
-	            this.assignHandlers();
+	    var CustomRenderAnimation = (function (_super) {
+	        __extends(CustomRenderAnimation, _super);
+	        function CustomRenderAnimation(config) {
+	            var _this = _super.call(this, config) || this;
+	            _this.element = config.target;
+	            _this.target = {};
+	            _this.renderer = config.renderer || function (values) { };
+	            _this.assignHandlers();
+	            return _this;
 	        }
-	        assignHandlers() {
+	        CustomRenderAnimation.prototype.assignHandlers = function () {
 	            var properties = this.properties;
 	            Object.keys(properties).forEach(function (name) {
 	                var property = properties[name];
@@ -1849,7 +1989,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                if (property.from == null) {
 	                    throw new Error("Cannot animate \"" + name + "\" without specifying the \"from\" field.");
 	                }
-	                valueHandlers.some((handler) => {
+	                valueHandlers.some(function (handler) {
 	                    if (handler.test(property.from) && handler.test(property.to)) {
 	                        property.from = handler.map(property.from);
 	                        property.to = handler.map(property.to);
@@ -1862,27 +2002,28 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    property.handlerName = "nullableHandler";
 	                }
 	            });
-	        }
-	        render() {
+	        };
+	        CustomRenderAnimation.prototype.render = function () {
+	            var _this = this;
 	            var progress = this.progress;
 	            var properties = this.properties;
-	            Object.keys(properties).forEach((propertyName) => {
+	            Object.keys(properties).forEach(function (propertyName) {
 	                var property = properties[propertyName];
 	                var handlerName = property.handlerName;
-	                var handler = this[handlerName];
+	                var handler = _this[handlerName];
 	                if (typeof handler !== "function") {
 	                    throw new Error("Unassigned Handler.");
 	                }
-	                var value = handler.apply(this, [property, progress]);
-	                this.target[propertyName] = value;
+	                var value = handler.apply(_this, [property, progress]);
+	                _this.target[propertyName] = value;
 	            });
 	            this.renderer(this.target);
 	            return this;
-	        }
-	        nullableHandler(property, progress) {
+	        };
+	        CustomRenderAnimation.prototype.nullableHandler = function (property, progress) {
 	            return property.from;
-	        }
-	        calculateColor(property, progress) {
+	        };
+	        CustomRenderAnimation.prototype.calculateColor = function (property, progress) {
 	            var value;
 	            var beginningValue = property.from;
 	            var endingValue = property.to;
@@ -1891,12 +2032,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	            beginningValue = colorAliases[beginningValue.toLowerCase()] || beginningValue;
 	            endingValue = colorAliases[endingValue.toLowerCase()] || endingValue;
 	            return this.rgbHandler(beginningValue, endingValue, progress, duration, easingFunction);
-	        }
-	        colorHandler(property, progress) {
+	        };
+	        CustomRenderAnimation.prototype.colorHandler = function (property, progress) {
 	            var value = this.calculateColor(property, progress);
 	            return value;
-	        }
-	        numberHandler(beginningValue, endingValue, progress, duration, easingFunction) {
+	        };
+	        CustomRenderAnimation.prototype.numberHandler = function (beginningValue, endingValue, progress, duration, easingFunction) {
 	            var value;
 	            var change = endingValue - beginningValue;
 	            var currentTime = progress * duration;
@@ -1907,8 +2048,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	                value = endingValue;
 	            }
 	            return value.toFixed(5);
-	        }
-	        calculateNumberUnit(property, progress) {
+	        };
+	        CustomRenderAnimation.prototype.calculateNumberUnit = function (property, progress) {
 	            var value;
 	            var beginningValue = property.from;
 	            var endingValue = property.to;
@@ -1922,12 +2063,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	            var endingFloat = Math.round(parseFloat(endingResults[1]) * 100) / 100;
 	            var value = this.numberHandler(beginningFloat, endingFloat, progress, duration, easingFunction);
 	            return value += unit;
-	        }
-	        numberUnitHandler(property, progress) {
+	        };
+	        CustomRenderAnimation.prototype.numberUnitHandler = function (property, progress) {
 	            var value = this.calculateNumberUnit(property, progress);
 	            return value;
-	        }
-	        caclulateDecimal(property, progress) {
+	        };
+	        CustomRenderAnimation.prototype.caclulateDecimal = function (property, progress) {
 	            var value;
 	            var beginningValue = property.from;
 	            var endingValue = property.to;
@@ -1936,12 +2077,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	            beginningValue = parseFloat(beginningValue);
 	            endingValue = parseFloat(endingValue);
 	            return this.numberHandler(beginningValue, endingValue, progress, duration, easingFunction);
-	        }
-	        decimalHandler(property, progress) {
+	        };
+	        CustomRenderAnimation.prototype.decimalHandler = function (property, progress) {
 	            var value = this.caclulateDecimal(property, progress);
 	            return value;
-	        }
-	        rgbaHandler(beginningValue, endingValue, progress, duration, easingFunction) {
+	        };
+	        CustomRenderAnimation.prototype.rgbaHandler = function (beginningValue, endingValue, progress, duration, easingFunction) {
 	            var value;
 	            var beginningValues = beginningValue.match(rgbaRegEx);
 	            var endingValues = endingValue.match(rgbaRegEx);
@@ -1962,9 +2103,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	            blue = getRgbWithInRangeValue(blue);
 	            value = "rgb(" + red + "," + green + "," + blue + ")";
 	            return value;
-	        }
+	        };
 	        ;
-	        rgbHandler(beginningValue, endingValue, progress, duration, easingFunction) {
+	        CustomRenderAnimation.prototype.rgbHandler = function (beginningValue, endingValue, progress, duration, easingFunction) {
 	            var value;
 	            var beginningValues = beginningValue.match(rgbRegEx);
 	            var endingValues = endingValue.match(rgbRegEx);
@@ -2018,8 +2159,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	            blue = getRgbWithInRangeValue(blue);
 	            value = "rgb(" + red + "," + green + "," + blue + ")";
 	            return value;
-	        }
-	    }
+	        };
+	        return CustomRenderAnimation;
+	    }(Animation_1.default));
 	    Object.defineProperty(exports, "__esModule", { value: true });
 	    exports.default = CustomRenderAnimation;
 	}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));

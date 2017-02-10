@@ -1,3 +1,8 @@
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
 define(["require", "exports", "./CustomRenderAnimation"], function (require, exports, CustomRenderAnimation_1) {
     "use strict";
     var transformMappings = {
@@ -11,13 +16,15 @@ define(["require", "exports", "./CustomRenderAnimation"], function (require, exp
         translateY: true,
         translateZ: true
     };
-    class CssAnimation extends CustomRenderAnimation_1.default {
-        constructor(config) {
+    var CssAnimation = (function (_super) {
+        __extends(CssAnimation, _super);
+        function CssAnimation(config) {
+            var _this = this;
             config.originalRenderer = config.renderer;
-            config.renderer = (values) => {
-                var target = this.target;
+            config.renderer = function (values) {
+                var target = _this.target;
                 var hasTransform = false;
-                Object.keys(values).forEach((key) => {
+                Object.keys(values).forEach(function (key) {
                     if (transformMappings[key]) {
                         hasTransform = true;
                         return;
@@ -25,16 +32,17 @@ define(["require", "exports", "./CustomRenderAnimation"], function (require, exp
                     target[key] = values[key];
                 });
                 if (hasTransform) {
-                    this.handleTransforms(values, target);
+                    _this.handleTransforms(values, target);
                 }
                 if (config.target == null && typeof config.originalRenderer === "function") {
                     config.originalRenderer(target);
                 }
             };
-            super(config);
-            this.target = config.target || {};
+            _this = _super.call(this, config) || this;
+            _this.target = config.target || {};
+            return _this;
         }
-        handleTransforms(values, target) {
+        CssAnimation.prototype.handleTransforms = function (values, target) {
             if (values.scaleX != null ||
                 values.scaleY != null ||
                 values.scaleZ != null ||
@@ -53,7 +61,7 @@ define(["require", "exports", "./CustomRenderAnimation"], function (require, exp
                 values.translateX = values.translateX || "0";
                 values.translateY = values.translateY || "0";
                 values.translateZ = values.translateZ || "0";
-                let transform = "scaleX(" + values.scaleX + ") scaleY(" + values.scaleY + ") scaleZ(" + values.scaleZ + ")";
+                var transform = "scaleX(" + values.scaleX + ") scaleY(" + values.scaleY + ") scaleZ(" + values.scaleZ + ")";
                 transform += " rotateX(" + values.rotateX + ") rotateY(" + values.rotateY + ") rotateZ(" + values.rotateZ + ")";
                 transform += " translateX(" + values.translateX + ") translateY(" + values.translateY + ") translateZ(" + values.translateZ + ")";
                 this.target["webkitTransform"] = transform;
@@ -61,8 +69,9 @@ define(["require", "exports", "./CustomRenderAnimation"], function (require, exp
                 this.target["msTransform"] = transform;
                 this.target["transform"] = transform;
             }
-        }
-    }
+        };
+        return CssAnimation;
+    }(CustomRenderAnimation_1.default));
     Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = CssAnimation;
 });
