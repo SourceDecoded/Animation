@@ -6,13 +6,13 @@ npm install clarity-animation
 ```
 
 ## Browser support
-IE Edge
-Chrome 38+
-Firefox 51+
-Opera 42+
-iOS Safari 9.3
-Android Browser 4.4.4
-Chrome For Android 55+
+* IE Edge
+* Chrome 38+
+* Firefox 51+
+* Opera 42+
+* iOS Safari 9.3
+* Android Browser 4.4.4
+* Chrome For Android 55+
 
 * [List of Examples](https://sourcedecoded.github.io/Animation/)
 * [Basic](https://sourcedecoded.github.io/Animation/examples/basic.html)
