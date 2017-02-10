@@ -1,6 +1,7 @@
 var gulp = require("gulp");
 var exec = require("child_process").exec;
 var jsdoc = require("gulp-jsdoc3");
+var uglify = require("gulp-uglify");
 
 gulp.task("typescript", function (callback) {
     exec("tsc", function (err) {
@@ -22,8 +23,12 @@ gulp.task("webpack", ["typescript"], function (callback) {
     });
 });
 
-gulp.task("jsdoc", ["typescript", "webpack"], function (callback) {
+gulp.task("jsdoc", ["webpack"], function (callback) {
     gulp.src(["./README.md", "./library/**/*.js"], { read: false }).pipe(jsdoc(callback));
 });
 
-gulp.task("default", ["webpack", "typescript", "jsdoc"]);
+gulp.task("minify", ["webpack"], function () {
+    gulp.src("./dist/main.js").pipe(uglify()).pipe(gulp.dest("./dist/"));
+});
+
+gulp.task("default", ["webpack", "typescript", "jsdoc", "minify"]);

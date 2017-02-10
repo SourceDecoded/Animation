@@ -1,5 +1,6 @@
-define(["require", "exports", "./animationStateManager", "./AnimationManager", "./easings", "./../node_modules/babel-polyfill/dist/polyfill"], function (require, exports, animationStateManager_1, AnimationManager_1, easings_1) {
+define(["require", "exports", "./animationStateManager", "./AnimationManager", "./easings"], function (require, exports, animationStateManager_1, AnimationManager_1, easings_1) {
     "use strict";
+    //import "./../node_modules/babel-polyfill/dist/polyfill";
     var delayAsync = function (milliseconds) {
         return new Promise(function (resolve, reject) {
             setTimeout(resolve, milliseconds);
