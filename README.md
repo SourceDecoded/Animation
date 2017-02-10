@@ -14,6 +14,8 @@ npm install clarity-animation
 * Android Browser 4.4.4
 * Chrome For Android 55+
 
+
+## Examples
 * [List of Examples](https://sourcedecoded.github.io/Animation/)
 * [Basic](https://sourcedecoded.github.io/Animation/examples/basic.html)
 * [Animation Controls](https://sourcedecoded.github.io/Animation/examples/controls.html)
