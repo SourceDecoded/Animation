@@ -2,7 +2,7 @@
 import Animation from "./Animation";
 
 export default class PercentageTimeline extends Timeline {
-     _duration;
+    _duration;
 
     constructor(duration) {
         super();
@@ -15,7 +15,8 @@ export default class PercentageTimeline extends Timeline {
             set: (value) => {
                 this._duration = value;
                 this._calculateAnimations();
-            }
+            },
+            configurable: true
         });
     }
 
@@ -54,13 +55,15 @@ export default class PercentageTimeline extends Timeline {
                 throw new Error("endAt needs to be greater than startAt.");
             }
 
-            var offset = animationItem.startAt * self.duration;
-            var duration = (animationItem.endAt * self.duration) - offset;
+            var offset = animationItem.startAt * self._duration;
+            var duration = (animationItem.endAt * self._duration) - offset;
 
             animationItem.offset = offset;
             animationItem.animation.duration = duration;
 
-            super.add(animationItem);
+            this.animationItems.set(animationItem, animationItem);
+
+            this.cacheDirection();
 
         });
 

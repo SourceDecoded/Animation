@@ -122,7 +122,8 @@ export default class Timeline extends Animation {
                 });
 
                 this._duration = value;
-            }
+            },
+            configurable: true
         });
     }
 
@@ -134,6 +135,14 @@ export default class Timeline extends Animation {
             }
             return duration;
         }, 0);
+    }
+
+    cacheDirection() {
+        this.forwardArrayAnimations = Array.from(this.animationItems.values());
+        this.reverseArrayAnimations = this.forwardArrayAnimations.slice(0);
+
+        orderBy(this.forwardArrayAnimations, renderByOffset);
+        orderByDesc(this.reverseArrayAnimations, renderByOffsetAndDuration);
     }
 
     add(...allAnimationItems) {
@@ -153,12 +162,7 @@ export default class Timeline extends Animation {
         });
 
         this._duration = this.calculateDuration();
-
-        this.forwardArrayAnimations = Array.from(this.animationItems.values());
-        this.reverseArrayAnimations = this.forwardArrayAnimations.slice(0);
-
-        orderBy(this.forwardArrayAnimations, renderByOffset);
-        orderByDesc(this.reverseArrayAnimations, renderByOffsetAndDuration);
+        this.cacheDirection();
     }
 
     remove(animationItem) {

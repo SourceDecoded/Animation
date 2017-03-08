@@ -3,7 +3,6 @@
 <head>
     <title>SVG Exmaple</title>
     <style>
-
     </style>
 </head>
 
@@ -17,19 +16,18 @@
     <script src="../scripts/clarity-animation.js"></script>
     <script>
         var CustomRenderAnimation = clarityAnimation.CustomRenderAnimation;
+        var PercentageTimeline = clarityAnimation.PercentageTimeline;
         var circle = document.querySelector("#circle");
+
+        var timeline = new PercentageTimeline(2000);
 
         var animation = new CustomRenderAnimation({
             renderer: (values) => {
-                Object.keys(values).forEach((propertyName)=>{
+                Object.keys(values).forEach((propertyName) => {
                     circle.setAttribute(propertyName, values[propertyName]);
                 });
             },
             properties: {
-                "stroke-width": {
-                    from: 4,
-                    to: 8
-                },
                 "r": {
                     from: 40,
                     to: 30
@@ -39,14 +37,38 @@
                     to: "#123456"
                 }
             },
-            duration: 500,
             easing: "easeOutQuad"
         });
 
-        animation.repeatDirection = CustomRenderAnimation.REPEAT_ALTERNATE;
-        animation.repeat = Infinity;
+        var animation1 = new CustomRenderAnimation({
+            renderer: (values) => {
+                Object.keys(values).forEach((propertyName) => {
+                    circle.setAttribute(propertyName, values[propertyName]);
+                });
+            },
+            properties: {
+                "stroke-width": {
+                    from: 4,
+                    to: 8
+                }
+            },
+            easing: "easeOutQuad"
+        });
 
-        animation.play();
+        timeline.add({
+            animation: animation,
+            startAt: 0,
+            endAt: 0.25
+        });
+        timeline.add({
+            animation: animation1,
+            startAt: 0.25,
+            endAt: 1
+        });
+
+        timeline.repeatDirection = CustomRenderAnimation.REPEAT_ALTERNATE;
+        timeline.repeat = Infinity;
+        timeline.play();
     </script>
 </body>
 
