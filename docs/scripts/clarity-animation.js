@@ -1480,7 +1480,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	                        animationItem.animation.duration = offsetDuration * value;
 	                    });
 	                    _this._duration = value;
-	                }
+	                },
+	                configurable: true
 	            });
 	            return _this;
 	        }
@@ -1492,6 +1493,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	                }
 	                return duration;
 	            }, 0);
+	        };
+	        Timeline.prototype.cacheDirection = function () {
+	            this.forwardArrayAnimations = Array.from(this.animationItems.values());
+	            this.reverseArrayAnimations = this.forwardArrayAnimations.slice(0);
+	            orderBy(this.forwardArrayAnimations, renderByOffset);
+	            orderByDesc(this.reverseArrayAnimations, renderByOffsetAndDuration);
 	        };
 	        Timeline.prototype.add = function () {
 	            var allAnimationItems = [];
@@ -1510,10 +1517,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                self.animationItems.set(animationItem, animationItem);
 	            });
 	            this._duration = this.calculateDuration();
-	            this.forwardArrayAnimations = Array.from(this.animationItems.values());
-	            this.reverseArrayAnimations = this.forwardArrayAnimations.slice(0);
-	            orderBy(this.forwardArrayAnimations, renderByOffset);
-	            orderByDesc(this.reverseArrayAnimations, renderByOffsetAndDuration);
+	            this.cacheDirection();
 	        };
 	        Timeline.prototype.remove = function (animationItem) {
 	            this.animationItems.delete(animationItem);
@@ -1606,7 +1610,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	                set: function (value) {
 	                    _this._duration = value;
 	                    _this._calculateAnimations();
-	                }
+	                },
+	                configurable: true
 	            });
 	            return _this;
 	        }
@@ -1639,11 +1644,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	                if (animationItem.startAt > animationItem.endAt) {
 	                    throw new Error("endAt needs to be greater than startAt.");
 	                }
-	                var offset = animationItem.startAt * self.duration;
-	                var duration = (animationItem.endAt * self.duration) - offset;
+	                var offset = animationItem.startAt * self._duration;
+	                var duration = (animationItem.endAt * self._duration) - offset;
 	                animationItem.offset = offset;
 	                animationItem.animation.duration = duration;
-	                _super.prototype.add.call(_this, animationItem);
+	                _this.animationItems.set(animationItem, animationItem);
+	                _this.cacheDirection();
 	            });
 	        };
 	        return PercentageTimeline;

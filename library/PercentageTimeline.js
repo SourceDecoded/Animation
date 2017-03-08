@@ -17,7 +17,8 @@ define(["require", "exports", "./Timeline", "./Animation"], function (require, e
                 set: function (value) {
                     _this._duration = value;
                     _this._calculateAnimations();
-                }
+                },
+                configurable: true
             });
             return _this;
         }
@@ -50,11 +51,12 @@ define(["require", "exports", "./Timeline", "./Animation"], function (require, e
                 if (animationItem.startAt > animationItem.endAt) {
                     throw new Error("endAt needs to be greater than startAt.");
                 }
-                var offset = animationItem.startAt * self.duration;
-                var duration = (animationItem.endAt * self.duration) - offset;
+                var offset = animationItem.startAt * self._duration;
+                var duration = (animationItem.endAt * self._duration) - offset;
                 animationItem.offset = offset;
                 animationItem.animation.duration = duration;
-                _super.prototype.add.call(_this, animationItem);
+                _this.animationItems.set(animationItem, animationItem);
+                _this.cacheDirection();
             });
         };
         return PercentageTimeline;

@@ -92,7 +92,8 @@ define(["require", "exports", "./Animation", "./animationStateManager"], functio
                         animationItem.animation.duration = offsetDuration * value;
                     });
                     _this._duration = value;
-                }
+                },
+                configurable: true
             });
             return _this;
         }
@@ -104,6 +105,12 @@ define(["require", "exports", "./Animation", "./animationStateManager"], functio
                 }
                 return duration;
             }, 0);
+        };
+        Timeline.prototype.cacheDirection = function () {
+            this.forwardArrayAnimations = Array.from(this.animationItems.values());
+            this.reverseArrayAnimations = this.forwardArrayAnimations.slice(0);
+            orderBy(this.forwardArrayAnimations, renderByOffset);
+            orderByDesc(this.reverseArrayAnimations, renderByOffsetAndDuration);
         };
         Timeline.prototype.add = function () {
             var allAnimationItems = [];
@@ -122,10 +129,7 @@ define(["require", "exports", "./Animation", "./animationStateManager"], functio
                 self.animationItems.set(animationItem, animationItem);
             });
             this._duration = this.calculateDuration();
-            this.forwardArrayAnimations = Array.from(this.animationItems.values());
-            this.reverseArrayAnimations = this.forwardArrayAnimations.slice(0);
-            orderBy(this.forwardArrayAnimations, renderByOffset);
-            orderByDesc(this.reverseArrayAnimations, renderByOffsetAndDuration);
+            this.cacheDirection();
         };
         Timeline.prototype.remove = function (animationItem) {
             this.animationItems.delete(animationItem);
