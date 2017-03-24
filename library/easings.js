@@ -1,5 +1,6 @@
 define(["require", "exports"], function (require, exports) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     var easings = {
         easeInQuad: function (t, b, c, d) {
             return c * (t /= d) * t + b;
@@ -179,7 +180,6 @@ define(["require", "exports"], function (require, exports) {
             return c * t / d + b;
         }
     };
-    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = easings;
 });
 //# sourceMappingURL=easings.js.map

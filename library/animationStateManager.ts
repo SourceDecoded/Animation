@@ -174,7 +174,6 @@ animationStateManager.forwardPausedState = {
         if (lastProgress > progress) {
             animation.currentState = animationStateManager.reversePausedState;
             animation.currentState.seek(animation, progress, now);
-            animation.currentState = animationStateManager.forwardPausedState;
             return;
         }
 
@@ -214,7 +213,6 @@ animationStateManager.reversePausedState = {
         if (lastProgress < progress) {
             animation.currentState = animationStateManager.forwardPausedState;
             animation.currentState.seek(animation, progress, now);
-            animation.currentState = animationStateManager.reversePausedState;
             return;
         }
 

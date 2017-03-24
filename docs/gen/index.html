@@ -92,6 +92,7 @@
 <h2>Examples</h2><ul>
 <li><a href="https://sourcedecoded.github.io/Animation/">List of Examples</a></li>
 <li><a href="https://sourcedecoded.github.io/Animation/examples/basic.html">Basic</a></li>
+<li><a href="https://sourcedecoded.github.io/Animation/examples/svg.html">SVG</a></li>
 <li><a href="https://sourcedecoded.github.io/Animation/examples/controls.html">Animation Controls</a></li>
 <li><a href="https://sourcedecoded.github.io/Animation/examples/alot.html">Load Test (Lots of animations)</a></li>
 <li><a href="https://sourcedecoded.github.io/Animation/examples/percentageTimeline.html">PercentageTimeline</a></li>
@@ -121,14 +122,13 @@ that can be used while building animations.</p>
 <li>Animation</li>
 <li>CssAnimation</li>
 <li>CustomRenderAnimation</li>
-<li>ElementAnimation</li>
 <li>ElementPathAnimation</li>
 <li>Timeline </li>
 <li>PercentageTimeline</li>
 </ul>
 <p>There are seven different classes to make animations with. There is the root class Animation, 
 from which all classes are derived. CustomRenderAnimation which allows you to provider a custom renderer. CssAnimation animates an object with properties that resemble
-css names and understands the units involved with those property names. ElementAnimation animates elements. ElementPathAnimation 
+css names and understands the units involved with those property names. ElementPathAnimation 
 animates elements through bezier curves with points and controls. Timeline allows you to compose many 
 animations into a concert of animations using offsets. PercentageTimeline does the same 
 as the Timeline but instead uses the principles of startAt and endAt to compose the animations.</p>
@@ -153,11 +153,15 @@ as the Timeline but instead uses the principles of startAt and endAt to compose 
 
         &lt;script src=&quot;./node_modules/clarity-animation/dist/main.js&quot;>&lt;/script>
         &lt;script>
-                var ElementAnimation = clarityAnimation.ElementAnimation;
+                var CssAnimation = clarityAnimation.CssAnimation;
                 var box = document.querySelector(&quot;#my-box&quot;);
 
-                var animation = new ElementAnimation({
-                    target: box,
+                var animation = new CssAnimation({
+                    render: function(values){
+                        Object.keys(values).forEach(function(property){
+                            box.style[property] = values[property];
+                        });
+                    },
                     properties: {
                         backgroundColor: {
                             from: &quot;rgba(0,0,0,0)&quot;,
@@ -346,61 +350,24 @@ var animation = new clarityAnimation.Animation({
     },
     duration: 1000,
     easing: &quot;easeOutExpo&quot;
-});</code></pre><h1>ElementAnimation</h1><p>This section will discuss the possibilities of ElementAnimation.</p>
-<h2>List of Animatable Properties for ElementAnimation.</h2><ul>
-<li>width</li>
-<li>height</li>
-<li>lineHeight</li>
-<li>top</li>
-<li>right</li>
-<li>bottom</li>
-<li>left</li>
-<li>fontSize</li>
-<li>borderTopWidth</li>
-<li>borderBottomWidth</li>
-<li>borderRightWidth</li>
-<li>borderLeftWidth</li>
-<li>borderTopColor</li>
-<li>borderBottomColor</li>
-<li>borderLeftColor</li>
-<li>borderRightColor</li>
-<li>marginTop</li>
-<li>marginBottom</li>
-<li>marginLeft</li>
-<li>marginRight</li>
-<li>paddingTop</li>
-<li>paddingBottom</li>
-<li>paddingLeft</li>
-<li>paddingRight</li>
-<li>opacity</li>
-<li>color</li>
-<li>backgroundColor</li>
-<li>rotateX</li>
-<li>rotateY</li>
-<li>rotateZ</li>
-<li>scaleX</li>
-<li>scaleY</li>
-<li>scaleZ</li>
-<li>translateX</li>
-<li>translateY</li>
-<li>translateZ</li>
-</ul>
-<pre class="prettyprint source lang-js"><code>    var div = document.createElement(&quot;div&quot;);
-    var animation = new ElementAnimation({
-        target: div,
-        properties: {
-            backgroundColor: {
-                from: &quot;rgba(0,0,0,1)&quot;,
-                to: &quot;rgba(100,0,100,0.5)&quot;
-            }
-        },
-        duration: 2000,
-        easing: &quot;easeOutExpo&quot;
-    });</code></pre><h1>Timeline</h1><pre class="prettyprint source lang-js"><code>    var div = document.createElement(&quot;div&quot;);
+});</code></pre><h1>Timeline</h1><pre class="prettyprint source lang-js"><code>    var div = document.createElement(&quot;div&quot;);
     var div2 = document.createElement(&quot;div&quot;);
 
-    var opacityAnimation = new ElementAnimation({
-        target: div,
+    var renderDiv = function(values){
+        Object.keys(values).forEach(function(property){
+            div.style[property] = values[property];
+        });
+    };
+
+    var renderDiv2 = function(values){
+        Object.keys(values).forEach(function(property){
+            div2.style[property] = values[property];
+        });
+    };
+
+
+    var opacityAnimation = new CssAnimation({
+        render: renderDiv,
         properties: {
             opacity: {
                 from: 0,
@@ -411,8 +378,8 @@ var animation = new clarityAnimation.Animation({
         easing: &quot;easing&quot;
     });
 
-    var moveAnimation = new ElementAnimation({
-        target: div,
+    var moveAnimation = new CssAnimation({
+        render: renderDiv2,
         properties: {
             left: {
                 from: &quot;0px&quot;,
@@ -423,8 +390,8 @@ var animation = new clarityAnimation.Animation({
         easing: &quot;easeOutExpo&quot;
     });
 
-    moveDiv2Animation = new ElementAnimation({
-        target: div2,
+    moveDiv2Animation = new CssAnimation({
+        render: renderDiv2,
         properties: {
             left: {
                 from: &quot;100px&quot;,
@@ -456,8 +423,21 @@ its perfect.</p>
 <pre class="prettyprint source lang-js"><code>    var div = document.createElement(&quot;div&quot;);
     var div2 = document.createElement(&quot;div&quot;);
 
-    var opacityAnimation = new ElementAnimation({
-        target: div,
+    var renderDiv = function(values){
+        Object.keys(values).forEach(function(property){
+            div.style[property] = values[property];
+        });
+    };
+
+    var renderDiv2 = function(values){
+        Object.keys(values).forEach(function(property){
+            div2.style[property] = values[property];
+        });
+    };
+
+
+    var opacityAnimation = new CssAnimation({
+        render: renderDiv,
         properties: {
             opacity: {
                 from: 0,
@@ -468,8 +448,8 @@ its perfect.</p>
         easing: &quot;easing&quot;
     });
 
-    var moveAnimation = new ElementAnimation({
-        target: div,
+    var moveAnimation = new CssAnimation({
+        render: renderDiv2,
         properties: {
             left: {
                 from: &quot;0px&quot;,
@@ -480,8 +460,8 @@ its perfect.</p>
         easing: &quot;easeOutExpo&quot;
     });
 
-    moveDiv2Animation = new ElementAnimation({
-        target: div2,
+    moveDiv2Animation = new CssAnimation({
+        render: renderDiv2,
         properties: {
             left: {
                 from: &quot;100px&quot;,
@@ -611,7 +591,7 @@ animation.render();
 <span class="jsdoc-message">
 	Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.4.3</a>
 	
-		on March 8th 2017, 11:18:58 am
+		on March 24th 2017, 2:06:20 pm
 	
 	using the <a href="https://github.com/docstrap/docstrap">DocStrap template</a>.
 </span>

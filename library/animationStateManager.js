@@ -1,5 +1,6 @@
 define(["require", "exports"], function (require, exports) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     var animationStateManager = {};
     var emptyFnWithReturnAnimation = function (animation) { return animation; };
     var forwardPause = function (animation) {
@@ -140,7 +141,6 @@ define(["require", "exports"], function (require, exports) {
             if (lastProgress > progress) {
                 animation.currentState = animationStateManager.reversePausedState;
                 animation.currentState.seek(animation, progress, now);
-                animation.currentState = animationStateManager.forwardPausedState;
                 return;
             }
             if (animation.progress > 1) {
@@ -174,7 +174,6 @@ define(["require", "exports"], function (require, exports) {
             if (lastProgress < progress) {
                 animation.currentState = animationStateManager.forwardPausedState;
                 animation.currentState.seek(animation, progress, now);
-                animation.currentState = animationStateManager.reversePausedState;
                 return;
             }
             if (animation.progress < 0) {
@@ -291,7 +290,6 @@ define(["require", "exports"], function (require, exports) {
         tick: emptyFnWithReturnAnimation,
         restart: restartForward
     };
-    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = animationStateManager;
 });
 //# sourceMappingURL=animationStateManager.js.map

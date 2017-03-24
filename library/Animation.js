@@ -1,5 +1,6 @@
 define(["require", "exports", "./animationStateManager", "./AnimationManager", "./easings"], function (require, exports, animationStateManager_1, AnimationManager_1, easings_1) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     //import "./../node_modules/babel-polyfill/dist/polyfill";
     var delayAsync = function (milliseconds) {
         return new Promise(function (resolve, reject) {
@@ -350,7 +351,6 @@ define(["require", "exports", "./animationStateManager", "./AnimationManager", "
         });
         return Animation;
     }());
-    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = Animation;
 });
 //# sourceMappingURL=Animation.js.map

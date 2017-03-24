@@ -5,7 +5,6 @@ var rgbRegEx = /^rgb\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)$/i;
 var rgbaRegEx = /^rgba\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+|\d\.\d+)\s*\)$/i;
 
 var isColor = /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$|^rgb\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)$|^rgba\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+|\d\.\d+)\s*\)$/;
-var isUnitNumber = /^(\-?[0-9]+)([^0-9]+)$/;
 
 var colorAliases = {
     "transparent": "rgba(0,0,0,0)"
@@ -53,7 +52,7 @@ var getRgbWithInRangeValue = function (value) {
 
 var valueHandlers = [{
     test: (value) => {
-        return isUnitNumber.test(value);
+        return numberUnitRegEx.test(value);
     },
     map: (value) => {
         return value;
@@ -80,13 +79,13 @@ var valueHandlers = [{
 
 export default class CustomRenderAnimation extends Animation {
     element;
-    renderer: (values: any) => void;
+    renderCallback: (values: any) => void;
 
     constructor(config) {
         super(config);
         this.element = config.target;
         this.target = {};
-        this.renderer = config.renderer || function (values) { };
+        this.renderCallback = config.render || config.renderer || function (values) { };
 
         this.assignHandlers();
     }
@@ -140,7 +139,7 @@ export default class CustomRenderAnimation extends Animation {
             this.target[propertyName] = value;
         });
 
-        this.renderer(this.target);
+        this.renderCallback(this.target);
 
         return this;
     }

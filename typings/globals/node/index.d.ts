@@ -105,7 +105,7 @@ interface MapConstructor extends NodeCollectionConstructor<Map<any, any>> {
 
 declare var Map: MapConstructor;
 
-interface WeakMap<K, V> extends NodeWeakCollection {
+interface WeakMap<K extends object, V> extends NodeWeakCollection {
   clear(): void;
   delete(key: K): boolean;
   get(key: K): V | void;
@@ -115,7 +115,7 @@ interface WeakMap<K, V> extends NodeWeakCollection {
 
 interface WeakMapConstructor extends NodeCollectionConstructor<WeakMap<any, any>> {
   new (): WeakMap<any, any>;
-  new <K, V>(): WeakMap<K, V>;
+  new <K, V>(): WeakMap<any, any>;
 }
 
 declare var WeakMap: WeakMapConstructor;
