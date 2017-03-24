@@ -35,7 +35,7 @@
         var box = document.querySelector("#my-box");
 
         var animation = new CssAnimation({
-            renderer: function (values) {
+            render: function (values) {
                 Object.keys(values).forEach(function (key) {
                     box.style[key] = values[key];
                 });

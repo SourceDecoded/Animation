@@ -1,5 +1,6 @@
 define(["require", "exports"], function (require, exports) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     (function () {
         var lastTime = 0;
         var vendors = ['ms', 'moz', 'webkit', 'o'];
@@ -91,7 +92,6 @@ define(["require", "exports"], function (require, exports) {
         };
         return AnimationManager;
     }());
-    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = AnimationManager;
 });
 //# sourceMappingURL=AnimationManager.js.map

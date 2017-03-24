@@ -18,6 +18,7 @@ npm install clarity-animation
 ## Examples
 * [List of Examples](https://sourcedecoded.github.io/Animation/)
 * [Basic](https://sourcedecoded.github.io/Animation/examples/basic.html)
+* [SVG](https://sourcedecoded.github.io/Animation/examples/svg.html)
 * [Animation Controls](https://sourcedecoded.github.io/Animation/examples/controls.html)
 * [Load Test (Lots of animations)](https://sourcedecoded.github.io/Animation/examples/alot.html)
 * [PercentageTimeline](https://sourcedecoded.github.io/Animation/examples/percentageTimeline.html)
@@ -56,14 +57,13 @@ that can be used while building animations.
 * Animation
 * CssAnimation
 * CustomRenderAnimation
-* ElementAnimation
 * ElementPathAnimation
 * Timeline 
 * PercentageTimeline
 
 There are seven different classes to make animations with. There is the root class Animation, 
 from which all classes are derived. CustomRenderAnimation which allows you to provider a custom renderer. CssAnimation animates an object with properties that resemble
-css names and understands the units involved with those property names. ElementAnimation animates elements. ElementPathAnimation 
+css names and understands the units involved with those property names. ElementPathAnimation 
 animates elements through bezier curves with points and controls. Timeline allows you to compose many 
 animations into a concert of animations using offsets. PercentageTimeline does the same 
 as the Timeline but instead uses the principles of startAt and endAt to compose the animations.
@@ -98,11 +98,15 @@ Copy the contents of this example and paste it into the index.html file.
 
         <script src="./node_modules/clarity-animation/dist/main.js"></script>
         <script>
-                var ElementAnimation = clarityAnimation.ElementAnimation;
+                var CssAnimation = clarityAnimation.CssAnimation;
                 var box = document.querySelector("#my-box");
 
-                var animation = new ElementAnimation({
-                    target: box,
+                var animation = new CssAnimation({
+                    render: function(values){
+                        Object.keys(values).forEach(function(property){
+                            box.style[property] = values[property];
+                        });
+                    },
                     properties: {
                         backgroundColor: {
                             from: "rgba(0,0,0,0)",
@@ -341,72 +345,27 @@ var animation = new clarityAnimation.CustomRenderAnimation({
 });
 ```
 
-ElementAnimation
-===
-This section will discuss the possibilities of ElementAnimation.
-
-## List of Animatable Properties for ElementAnimation.
-* width
-* height
-* lineHeight
-* top
-* right
-* bottom
-* left
-* fontSize
-* borderTopWidth
-* borderBottomWidth
-* borderRightWidth
-* borderLeftWidth
-* borderTopColor
-* borderBottomColor
-* borderLeftColor
-* borderRightColor
-* marginTop
-* marginBottom
-* marginLeft
-* marginRight
-* paddingTop
-* paddingBottom
-* paddingLeft
-* paddingRight
-* opacity
-* color
-* backgroundColor
-* rotateX
-* rotateY
-* rotateZ
-* scaleX
-* scaleY
-* scaleZ
-* translateX
-* translateY
-* translateZ
-
-```js
-    var div = document.createElement("div");
-    var animation = new ElementAnimation({
-        target: div,
-        properties: {
-            backgroundColor: {
-                from: "rgba(0,0,0,1)",
-                to: "rgba(100,0,100,0.5)"
-            }
-        },
-        duration: 2000,
-        easing: "easeOutExpo"
-    });
-
-```
-
 Timeline
 ===
 ```js
     var div = document.createElement("div");
     var div2 = document.createElement("div");
 
-    var opacityAnimation = new ElementAnimation({
-        target: div,
+    var renderDiv = function(values){
+        Object.keys(values).forEach(function(property){
+            div.style[property] = values[property];
+        });
+    };
+
+    var renderDiv2 = function(values){
+        Object.keys(values).forEach(function(property){
+            div2.style[property] = values[property];
+        });
+    };
+
+
+    var opacityAnimation = new CssAnimation({
+        render: renderDiv,
         properties: {
             opacity: {
                 from: 0,
@@ -417,8 +376,8 @@ Timeline
         easing: "easing"
     });
 
-    var moveAnimation = new ElementAnimation({
-        target: div,
+    var moveAnimation = new CssAnimation({
+        render: renderDiv2,
         properties: {
             left: {
                 from: "0px",
@@ -429,8 +388,8 @@ Timeline
         easing: "easeOutExpo"
     });
 
-    moveDiv2Animation = new ElementAnimation({
-        target: div2,
+    moveDiv2Animation = new CssAnimation({
+        render: renderDiv2,
         properties: {
             left: {
                 from: "100px",
@@ -470,8 +429,21 @@ its perfect.
     var div = document.createElement("div");
     var div2 = document.createElement("div");
 
-    var opacityAnimation = new ElementAnimation({
-        target: div,
+    var renderDiv = function(values){
+        Object.keys(values).forEach(function(property){
+            div.style[property] = values[property];
+        });
+    };
+
+    var renderDiv2 = function(values){
+        Object.keys(values).forEach(function(property){
+            div2.style[property] = values[property];
+        });
+    };
+
+
+    var opacityAnimation = new CssAnimation({
+        render: renderDiv,
         properties: {
             opacity: {
                 from: 0,
@@ -482,8 +454,8 @@ its perfect.
         easing: "easing"
     });
 
-    var moveAnimation = new ElementAnimation({
-        target: div,
+    var moveAnimation = new CssAnimation({
+        render: renderDiv2,
         properties: {
             left: {
                 from: "0px",
@@ -494,8 +466,8 @@ its perfect.
         easing: "easeOutExpo"
     });
 
-    moveDiv2Animation = new ElementAnimation({
-        target: div2,
+    moveDiv2Animation = new CssAnimation({
+        render: renderDiv2,
         properties: {
             left: {
                 from: "100px",

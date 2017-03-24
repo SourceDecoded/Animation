@@ -1,15 +1,20 @@
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = Object.setPrototypeOf ||
+        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
+    return function (d, b) {
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
 define(["require", "exports", "./Animation"], function (require, exports, Animation_1) {
     "use strict";
+    Object.defineProperty(exports, "__esModule", { value: true });
     var numberUnitRegEx = /^(\-?\d*\.?\d+)+(.*?)$/i;
     var rgbRegEx = /^rgb\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)$/i;
     var rgbaRegEx = /^rgba\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+|\d\.\d+)\s*\)$/i;
     var isColor = /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$|^rgb\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*\)$|^rgba\s*\(\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+)\s*,\s*(\d+|\d\.\d+)\s*\)$/;
-    var isUnitNumber = /^([0-9]+)([^0-9]+)$/;
     var colorAliases = {
         "transparent": "rgba(0,0,0,0)"
     };
@@ -49,7 +54,7 @@ define(["require", "exports", "./Animation"], function (require, exports, Animat
     };
     var valueHandlers = [{
             test: function (value) {
-                return isUnitNumber.test(value);
+                return numberUnitRegEx.test(value);
             },
             map: function (value) {
                 return value;
@@ -78,7 +83,7 @@ define(["require", "exports", "./Animation"], function (require, exports, Animat
             var _this = _super.call(this, config) || this;
             _this.element = config.target;
             _this.target = {};
-            _this.renderer = config.renderer || function (values) { };
+            _this.renderCallback = config.render || config.renderer || function (values) { };
             _this.assignHandlers();
             return _this;
         }
@@ -120,7 +125,7 @@ define(["require", "exports", "./Animation"], function (require, exports, Animat
                 var value = handler.apply(_this, [property, progress]);
                 _this.target[propertyName] = value;
             });
-            this.renderer(this.target);
+            this.renderCallback(this.target);
             return this;
         };
         CustomRenderAnimation.prototype.nullableHandler = function (property, progress) {
@@ -265,7 +270,6 @@ define(["require", "exports", "./Animation"], function (require, exports, Animat
         };
         return CustomRenderAnimation;
     }(Animation_1.default));
-    Object.defineProperty(exports, "__esModule", { value: true });
     exports.default = CustomRenderAnimation;
 });
 //# sourceMappingURL=CustomRenderAnimation.js.map

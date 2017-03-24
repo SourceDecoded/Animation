@@ -22,7 +22,7 @@
         var timeline = new PercentageTimeline(2000);
 
         var animation = new CustomRenderAnimation({
-            renderer: (values) => {
+            render: (values) => {
                 Object.keys(values).forEach((propertyName) => {
                     circle.setAttribute(propertyName, values[propertyName]);
                 });

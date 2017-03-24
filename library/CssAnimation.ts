@@ -15,8 +15,8 @@ var transformMappings = {
 export default class CssAnimation extends CustomRenderAnimation {
     target: any;
     constructor(config) {
-        config.originalRenderer = config.renderer;
-        config.renderer = (values) => {
+        var render = config.render || config.renderer;
+        config.render = (values) => {
             var target = this.target;
             var hasTransform = false;
 
@@ -32,8 +32,8 @@ export default class CssAnimation extends CustomRenderAnimation {
                 this.handleTransforms(values, target);
             }
 
-            if (config.target == null && typeof config.originalRenderer === "function") {
-                config.originalRenderer(target);
+            if (typeof render === "function") {
+                render(target);
             }
 
         };
