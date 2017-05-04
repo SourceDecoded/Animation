@@ -325,7 +325,7 @@ This class allows you to decide how to render the current values. Check out the 
 
 ```js
 var animation = new clarityAnimation.CustomRenderAnimation({
-    renderer: (values)=>{
+    render: (values)=>{
         Object.keys(values).forEach((propertyName)=>{
             svgCircle.setAttribute(propertyName, values[propertyName]);
         });
