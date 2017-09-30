@@ -8,7 +8,7 @@ var distribution = {
         filename: 'main.js',
         library: "clarityAnimation",
         libraryTarget: "umd",
-        path: './dist'
+        path: path.resolve(__dirname, 'dist')
     }
 };
 
@@ -20,11 +20,11 @@ var website = {
         filename: 'clarity-animation.js',
         library: "clarityAnimation",
         libraryTarget: "umd",
-        path: './docs/scripts'
+        path: path.resolve('docs/scripts')
     }
 };
 
 module.exports = [
     distribution,
-    website    
+    website
 ]
