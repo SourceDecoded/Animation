@@ -70,9 +70,6 @@ define(["require", "exports", "./CustomRenderAnimation"], function (require, exp
                 var transform = "scaleX(" + values.scaleX + ") scaleY(" + values.scaleY + ") scaleZ(" + values.scaleZ + ")";
                 transform += " rotateX(" + values.rotateX + ") rotateY(" + values.rotateY + ") rotateZ(" + values.rotateZ + ")";
                 transform += " translateX(" + values.translateX + ") translateY(" + values.translateY + ") translateZ(" + values.translateZ + ")";
-                this.target["webkitTransform"] = transform;
-                this.target["mozTransform"] = transform;
-                this.target["msTransform"] = transform;
                 this.target["transform"] = transform;
             }
         };
